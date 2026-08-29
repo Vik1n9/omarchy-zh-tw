@@ -52,6 +52,9 @@ if (menu["learn.keybindings"].label !== "快捷键") throw new Error("快捷键�
 if (menu["learn.keybindings"].action !== home + "/.local/bin/omarchy-menu-keybindings-zh") {
   throw new Error("快捷键入口路径不正确")
 }
+if (menu["update.omarchy"].action !== "omarchy-launch-floating-terminal-with-presentation " + home + "/.local/bin/omarchy-update-zh") {
+  throw new Error("系统更新入口路径不正确")
+}
 NODE
 
 rg -Fq '"scrolling": "滚动布局"' \
@@ -59,6 +62,8 @@ rg -Fq '"scrolling": "滚动布局"' \
 rg -Fq 'Qt.locale("zh_CN")' "$plugin_root/testuser.weather/Panel.qml"
 rg -Fq '"power-saver": "节能", "balanced": "平衡", "performance": "性能"' \
   "$plugin_root/testuser.power/Panel.qml"
+rg -Fq "$sandbox_home/.local/bin/omarchy-update-zh" \
+  "$plugin_root/testuser.system-update/SystemUpdate.qml"
 test -x "$sandbox_home/.local/bin/omarchy-menu-keybindings-zh"
 bash -n "$sandbox_home/.local/bin/omarchy-menu-keybindings-zh"
 

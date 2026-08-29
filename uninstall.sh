@@ -10,6 +10,9 @@ SHELL_FILE="$HOME/.config/omarchy/shell.json"
 HOOK_FILE="$HOME/.config/omarchy/hooks/post-update.d/omarchy-zh-post-update"
 SYNC_TARGET="$HOME/.local/bin/omarchy-zh-sync"
 KEYBINDINGS_TARGET="$HOME/.local/bin/omarchy-menu-keybindings-zh"
+UPDATE_TARGET="$HOME/.local/bin/omarchy-update-zh"
+UPDATE_CONFIRM_DIR="$HOME/.local/share/omarchy-zh-cn/bin"
+UPDATE_CONFIRM_TARGET="$UPDATE_CONFIRM_DIR/omarchy-update-confirm"
 ASSUME_YES=0
 
 while (($# > 0)); do
@@ -103,6 +106,18 @@ if [[ -f $STATE_DIR/original/omarchy-menu-keybindings-zh ]]; then
   cp -a "$STATE_DIR/original/omarchy-menu-keybindings-zh" "$KEYBINDINGS_TARGET"
 else
   rm -f "$KEYBINDINGS_TARGET"
+fi
+if [[ -f $STATE_DIR/original/omarchy-update-zh ]]; then
+  cp -a "$STATE_DIR/original/omarchy-update-zh" "$UPDATE_TARGET"
+else
+  rm -f "$UPDATE_TARGET"
+fi
+if [[ -f $STATE_DIR/original/omarchy-update-confirm ]]; then
+  mkdir -p "$UPDATE_CONFIRM_DIR"
+  cp -a "$STATE_DIR/original/omarchy-update-confirm" "$UPDATE_CONFIRM_TARGET"
+else
+  rm -f "$UPDATE_CONFIRM_TARGET"
+  rmdir "$UPDATE_CONFIRM_DIR" "$HOME/.local/share/omarchy-zh-cn" 2>/dev/null || true
 fi
 
 if command -v hyprctl >/dev/null; then hyprctl reload >/dev/null || true; fi

@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+OFFICIAL_UPDATE="/usr/share/omarchy/bin/omarchy-update"
+LOCALIZER_BIN="$HOME/.local/share/omarchy-zh-cn/bin"
+
+[[ -x $OFFICIAL_UPDATE ]] || {
+  echo "找不到 Omarchy 官方更新命令：$OFFICIAL_UPDATE" >&2
+  exit 1
+}
+
+# Keep the official updater intact. Only prefer our localized confirmation
+# helper while this update process and its child process are running.
+exec env PATH="$LOCALIZER_BIN:$PATH" "$OFFICIAL_UPDATE" "$@"

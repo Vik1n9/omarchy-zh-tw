@@ -19,6 +19,7 @@ const menuUser = path.join(home, ".config/omarchy/extensions/omarchy-menu.jsonc"
 const stateDir = path.join(home, ".local/state/omarchy-zh");
 const keybindingsSource = "/usr/share/omarchy/bin/omarchy-menu-keybindings";
 const keybindingsZh = path.join(home, ".local/bin/omarchy-menu-keybindings-zh");
+const updateZh = path.join(home, ".local/bin/omarchy-update-zh");
 
 const pluginIds = [
   "omarchy.audio", "omarchy.bluetooth", "omarchy.clock", "omarchy.monitor",
@@ -1178,6 +1179,12 @@ function rebuildPlugin(catalogEntry) {
         if (!after.includes(profileLabelSource)) throw new Error("电源插件结构已变化：模式标签");
         after = after.replace(profileLabelSource, profileLabelTarget);
       }
+      if (sourceId === "omarchy.system-update" && path.basename(file) === "SystemUpdate.qml") {
+        const updateCommandSource = "omarchy-launch-floating-terminal-with-presentation omarchy-update";
+        const updateCommandTarget = `omarchy-launch-floating-terminal-with-presentation ${updateZh}`;
+        if (!after.includes(updateCommandSource)) throw new Error("系统更新插件结构已变化：更新入口");
+        after = after.replace(updateCommandSource, updateCommandTarget);
+      }
       if (sourceId === "omarchy.menu" && path.basename(file) === "Menu.qml") {
         after = after
           .replace(
@@ -1256,6 +1263,9 @@ function syncMenu() {
     if (!(id in defaults)) defaults[id] = item;
   }
   if (defaults["learn.keybindings"]) defaults["learn.keybindings"].action = keybindingsZh;
+  if (defaults["update.omarchy"]) {
+    defaults["update.omarchy"].action = `omarchy-launch-floating-terminal-with-presentation ${updateZh}`;
+  }
   const header = "// Omarchy 4 简体中文菜单：动作来自当前系统版本，文字由本地汉化保留。\n";
   fs.mkdirSync(path.dirname(menuUser), { recursive: true });
   fs.writeFileSync(menuUser, header + JSON.stringify(defaults, null, 2) + "\n");
@@ -1298,4 +1308,4 @@ if (!noRestart) {
     try { execFileSync("omarchy-shell", ["shell", "rescanPlugins"], { stdio: quiet ? "ignore" : "inherit" }); } catch (_) {}
   }
 }
-if (!quiet) console.log(`已同步 ${pluginIds.length} 个中文插件、Omarchy 菜单和快捷键面板。`);
+if (!quiet) console.log(`已同步 ${pluginIds.length} 个中文插件、Omarchy 菜单、快捷键面板和更新入口。`);

@@ -5,8 +5,13 @@ set -euo pipefail
 ROOT_DIR=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)
 SYNC_SOURCE="$ROOT_DIR/bin/omarchy-zh-sync"
 HOOK_SOURCE="$ROOT_DIR/hooks/omarchy-zh-post-update"
+UPDATE_SOURCE="$ROOT_DIR/bin/omarchy-update-zh"
+UPDATE_CONFIRM_SOURCE="$ROOT_DIR/bin/omarchy-update-confirm-zh"
 SYNC_TARGET="$HOME/.local/bin/omarchy-zh-sync"
 KEYBINDINGS_TARGET="$HOME/.local/bin/omarchy-menu-keybindings-zh"
+UPDATE_TARGET="$HOME/.local/bin/omarchy-update-zh"
+UPDATE_CONFIRM_DIR="$HOME/.local/share/omarchy-zh-cn/bin"
+UPDATE_CONFIRM_TARGET="$UPDATE_CONFIRM_DIR/omarchy-update-confirm"
 HOOK_TARGET="$HOME/.config/omarchy/hooks/post-update.d/omarchy-zh-post-update"
 PLUGIN_ROOT="$HOME/.config/omarchy/plugins"
 MENU_FILE="$HOME/.config/omarchy/extensions/omarchy-menu.jsonc"
@@ -46,7 +51,7 @@ while (($# > 0)); do
   shift
 done
 
-for command_name in node jq omarchy omarchy-plugin-catalog omarchy-shell; do
+for command_name in node jq gum omarchy omarchy-plugin-catalog omarchy-shell; do
   command -v "$command_name" >/dev/null || {
     echo "缺少命令：$command_name" >&2
     exit 1
@@ -65,7 +70,7 @@ user_name=${USER:-$(id -un)}
   exit 1
 }
 
-[[ -f $SYNC_SOURCE && -f $HOOK_SOURCE ]] || {
+[[ -f $SYNC_SOURCE && -f $HOOK_SOURCE && -f $UPDATE_SOURCE && -f $UPDATE_CONFIRM_SOURCE ]] || {
   echo "项目文件不完整，请从仓库根目录运行安装器。" >&2
   exit 1
 }
@@ -83,11 +88,12 @@ if ((DRY_RUN)); then
     fi
   done
   echo "将安装：$SYNC_TARGET"
+  echo "将安装：$UPDATE_TARGET（中文更新确认界面）"
   echo "将安装 post-update 自动同步钩子，并把 Super+K 指向中文快捷键面板。"
   exit 0
 fi
 
-mkdir -p "$HOME/.local/bin" "$PLUGIN_ROOT" "$BACKUP_DIR"
+mkdir -p "$HOME/.local/bin" "$UPDATE_CONFIRM_DIR" "$PLUGIN_ROOT" "$BACKUP_DIR"
 
 if [[ ! -e $STATE_DIR/install.version ]]; then
   printf '1\n' >"$STATE_DIR/install.version"
@@ -102,7 +108,25 @@ if [[ ! -e $STATE_DIR/install.version ]]; then
   [[ -f $HOOK_TARGET ]] && cp -a "$HOOK_TARGET" "$BACKUP_DIR/omarchy-zh-post-update"
 fi
 
+backup_once() {
+  local current=$1
+  local backup=$2
+  local absent_marker=$3
+  if [[ ! -e $backup && ! -e $absent_marker ]]; then
+    if [[ -f $current ]]; then
+      cp -a "$current" "$backup"
+    else
+      : >"$absent_marker"
+    fi
+  fi
+}
+
+backup_once "$UPDATE_TARGET" "$BACKUP_DIR/omarchy-update-zh" "$BACKUP_DIR/omarchy-update-zh-was-absent"
+backup_once "$UPDATE_CONFIRM_TARGET" "$BACKUP_DIR/omarchy-update-confirm" "$BACKUP_DIR/omarchy-update-confirm-was-absent"
+
 install -m 755 "$SYNC_SOURCE" "$SYNC_TARGET"
+install -m 755 "$UPDATE_SOURCE" "$UPDATE_TARGET"
+install -m 755 "$UPDATE_CONFIRM_SOURCE" "$UPDATE_CONFIRM_TARGET"
 
 mark_managed() {
   local manifest=$1
@@ -173,4 +197,4 @@ if command -v hyprctl >/dev/null; then
 fi
 
 printf '%s\n' "${PLUGIN_IDS[@]}" >"$STATE_DIR/plugin-sources"
-echo "安装完成。按 Super+K 可打开中文快捷键面板。"
+echo "安装完成。按 Super+K 可打开中文快捷键面板；系统更新确认界面也已汉化。"
