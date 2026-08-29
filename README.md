@@ -1,5 +1,7 @@
 # Omarchy 简体中文界面
 
+**简体中文** | [English](README.en.md)
+
 面向 Omarchy 4 的非官方简体中文本地化项目。它从本机当前安装的 Omarchy 源文件生成用户级插件克隆，不修改 `/usr/share/omarchy`，也不在仓库中重新分发 Omarchy 的插件源码。
 
 ## 效果预览
@@ -52,7 +54,7 @@
 ## 兼容性
 
 - Omarchy `4.x`
-- Node.js、jq（Omarchy 4 默认环境已提供）
+- Node.js、jq、gum（Omarchy 4 默认环境已提供）
 - 需要正在运行的 Omarchy Shell
 
 本项目跟随系统已安装的插件结构生成汉化克隆。Omarchy 更新改变界面源码时，同步器会重新生成插件；如果上游结构发生不兼容变化，同步会明确失败并保留上一份可用版本。
@@ -93,7 +95,8 @@ cd omarchy-zh-cn
 3. 安装本地化同步器并生成中文插件。
 4. 将天气单位设为公制。
 5. 将 `Super + K` 指向中文快捷键面板。
-6. 安装 `post-update` 钩子，以便系统更新后自动同步。
+6. 将 Omarchy 菜单和状态栏的系统更新入口接入中文确认界面。
+7. 安装 `post-update` 钩子，以便系统更新后自动同步。
 
 如果你已经有相同用户名和插件后缀的克隆，安装器会停止，避免覆盖个人修改。只有确认这些克隆就是此前的汉化版本时，才使用：
 
@@ -125,7 +128,7 @@ omarchy-zh-sync
 ./uninstall.sh
 ```
 
-卸载器会恢复安装前的菜单，移除受本项目管理的插件克隆，并恢复 `Super + K` 配置。Omarchy 的插件删除命令和卸载器都会保留带时间戳的备份，不会直接销毁用户配置。
+卸载器会恢复安装前的菜单和更新命令，移除受本项目管理的插件克隆，并恢复 `Super + K` 配置。Omarchy 的插件删除命令和卸载器都会保留带时间戳的备份，不会直接销毁用户配置。
 
 ## 修改范围
 
@@ -138,6 +141,7 @@ omarchy-zh-sync
 ~/.config/omarchy/shell.json
 ~/.config/hypr/bindings.lua
 ~/.local/bin/
+~/.local/share/omarchy-zh-cn/
 ~/.local/state/omarchy-zh-cn/
 ```
 
