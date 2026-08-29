@@ -44,8 +44,9 @@ These screenshots were captured on an Omarchy 4 desktop with this project instal
 - Dates, months, weekdays, and the calendar
 - Celsius temperatures, `km/h` wind speeds, and original location names from the data source
 - Reminders, notification history, and Omarchy activity notifications
-- Clipboard, emoji and image pickers, speed tests, and Wi-Fi QR codes
-- Lock screen, authentication, and system update prompts
+- System tray, clipboard, emoji and image pickers, speed tests, and Wi-Fi QR codes
+- Chinese emoji search keywords when a local Fcitx 5/Rime emoji annotation file is available
+- Lock screen, authentication, and Omarchy-controlled snapshot, package, migration, error, and restart messages during updates
 - The `Super + K` keyboard shortcuts panel and command descriptions
 - Automatic resynchronization after Omarchy updates
 
@@ -95,7 +96,7 @@ The installer will:
 3. Install the localization synchronizer and generate the localized plugins.
 4. Configure metric units for weather data.
 5. Map `Super + K` to the Chinese keyboard shortcuts panel.
-6. Route the Omarchy menu and status-bar update actions through the localized confirmation screen.
+6. Generate localized update scripts from the currently installed version and route the Omarchy menu and status-bar update actions through them.
 7. Install a `post-update` hook that automatically resynchronizes after Omarchy updates.
 
 If clones with the same username and plugin suffix already exist, the installer stops to avoid overwriting personal modifications. Use the following command only after confirming that those clones were created by an earlier version of this localization:

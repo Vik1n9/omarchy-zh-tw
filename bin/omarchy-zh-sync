@@ -20,6 +20,9 @@ const stateDir = path.join(home, ".local/state/omarchy-zh");
 const keybindingsSource = "/usr/share/omarchy/bin/omarchy-menu-keybindings";
 const keybindingsZh = path.join(home, ".local/bin/omarchy-menu-keybindings-zh");
 const updateZh = path.join(home, ".local/bin/omarchy-update-zh");
+const updateSourceDir = "/usr/share/omarchy/bin";
+const updateLocalizerDir = path.join(home, ".local/share/omarchy-zh-cn/bin");
+const speedTestOverlaySource = "/usr/share/omarchy/shell/Ui/SpeedTestOverlay.qml";
 
 const pluginIds = [
   "omarchy.audio", "omarchy.bluetooth", "omarchy.clock", "omarchy.monitor",
@@ -58,7 +61,8 @@ const zh = {
   "Pair": "配对", "No Bluetooth adapter": "未找到蓝牙适配器", "No adapter": "无蓝牙适配器",
   "Turned Off": "已关闭", "Turn Bluetooth off": "关闭蓝牙", "Turn Bluetooth on": "打开蓝牙",
   "Turn Bluetooth on to scan": "打开蓝牙以扫描设备", "Forgetting…": "正在忽略…",
-  "Disconnecting…": "正在断开…", "Connecting…": "正在连接…",
+  "Disconnecting…": "正在断开…", "Connecting…": "正在连接…", "Connecting...": "正在连接…",
+  "Scanning for devices…": "正在扫描设备…", "Device": "设备",
   "Herding headsets": "正在寻找耳机", "Pairing mysteries": "正在准备配对",
   "Polishing packets": "正在整理数据", "Streaming vikings": "正在扫描设备",
   "Summoning speakers": "正在寻找扬声器", "Taming radios": "正在调试无线电",
@@ -71,6 +75,7 @@ const zh = {
 
   "Display": "显示器", "BRIGHTNESS": "亮度", "FIXED BRIGHTNESS": "固定亮度",
   "TEXT SIZE": "文字大小", "SCALE": "缩放", "DISPLAYS": "显示器",
+  " · focused": " · 当前",
   "Sun blast": "阳光般明亮", "Solar flare": "非常明亮", "Golden hour": "明亮",
   "Even day": "日间亮度", "Soft glow": "柔和亮度", "Lamp light": "灯光亮度",
   "Candlelit": "烛光亮度", "Night owl": "夜间亮度",
@@ -91,6 +96,8 @@ const zh = {
   "Stay on ": "固定使用", "Timeout": "连接超时", "Passphrase required": "需要输入密码",
   "Wrong password": "密码错误", "Network lost": "网络连接已断开",
   "Connection failed": "连接失败", "Failed to connect": "无法连接",
+  "Turn Wi-Fi off": "关闭无线网络", "Turn Wi-Fi on": "打开无线网络",
+  "Hidden": "隐藏网络", "Auto": "自动",
   "Timed out connecting": "连接超时", "Timed out disconnecting": "断开连接超时",
   "Timed out forgetting": "忽略网络超时", "Failed": "失败",
   "Bending light": "正在传输信号", "Counting collisions": "正在检查网络",
@@ -131,6 +138,7 @@ const zh = {
   "Pending Omarchy Updates": "有可用的 Omarchy 更新", "System tray": "系统托盘",
   "Tray icons": "托盘图标", "Pinned icons stay visible. Hidden icons never show.": "固定的图标始终显示；隐藏的图标不会显示。",
   "No tray items reporting.": "当前没有托盘项目。", "Omarchy update": "Omarchy 更新",
+  "Pin": "固定", "Unpin": "取消固定", "Show": "显示", "Hide": "隐藏",
 
   "Indicators": "状态指示器", "Manual state indicators": "手动状态指示器",
   "Choose which indicators this widget instance should show. Leave empty to show all indicators.": "选择此组件要显示的状态指示器；留空则显示全部。",
@@ -156,19 +164,20 @@ const zh = {
 
   "Enter Password": "请输入密码", "Authentication failed (": "认证失败（",
   "Lock Screen": "锁屏", "Authentication is needed...": "需要进行身份认证…",
-  "Checking...": "正在验证…", "Enter password": "请输入密码", "Wrong": "密码错误",
+  "Checking...": "正在验证…", "Checking…": "正在验证…", "Enter password": "请输入密码", "Wrong": "密码错误",
   "Authorize running '": "授权运行“", "Polkit Agent": "权限认证",
 
   "Clipboard": "剪贴板", "Clipboard is empty": "剪贴板为空",
   "Delete entire clipboard history?": "确定清空全部剪贴板记录吗？", "Delete": "删除",
-  "Image": "图片", "Screenshot": "截图", "Emojis": "表情符号",
+  "Search clipboard…": "搜索剪贴板…", " files": " 个文件", " from ": "，时间：",
+  "Image": "图片", "Screenshot": "截图", "Emojis": "表情符号", "Search emojis…": "搜索表情…",
   "No matches for “": "没有匹配“", "Image picker": "图片选择器", "No matches": "没有匹配项",
   "Reminders": "提醒", "Enter the number of minutes": "请输入分钟数",
   "Invalid reminder": "提醒时间无效", "Remind in minutes": "多少分钟后提醒",
   "Reminder message": "提醒内容",
 
   "Speed Test": "网络测速", "DOWNLOAD": "下载", "UPLOAD": "上传",
-  "Measure again via fast.com": "通过 fast.com 重新测速", "Speed test failed": "网络测速失败",
+  "Run Again": "再次测试", "Measure again via fast.com": "通过 fast.com 重新测速", "Speed test failed": "网络测速失败",
   "Disk speed test": "磁盘测速", "READ": "读取", "WRITE": "写入",
   "Measure again": "重新测试", "Disk speed test failed": "磁盘测速失败",
   "Wi-Fi QR": "无线网络二维码", "Generating QR code…": "正在生成二维码…",
@@ -202,6 +211,139 @@ const zh = {
   "Optional. Defaults to <hostname>.json. Use a different file name on each machine, such as laptop.json or desktop.json.": "可选。默认为 <hostname>.json；每台设备应使用不同文件名。",
   "Optional stable device name used inside synced aggregate snapshots.": "可选。用于汇总快照的固定设备名称。"
 };
+
+const updateScriptReplacements = {
+  "omarchy-update": [
+    ["Something went wrong during the update!", "更新过程中出现错误！", "错误标题"],
+    ["Please review the output above carefully, correct the error, and retry the update.", "请仔细检查上方输出，修正错误后重新更新。", "错误说明"],
+    ["If you need assistance, get help from the community at https://omarchy.org/discord", "如需帮助，请前往社区：https://omarchy.org/discord", "求助说明"],
+    ["Continuing the update without a snapshot.", "未创建快照，将继续更新。", "无快照提示"]
+  ],
+  "omarchy-update-pkg-prune": [
+    ["Prune package cache", "清理软件包缓存", "标题"],
+    ["Could not prune the package cache.", "无法清理软件包缓存。", "失败提示"]
+  ],
+  "omarchy-update-lock": [
+    ["Usage: omarchy-update-lock run <command> [args...]", "用法：omarchy-update-lock run <命令> [参数...]", "运行用法"],
+    ["An Omarchy update is already running.", "已有一个 Omarchy 更新正在运行。", "重复更新"],
+    ["Usage: omarchy-update-lock <held|run> [command] [args...]", "用法：omarchy-update-lock <held|run> [命令] [参数...]", "通用用法"]
+  ],
+  "omarchy-update-requires-free-space": [
+    ["You need at least 10 GiB free to safely update Omarchy.", "安全更新 Omarchy 至少需要 10 GiB 可用空间。", "空间不足"]
+  ],
+  "omarchy-snapshot": [
+    ["Usage: omarchy-snapshot <create|restore>", "用法：omarchy-snapshot <create|restore>", "用法"],
+    ["No Snapper configs found, so no snapshot was created.", "未找到 Snapper 配置，因此没有创建快照。", "无配置"],
+    ["Configure Snapper with:", "可使用以下命令配置 Snapper：", "配置说明"],
+    ["Create system snapshot", "创建系统快照", "创建标题"],
+    ["Snapshots can be selected during boot.", "可在启动系统时选择快照。", "完成说明"],
+    ["echo unknown", "echo 未知版本", "未知版本"]
+  ],
+  "omarchy-update-keyring": [
+    ["Update Arch signing keys", "更新 Arch 签名密钥", "标题"],
+    ["Keys are correct", "密钥状态正常", "完成提示"]
+  ],
+  "omarchy-pkg-add": [
+    ["Error: Package '", "错误：软件包“", "软件包错误前缀"],
+    ["' did not install", "”安装失败", "软件包错误后缀"]
+  ],
+  "omarchy-update-system-pkgs": [
+    ["Update system packages", "更新系统软件包", "标题"]
+  ],
+  "omarchy-update-system-pkgs-when-conflicted": [
+    ["omarchy-update-system-pkgs-when-conflicted runs as part of omarchy update", "omarchy-update-system-pkgs-when-conflicted 只能由 Omarchy 更新流程运行", "直接运行错误"],
+    ["Putting back what the upgrade didn't take:", "正在恢复本次升级未接管的文件：", "恢复文件"],
+    ["This upgrade needs an answer. Run omarchy update interactively to give it.", "本次升级需要人工确认。请在终端中运行 omarchy update 并作出选择。", "需要交互"],
+    ["A package conflict stopped this upgrade. Running it again so you can answer:", "软件包冲突中止了升级。现在重新运行，以便你作出选择：", "软件包冲突"],
+    ["Taking over files pacman doesn't own yet:", "正在接管尚未由 pacman 管理的文件：", "接管文件"]
+  ],
+  "omarchy-migrate": [
+    ["Usage: omarchy-migrate [--pending]", "用法：omarchy-migrate [--pending]", "用法"],
+    ["Unknown option: $1", "未知选项：$1", "未知选项"],
+    ["Waiting for pacman transaction to finish before running Omarchy migrations...", "正在等待 pacman 事务完成，然后运行 Omarchy 迁移…", "等待 pacman"],
+    ["Pacman transaction is still running; Omarchy migrations will retry on next login.", "pacman 事务仍在运行；Omarchy 迁移将在下次登录时重试。", "迁移延后"],
+    ["Running migration (${name%.sh})", "正在运行迁移（${name%.sh}）", "迁移标题"]
+  ],
+  "omarchy-update-aur-pkgs": [
+    ["Update AUR packages", "更新 AUR 软件包", "标题"],
+    ["AUR is unavailable (so skipping updates)", "AUR 当前不可用（已跳过更新）", "不可用提示"]
+  ],
+  "omarchy-update-mise": [
+    ["Update mise tools", "更新 mise 管理的工具", "标题"]
+  ],
+  "omarchy-update-orphan-pkgs": [
+    ["Orphan system packages", "孤立的系统软件包", "标题"],
+    ["${#orphans[@]} orphaned package(s) found. Re-run omarchy-update-orphan-pkgs in a terminal to review/remove them.", "发现 ${#orphans[@]} 个孤立软件包。请在终端中重新运行 omarchy-update-orphan-pkgs 以检查或删除。", "非交互提示"],
+    ["gum confirm --default=false \"Remove ${#orphans[@]} orphaned package(s)?\"", "gum confirm --default=false --affirmative \"是\" --negative \"否\" --no-show-help \"删除 ${#orphans[@]} 个孤立软件包吗？\"", "删除确认"],
+    ["Keeping orphaned packages.", "保留孤立软件包。", "保留提示"],
+    ["Removing orphan system packages", "正在删除孤立的系统软件包", "删除标题"]
+  ],
+  "omarchy-update-restart": [
+    ["gum confirm \"$1\"", "gum confirm --affirmative \"是\" --negative \"否\" --no-show-help \"$1\"", "重启确认按钮"],
+    ["Linux kernel has been updated. Reboot?", "Linux 内核已更新，是否重启？", "内核重启"],
+    ["Updates require reboot. Ready?", "更新需要重启，是否现在重启？", "更新重启"],
+    ["Hyprland has been updated. Reboot?", "Hyprland 已更新，是否重启？", "Hyprland 重启"],
+    ["Restarting $service", "正在重启 $service", "服务重启"],
+    ["Restarting shell", "正在重启桌面外壳", "外壳重启"],
+    ["All plugins have been reloaded", "所有插件已重新加载", "插件重载"]
+  ],
+  "omarchy-system-reboot": [
+    ["Rebooting", "正在重启", "重启提示"]
+  ],
+  "omarchy-restart-shell": [
+    ["Omarchy shell config not found:", "未找到 Omarchy Shell 配置：", "配置缺失"],
+    ["Refusing to restart Omarchy shell while the session is locked.", "会话锁定时不能重启 Omarchy Shell。", "锁定状态"],
+    ["Omarchy shell restarted, but the session lock was not re-secured.", "Omarchy Shell 已重启，但未能重新启用会话锁定。", "重新锁定失败"],
+    ["Omarchy shell did not become ready after restart.", "Omarchy Shell 重启后未能就绪。", "重启失败"]
+  ],
+  "omarchy-update-dev": [
+    ["Error: OMARCHY_PATH is not a git checkout: $OMARCHY_PATH", "错误：OMARCHY_PATH 不是 Git 工作区：$OMARCHY_PATH", "工作区错误"],
+    ["Skip Omarchy dev checkout update (current branch has no upstream)", "跳过 Omarchy 开发工作区更新（当前分支没有上游分支）", "无上游"],
+    ["Update Omarchy dev checkout", "更新 Omarchy 开发工作区", "标题"]
+  ],
+  "omarchy-update-stay-awake": [
+    ["Failed to stop the Omarchy update sleep inhibitor.", "无法停止 Omarchy 更新的睡眠抑制进程。", "停止失败"],
+    ["Omarchy update in progress", "Omarchy 正在更新", "抑制原因"],
+    ["Usage: omarchy-update-stay-awake <start|stop>", "用法：omarchy-update-stay-awake <start|stop>", "用法"]
+  ],
+  "omarchy-update-analyze-logs": [
+    ["Error: Initramfs generation may have failed. Review logs before restart.", "错误：Initramfs 生成可能失败。重启前请检查日志。", "Initramfs 错误"]
+  ],
+  "omarchy-hook": [
+    ["Usage: omarchy-hook [name] [args...]", "用法：omarchy-hook [名称] [参数...]", "用法"],
+    ["Hook failed:", "钩子执行失败：", "失败提示"]
+  ]
+};
+
+const emojiKeywordFallbacks = [
+  [["smiling", "smile", "pleased"], "微笑 笑脸"],
+  [["frowning", "frown"], "皱眉 不开心"],
+  [["person", "adult"], "人物 成人"],
+  [["man"], "男人 男性"], [["woman"], "女人 女性"],
+  [["boy"], "男孩"], [["girl"], "女孩"],
+  [["older"], "老人 年长者"], [["beard"], "胡须"],
+  [["student"], "学生"], [["teacher"], "老师 教师"], [["judge"], "法官"],
+  [["farmer"], "农民"], [["cook"], "厨师"], [["mechanic"], "机械师 维修工"],
+  [["factory worker"], "工人 工厂"], [["office worker"], "上班族 办公室"],
+  [["scientist"], "科学家"], [["technologist"], "程序员 技术人员"],
+  [["singer"], "歌手"], [["artist"], "艺术家"], [["pilot"], "飞行员"],
+  [["astronaut"], "宇航员"], [["firefighter"], "消防员"],
+  [["health worker"], "医务人员"], [["mx claus"], "圣诞老人"],
+  [["police", "cop"], "警察"], [["detective", "sleuth"], "侦探"],
+  [["guard"], "卫兵"], [["construction worker"], "建筑工人"],
+  [["superhero"], "超级英雄"], [["supervillain"], "超级反派"],
+  [["mage", "wizard"], "法师 巫师"], [["fairy"], "仙子"],
+  [["vampire"], "吸血鬼"], [["merperson"], "人鱼"], [["elf"], "精灵"],
+  [["genie"], "灯神"], [["zombie"], "僵尸"],
+  [["kiss"], "亲吻 接吻"], [["couple"], "情侣 伴侣"],
+  [["bunny"], "兔耳朵 舞者"], [["wrestling"], "摔跤"],
+  [["family", "parents", "home"], "家庭 家人"],
+  [["tram"], "有轨电车"], [["sun"], "太阳"], [["snowman"], "雪人"],
+  [["optical disk", "dvd"], "光盘"], [["chart"], "图表"],
+  [["envelope"], "信封"], [["mailbox"], "邮箱"], [["arrow"], "箭头"],
+  [["infinity"], "无限"], [["sparkle"], "闪光"], [["alphabet"], "字母"],
+  [["ok button"], "确定 好"], [["diamond"], "菱形 钻石"], [["taiwan"], "台湾"]
+];
 
 // These labels are also used as internal indicator IDs. Translate them only in
 // manifest display fields, never with the global source-code replacement pass.
@@ -886,7 +1028,10 @@ const notificationLocalizationSource = String.raw`function translate(value, appN
     "Saved and copied to clipboard.": "已保存并复制到剪贴板。",
     "Weather unavailable": "天气信息不可用",
     "Click to diagnose with AI": "点击使用 AI 诊断",
-    "Screen did not lock before suspend": "睡眠前屏幕未能锁定"
+    "Screen did not lock before suspend": "睡眠前屏幕未能锁定",
+    "Refusing unsafe monitor name": "拒绝使用不安全的显示器名称",
+    "Use Super + Alt + Home to save one for this workspace.": "按 Super + Alt + Home 为此工作区保存窗口宽度。",
+    "Restore using Super + Home on this workspace.": "在此工作区按 Super + Home 恢复窗口宽度。"
   }
   if (Object.prototype.hasOwnProperty.call(exact, original)) return exact[original]
 
@@ -919,6 +1064,8 @@ const notificationLocalizationSource = String.raw`function translate(value, appN
   if ((match = original.match(/^Could not send to (.+)$/))) return "无法发送到 " + match[1]
   if ((match = original.match(/^Transcoding video…$/))) return "正在转码视频…"
   if ((match = original.match(/^Transcoded to (.+)$/))) return "已转码为 " + match[1]
+  if ((match = original.match(/^No saved width found for (.+) on workspace (.+)$/))) return "未找到 " + match[1] + " 在工作区 " + match[2] + " 保存的窗口宽度"
+  if ((match = original.match(/^Saved width for (.+) on workspace (.+)$/))) return "已保存 " + match[1] + " 在工作区 " + match[2] + " 的窗口宽度"
 
   var localized = original
     .replace(/\s*·\s*Temp\s+/g, "  ·  温度 ")
@@ -1046,6 +1193,75 @@ function translateText(content) {
   return result;
 }
 
+function syncUpdateScripts() {
+  fs.mkdirSync(updateLocalizerDir, { recursive: true });
+  for (const [scriptName, replacements] of Object.entries(updateScriptReplacements)) {
+    const source = path.join(updateSourceDir, scriptName);
+    if (!fs.existsSync(source)) throw new Error(`找不到 Omarchy 更新脚本：${source}`);
+
+    let content = fs.readFileSync(source, "utf8");
+    for (const [from, to, label] of replacements) {
+      if (!content.includes(from)) throw new Error(`更新脚本结构已变化：${scriptName} / ${label}`);
+      content = content.split(from).join(to);
+    }
+
+    const target = path.join(updateLocalizerDir, scriptName);
+    const temporary = `${target}.new-${process.pid}`;
+    fs.writeFileSync(temporary, content, { mode: 0o755 });
+    fs.chmodSync(temporary, 0o755);
+    fs.renameSync(temporary, target);
+  }
+}
+
+function normalizedEmoji(value) {
+  return String(value || "").replace(/\uFE0F/g, "");
+}
+
+function fallbackEmojiKeywords(value) {
+  const words = ` ${String(value || "").toLowerCase().replace(/[^a-z0-9]+/g, " ").trim()} `;
+  const matches = [];
+  for (const [terms, translation] of emojiKeywordFallbacks) {
+    if (terms.some(term => words.includes(` ${term} `))) matches.push(translation);
+  }
+  return matches;
+}
+
+function localizeEmojiKeywords(stage) {
+  const emojiFile = path.join(stage, "emojis.json");
+  if (!fs.existsSync(emojiFile)) throw new Error("表情插件缺少 emojis.json");
+
+  const annotationCandidates = [
+    path.join(home, ".local/share/fcitx5/rime/opencc/emoji.txt"),
+    path.join(home, ".config/fcitx5/rime/opencc/emoji.txt"),
+    "/usr/share/opencc/emoji.txt",
+    "/usr/share/fcitx5/rime-data/opencc/emoji.txt"
+  ];
+  const annotationFile = annotationCandidates.find(candidate => fs.existsSync(candidate));
+  if (!annotationFile) return;
+
+  const items = JSON.parse(fs.readFileSync(emojiFile, "utf8"));
+  const keywordsByEmoji = new Map(items.map(item => [normalizedEmoji(item.e), new Set()]));
+  for (const line of fs.readFileSync(annotationFile, "utf8").split(/\r?\n/)) {
+    const tab = line.indexOf("\t");
+    if (tab < 1) continue;
+    const keyword = line.slice(0, tab).trim();
+    if (!/[\u3400-\u9fff]/.test(keyword)) continue;
+    for (const token of line.slice(tab + 1).trim().split(/\s+/)) {
+      const matches = keywordsByEmoji.get(normalizedEmoji(token));
+      if (matches) matches.add(keyword);
+    }
+  }
+
+  for (const item of items) {
+    const additions = [...(keywordsByEmoji.get(normalizedEmoji(item.e)) || [])];
+    if (additions.length === 0 && !/[\u3400-\u9fff]/.test(item.k)) {
+      additions.push(...fallbackEmojiKeywords(item.k));
+    }
+    if (additions.length > 0) item.k = `${item.k} ${additions.join(" ")}`;
+  }
+  fs.writeFileSync(emojiFile, JSON.stringify(items) + "\n");
+}
+
 function walkFiles(dir, callback) {
   for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
     const full = path.join(dir, entry.name);
@@ -1108,6 +1324,11 @@ function rebuildPlugin(catalogEntry) {
           if (after !== before) fs.writeFileSync(file, after);
         });
       }
+    }
+
+    if (sourceId === "omarchy.speedtest" || sourceId === "omarchy.disk-speedtest") {
+      if (!fs.existsSync(speedTestOverlaySource)) throw new Error("找不到测速公共界面组件");
+      fs.copyFileSync(speedTestOverlaySource, path.join(stage, "SpeedTestOverlay.qml"));
     }
 
     const manifestFile = path.join(stage, "manifest.json");
@@ -1196,6 +1417,75 @@ function rebuildPlugin(catalogEntry) {
             'confirmText: "卸载"\n          cancelText: "取消"'
           );
       }
+      if (sourceId === "omarchy.clipboard" && path.basename(file) === "Clipboard.qml") {
+        const confirmSource = 'confirmText: "删除"';
+        if (!after.includes(confirmSource)) throw new Error("剪贴板插件结构已变化：清空确认按钮");
+        after = after.replace(confirmSource, 'confirmText: "删除"\n          cancelText: "取消"');
+      }
+      if (sourceId === "omarchy.wifiqr" && path.basename(file) === "Panel.qml") {
+        const propertySource = 'readonly property bool showingQr: qrSize > 0 && !loading && error === ""';
+        const errorSource = 'onStreamFinished: if (!root.expectedStop) root.error = String(text || "").trim()';
+        if (!after.includes(propertySource) || !after.includes(errorSource)) {
+          throw new Error("无线网络二维码插件结构已变化：错误提示");
+        }
+        after = after
+          .replace(propertySource, propertySource + `
+
+  function localizedCommandError(value) {
+    var messages = {
+      "No active Wi-Fi connection": "没有正在使用的无线网络连接",
+      "Could not read the Wi-Fi name": "无法读取无线网络名称",
+      "Enterprise Wi-Fi cannot be shared with a password QR code": "企业无线网络无法通过密码二维码分享",
+      "Could not read the Wi-Fi password": "无法读取无线网络密码",
+      "Enterprise Wi-Fi has no shareable password": "企业无线网络没有可分享的密码",
+      "This network has no password": "此无线网络没有密码"
+    }
+    var message = String(value || "").trim()
+    return messages[message] || message
+  }`)
+          .replace(errorSource, 'onStreamFinished: if (!root.expectedStop) root.error = root.localizedCommandError(text)');
+      }
+      if (sourceId === "omarchy.speedtest" && path.basename(file) === "Panel.qml") {
+        const functionSource = '  function open(payloadJson) {';
+        const errorSource = 'root.stderrText = String(text || "").trim()';
+        if (!after.includes(functionSource) || !after.includes(errorSource)) {
+          throw new Error("网络测速插件结构已变化：错误提示");
+        }
+        after = after
+          .replace(functionSource, `  function localizedCommandError(value) {
+    var messages = {
+      "No active network interface": "没有可用的网络接口",
+      "curl is required": "网络测速需要 curl",
+      "Failed to fetch speed test endpoints": "无法获取测速节点"
+    }
+    var message = String(value || "").trim()
+    return messages[message] || message
+  }
+
+${functionSource}`)
+          .replace(errorSource, "root.stderrText = root.localizedCommandError(text)");
+      }
+      if (sourceId === "omarchy.disk-speedtest" && path.basename(file) === "Panel.qml") {
+        const functionSource = '  function open(payloadJson) {';
+        const errorSource = 'root.stderrText = String(text || "").trim()';
+        if (!after.includes(functionSource) || !after.includes(errorSource)) {
+          throw new Error("磁盘测速插件结构已变化：错误提示");
+        }
+        after = after
+          .replace(functionSource, `  function localizedCommandError(value) {
+    var message = String(value || "").trim()
+    var match
+    if ((match = message.match(/^Cannot find a disk behind (.+)$/))) return "无法找到 " + match[1] + " 所在的磁盘"
+    if ((match = message.match(/^No I\\/O statistics for (.+)$/))) return "无法读取 " + match[1] + " 的磁盘 I/O 统计信息"
+    if ((match = message.match(/^Need at least (.+) free on (.+)$/))) return match[2] + " 至少需要 " + match[1] + " 可用空间"
+    if ((match = message.match(/^Disk (read|write) test failed before finishing$/))) return "磁盘" + (match[1] === "read" ? "读取" : "写入") + "测速未完成"
+    if ((match = message.match(/^Direct disk I\\/O is not available on (.+)$/))) return match[1] + " 不支持直接磁盘 I/O"
+    return message
+  }
+
+${functionSource}`)
+          .replace(errorSource, "root.stderrText = root.localizedCommandError(text)");
+      }
       if (sourceId === "omarchy.notifications" && path.basename(file) === "NotificationCard.qml") {
         after = after
           .replace(
@@ -1226,6 +1516,7 @@ function rebuildPlugin(catalogEntry) {
         notificationLocalizationSource
       );
     }
+    if (sourceId === "omarchy.emojis") localizeEmojiKeywords(stage);
 
     const backup = `${targetDir}.zh-old-${process.pid}`;
     if (fs.existsSync(backup)) fs.rmSync(backup, { recursive: true, force: true });
@@ -1289,6 +1580,7 @@ function syncShellSettings() {
 
 fs.mkdirSync(pluginRoot, { recursive: true });
 fs.mkdirSync(stateDir, { recursive: true });
+syncUpdateScripts();
 const catalog = JSON.parse(execFileSync("omarchy-plugin-catalog", { encoding: "utf8" }));
 const byId = new Map(catalog.filter(item => item.firstParty).map(item => [item.id, item]));
 for (const id of pluginIds) {
@@ -1308,4 +1600,4 @@ if (!noRestart) {
     try { execFileSync("omarchy-shell", ["shell", "rescanPlugins"], { stdio: quiet ? "ignore" : "inherit" }); } catch (_) {}
   }
 }
-if (!quiet) console.log(`已同步 ${pluginIds.length} 个中文插件、Omarchy 菜单、快捷键面板和更新入口。`);
+if (!quiet) console.log(`已同步 ${pluginIds.length} 个中文插件、Omarchy 菜单、快捷键面板和更新流程。`);

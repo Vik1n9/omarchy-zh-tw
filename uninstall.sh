@@ -13,6 +13,17 @@ KEYBINDINGS_TARGET="$HOME/.local/bin/omarchy-menu-keybindings-zh"
 UPDATE_TARGET="$HOME/.local/bin/omarchy-update-zh"
 UPDATE_CONFIRM_DIR="$HOME/.local/share/omarchy-zh-cn/bin"
 UPDATE_CONFIRM_TARGET="$UPDATE_CONFIRM_DIR/omarchy-update-confirm"
+UPDATE_HELPERS=(
+  omarchy-update omarchy-update-pkg-prune omarchy-update-lock
+  omarchy-update-requires-free-space omarchy-snapshot omarchy-update-keyring
+  omarchy-pkg-add
+  omarchy-update-system-pkgs
+  omarchy-update-system-pkgs-when-conflicted omarchy-migrate
+  omarchy-update-aur-pkgs omarchy-update-mise omarchy-update-orphan-pkgs
+  omarchy-update-restart omarchy-update-dev omarchy-update-stay-awake
+  omarchy-update-analyze-logs omarchy-hook omarchy-system-reboot
+  omarchy-restart-shell
+)
 ASSUME_YES=0
 
 while (($# > 0)); do
@@ -112,13 +123,16 @@ if [[ -f $STATE_DIR/original/omarchy-update-zh ]]; then
 else
   rm -f "$UPDATE_TARGET"
 fi
+for helper in "${UPDATE_HELPERS[@]}"; do
+  rm -f "$UPDATE_CONFIRM_DIR/$helper"
+done
 if [[ -f $STATE_DIR/original/omarchy-update-confirm ]]; then
   mkdir -p "$UPDATE_CONFIRM_DIR"
   cp -a "$STATE_DIR/original/omarchy-update-confirm" "$UPDATE_CONFIRM_TARGET"
 else
   rm -f "$UPDATE_CONFIRM_TARGET"
-  rmdir "$UPDATE_CONFIRM_DIR" "$HOME/.local/share/omarchy-zh-cn" 2>/dev/null || true
 fi
+rmdir "$UPDATE_CONFIRM_DIR" "$HOME/.local/share/omarchy-zh-cn" 2>/dev/null || true
 
 if command -v hyprctl >/dev/null; then hyprctl reload >/dev/null || true; fi
 omarchy restart shell >/dev/null || true

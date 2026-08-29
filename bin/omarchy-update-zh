@@ -2,14 +2,15 @@
 
 set -euo pipefail
 
-OFFICIAL_UPDATE="/usr/share/omarchy/bin/omarchy-update"
 LOCALIZER_BIN="$HOME/.local/share/omarchy-zh-cn/bin"
+LOCALIZED_UPDATE="$LOCALIZER_BIN/omarchy-update"
 
-[[ -x $OFFICIAL_UPDATE ]] || {
-  echo "找不到 Omarchy 官方更新命令：$OFFICIAL_UPDATE" >&2
+[[ -x $LOCALIZED_UPDATE ]] || {
+  echo "找不到已生成的 Omarchy 中文更新命令：$LOCALIZED_UPDATE" >&2
+  echo "请先运行 omarchy-zh-sync，然后重试。" >&2
   exit 1
 }
 
-# Keep the official updater intact. Only prefer our localized confirmation
-# helper while this update process and its child process are running.
-exec env PATH="$LOCALIZER_BIN:$PATH" "$OFFICIAL_UPDATE" "$@"
+# The localized updater is regenerated from the currently installed Omarchy
+# scripts. Its child helpers are resolved from the same private directory.
+exec env PATH="$LOCALIZER_BIN:$PATH" "$LOCALIZED_UPDATE" "$@"

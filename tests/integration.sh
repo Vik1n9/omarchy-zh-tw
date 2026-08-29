@@ -15,6 +15,10 @@ cleanup() {
 }
 trap cleanup EXIT
 
+mkdir -p "$sandbox_home/.local/share/fcitx5/rime/opencc"
+printf '笑脸\t笑脸 😀\n汽车\t汽车 🚗\n' \
+  >"$sandbox_home/.local/share/fcitx5/rime/opencc/emoji.txt"
+
 HOME="$sandbox_home" USER=testuser \
   "$ROOT_DIR/bin/omarchy-zh-sync" --quiet --no-restart
 
@@ -62,10 +66,79 @@ rg -Fq '"scrolling": "滚动布局"' \
 rg -Fq 'Qt.locale("zh_CN")' "$plugin_root/testuser.weather/Panel.qml"
 rg -Fq '"power-saver": "节能", "balanced": "平衡", "performance": "性能"' \
   "$plugin_root/testuser.power/Panel.qml"
+rg -Fq 'text: rowRoot.isPinned ? "取消固定" : "固定"' "$plugin_root/testuser.tray/Tray.qml"
+rg -Fq 'text: rowRoot.isHidden ? "显示" : "隐藏"' "$plugin_root/testuser.tray/Tray.qml"
+rg -Fq '搜索剪贴板…' "$plugin_root/testuser.clipboard/Clipboard.qml"
+rg -Fq 'cancelText: "取消"' "$plugin_root/testuser.clipboard/Clipboard.qml"
+rg -Fq ' 个文件' "$plugin_root/testuser.clipboard/ClipboardHistory.js"
+rg -Fq '，时间：' "$plugin_root/testuser.clipboard/ClipboardHistory.js"
+rg -Fq '搜索表情…' "$plugin_root/testuser.emojis/Emojis.qml"
+node - "$plugin_root/testuser.emojis/emojis.json" <<'NODE'
+const items = require(process.argv[2])
+const byEmoji = new Map(items.map(item => [item.e, item.k]))
+if (!byEmoji.get("😀")?.includes("笑脸")) throw new Error("笑脸中文关键词缺失")
+if (!byEmoji.get("🚗")?.includes("汽车")) throw new Error("汽车中文关键词缺失")
+if (!byEmoji.get("🧑")?.includes("人物")) throw new Error("人物兜底关键词缺失")
+if (!byEmoji.get("🚊")?.includes("有轨电车")) throw new Error("交通工具兜底关键词缺失")
+NODE
+rg -Fq '关闭无线网络' "$plugin_root/testuser.network/Panel.qml"
+rg -Fq '隐藏网络' "$plugin_root/testuser.network/Panel.qml"
+rg -Fq 'return "自动"' "$plugin_root/testuser.network/Model.js"
+rg -Fq '正在连接…' "$plugin_root/testuser.network/Panel.qml"
+rg -Fq '正在扫描设备…' "$plugin_root/testuser.bluetooth/Panel.qml"
+rg -Fq '|| "设备"' "$plugin_root/testuser.bluetooth/Panel.qml"
+rg -Fq '正在验证…' "$plugin_root/testuser.lock/LockView.qml"
+rg -Fq ' · 当前' "$plugin_root/testuser.monitor/Panel.qml"
+for speed_plugin in speedtest disk-speedtest; do
+  rg -Fq 'text: "再次测试"' "$plugin_root/testuser.$speed_plugin/SpeedTestOverlay.qml"
+done
+rg -Fq '无法获取测速节点' "$plugin_root/testuser.speedtest/Panel.qml"
+rg -Fq '测速未完成' "$plugin_root/testuser.disk-speedtest/Panel.qml"
+rg -Fq 'function localizedCommandError' "$plugin_root/testuser.wifiqr/Panel.qml"
+rg -Fq '没有正在使用的无线网络连接' "$plugin_root/testuser.wifiqr/Panel.qml"
+rg -Fq '拒绝使用不安全的显示器名称' \
+  "$plugin_root/testuser.notifications/components/NotificationLocalization.js"
+rg -Fq '未找到 " + match[1] + " 在工作区 "' \
+  "$plugin_root/testuser.notifications/components/NotificationLocalization.js"
 rg -Fq "$sandbox_home/.local/bin/omarchy-update-zh" \
   "$plugin_root/testuser.system-update/SystemUpdate.qml"
 test -x "$sandbox_home/.local/bin/omarchy-menu-keybindings-zh"
 bash -n "$sandbox_home/.local/bin/omarchy-menu-keybindings-zh"
+
+update_helpers=(
+  omarchy-update omarchy-update-pkg-prune omarchy-update-lock
+  omarchy-update-requires-free-space omarchy-snapshot omarchy-update-keyring
+  omarchy-pkg-add
+  omarchy-update-system-pkgs
+  omarchy-update-system-pkgs-when-conflicted omarchy-migrate
+  omarchy-update-aur-pkgs omarchy-update-mise omarchy-update-orphan-pkgs
+  omarchy-update-restart omarchy-update-dev omarchy-update-stay-awake
+  omarchy-update-analyze-logs omarchy-hook omarchy-system-reboot
+  omarchy-restart-shell
+)
+for helper in "${update_helpers[@]}"; do
+  test -x "$sandbox_home/.local/share/omarchy-zh-cn/bin/$helper"
+  bash -n "$sandbox_home/.local/share/omarchy-zh-cn/bin/$helper"
+done
+rg -Fq '更新过程中出现错误！' "$sandbox_home/.local/share/omarchy-zh-cn/bin/omarchy-update"
+rg -Fq '创建系统快照' "$sandbox_home/.local/share/omarchy-zh-cn/bin/omarchy-snapshot"
+rg -Fq '清理软件包缓存' "$sandbox_home/.local/share/omarchy-zh-cn/bin/omarchy-update-pkg-prune"
+rg -Fq '更新 Arch 签名密钥' "$sandbox_home/.local/share/omarchy-zh-cn/bin/omarchy-update-keyring"
+rg -Fq '错误：软件包“' "$sandbox_home/.local/share/omarchy-zh-cn/bin/omarchy-pkg-add"
+rg -Fq 'echo -e "\e[32m\n更新系统软件包\e[0m"' \
+  "$sandbox_home/.local/share/omarchy-zh-cn/bin/omarchy-update-system-pkgs"
+rg -Fq 'echo -e "\e[32m\n更新 AUR 软件包\e[0m"' \
+  "$sandbox_home/.local/share/omarchy-zh-cn/bin/omarchy-update-aur-pkgs"
+rg -Fq '正在运行迁移' "$sandbox_home/.local/share/omarchy-zh-cn/bin/omarchy-migrate"
+rg -Fq '更新 mise 管理的工具' "$sandbox_home/.local/share/omarchy-zh-cn/bin/omarchy-update-mise"
+rg -Fq '重启前请检查日志' "$sandbox_home/.local/share/omarchy-zh-cn/bin/omarchy-update-analyze-logs"
+rg -Fq '钩子执行失败：' "$sandbox_home/.local/share/omarchy-zh-cn/bin/omarchy-hook"
+rg -Fq '正在重启' "$sandbox_home/.local/share/omarchy-zh-cn/bin/omarchy-system-reboot"
+rg -Fq 'Omarchy Shell 重启后未能就绪' "$sandbox_home/.local/share/omarchy-zh-cn/bin/omarchy-restart-shell"
+rg -Fq -- '--affirmative "是" --negative "否" --no-show-help' \
+  "$sandbox_home/.local/share/omarchy-zh-cn/bin/omarchy-update-restart"
+! rg -Fq 'Omarchy update in progress' \
+  "$sandbox_home/.local/share/omarchy-zh-cn/bin/omarchy-update-stay-awake"
 
 if rg -n '/home/[[:alnum:]_.-]+|/Users/[[:alnum:]_.-]+' "$sandbox_home"; then
   echo "生成结果包含开发机器信息。" >&2

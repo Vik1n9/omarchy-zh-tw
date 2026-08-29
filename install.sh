@@ -88,7 +88,7 @@ if ((DRY_RUN)); then
     fi
   done
   echo "将安装：$SYNC_TARGET"
-  echo "将安装：$UPDATE_TARGET（中文更新确认界面）"
+  echo "将安装：$UPDATE_TARGET（中文更新流程）"
   echo "将安装 post-update 自动同步钩子，并把 Super+K 指向中文快捷键面板。"
   exit 0
 fi
@@ -197,4 +197,4 @@ if command -v hyprctl >/dev/null; then
 fi
 
 printf '%s\n' "${PLUGIN_IDS[@]}" >"$STATE_DIR/plugin-sources"
-echo "安装完成。按 Super+K 可打开中文快捷键面板；系统更新确认界面也已汉化。"
+echo "安装完成。按 Super+K 可打开中文快捷键面板；系统更新流程也已汉化。"
