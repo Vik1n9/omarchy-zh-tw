@@ -23,6 +23,11 @@ const updateZh = path.join(home, ".local/bin/omarchy-update-zh");
 const updateSourceDir = "/usr/share/omarchy/bin";
 const updateLocalizerDir = path.join(home, ".local/share/omarchy-zh-cn/bin");
 const speedTestOverlaySource = "/usr/share/omarchy/shell/Ui/SpeedTestOverlay.qml";
+const agentsOverlayCandidates = [
+  path.join(home, ".local/share/omarchy-zh-cn/agents"),
+  path.resolve(__dirname, "../agents-overlay")
+];
+const agentsOverlayDir = agentsOverlayCandidates.find(candidate => fs.existsSync(candidate));
 
 const pluginIds = [
   "omarchy.audio", "omarchy.bluetooth", "omarchy.clock", "omarchy.monitor",
@@ -1277,6 +1282,32 @@ function copyEntry(sourceDir, source, stage, target = source) {
   fs.cpSync(src, dst, { recursive: true, dereference: true });
 }
 
+function applyAgentsOverlay(stage, targetDir) {
+  if (!agentsOverlayDir) throw new Error("找不到 Agents 用量扩展文件，请重新运行安装器");
+
+  for (const directory of ["bin", "assets"]) {
+    const source = path.join(agentsOverlayDir, directory);
+    if (!fs.existsSync(source)) throw new Error(`Agents 用量扩展不完整：${source}`);
+    fs.cpSync(source, path.join(stage, directory), { recursive: true, dereference: true });
+  }
+  for (const script of ["codex", "codex-collector", "grok-collector", "kimi-collector", "usage-update"]) {
+    fs.chmodSync(path.join(stage, "bin", script), 0o755);
+  }
+
+  const mainFile = path.join(stage, "Main.qml");
+  const commandSource = '    var command = ["omarchy-agent-usage-update"]';
+  let main = fs.readFileSync(mainFile, "utf8");
+  if (!main.includes(commandSource)) throw new Error("Agents 插件结构已变化：用量更新入口");
+  main = main.replace(
+    commandSource,
+    `    var command = [${JSON.stringify(path.join(targetDir, "bin", "usage-update"))}]`
+  );
+  fs.writeFileSync(mainFile, main);
+
+  const extraReadme = path.join(agentsOverlayDir, "README.md");
+  if (fs.existsSync(extraReadme)) fs.copyFileSync(extraReadme, path.join(stage, "README.omarchy-zh-cn.md"));
+}
+
 function rebuildPlugin(catalogEntry) {
   const sourceId = catalogEntry.id;
   const suffix = sourceId.slice("omarchy.".length);
@@ -1349,6 +1380,16 @@ function rebuildPlugin(catalogEntry) {
           if (typeof option.description === "string") option.description = translated(option.description);
         }
       }
+    }
+    if (sourceId === "omarchy.agents") {
+      manifest.description = "在 Omarchy 面板中显示 Claude Code、Codex、Fireworks、Grok 和 Kimi 的用量与限额";
+      manifest.barWidget = manifest.barWidget || {};
+      manifest.barWidget.defaults = manifest.barWidget.defaults || {};
+      manifest.barWidget.defaults.providers = {
+        ...(manifest.barWidget.defaults.providers || {}),
+        grok: { enabled: true },
+        kimi: { enabled: true }
+      };
     }
     manifest.omarchy = { ...(manifest.omarchy || {}), clonedFrom: sourceId, zhCnManaged: true };
     delete manifest.omarchy.clonePaths;
@@ -1517,6 +1558,7 @@ ${functionSource}`)
       );
     }
     if (sourceId === "omarchy.emojis") localizeEmojiKeywords(stage);
+    if (sourceId === "omarchy.agents") applyAgentsOverlay(stage, targetDir);
 
     const backup = `${targetDir}.zh-old-${process.pid}`;
     if (fs.existsSync(backup)) fs.rmSync(backup, { recursive: true, force: true });

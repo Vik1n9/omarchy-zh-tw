@@ -12,6 +12,8 @@ KEYBINDINGS_TARGET="$HOME/.local/bin/omarchy-menu-keybindings-zh"
 UPDATE_TARGET="$HOME/.local/bin/omarchy-update-zh"
 UPDATE_CONFIRM_DIR="$HOME/.local/share/omarchy-zh-cn/bin"
 UPDATE_CONFIRM_TARGET="$UPDATE_CONFIRM_DIR/omarchy-update-confirm"
+AGENTS_OVERLAY_SOURCE="$ROOT_DIR/agents-overlay"
+AGENTS_OVERLAY_TARGET="$HOME/.local/share/omarchy-zh-cn/agents"
 HOOK_TARGET="$HOME/.config/omarchy/hooks/post-update.d/omarchy-zh-post-update"
 PLUGIN_ROOT="$HOME/.config/omarchy/plugins"
 MENU_FILE="$HOME/.config/omarchy/extensions/omarchy-menu.jsonc"
@@ -70,7 +72,7 @@ user_name=${USER:-$(id -un)}
   exit 1
 }
 
-[[ -f $SYNC_SOURCE && -f $HOOK_SOURCE && -f $UPDATE_SOURCE && -f $UPDATE_CONFIRM_SOURCE ]] || {
+[[ -f $SYNC_SOURCE && -f $HOOK_SOURCE && -f $UPDATE_SOURCE && -f $UPDATE_CONFIRM_SOURCE && -d $AGENTS_OVERLAY_SOURCE ]] || {
   echo "项目文件不完整，请从仓库根目录运行安装器。" >&2
   exit 1
 }
@@ -89,6 +91,7 @@ if ((DRY_RUN)); then
   done
   echo "将安装：$SYNC_TARGET"
   echo "将安装：$UPDATE_TARGET（中文更新流程）"
+  echo "将安装：$AGENTS_OVERLAY_TARGET（Codex/Grok/Kimi 用量扩展与主题图标）"
   echo "将安装 post-update 自动同步钩子，并把 Super+K 指向中文快捷键面板。"
   exit 0
 fi
@@ -127,6 +130,10 @@ backup_once "$UPDATE_CONFIRM_TARGET" "$BACKUP_DIR/omarchy-update-confirm" "$BACK
 install -m 755 "$SYNC_SOURCE" "$SYNC_TARGET"
 install -m 755 "$UPDATE_SOURCE" "$UPDATE_TARGET"
 install -m 755 "$UPDATE_CONFIRM_SOURCE" "$UPDATE_CONFIRM_TARGET"
+mkdir -p "$AGENTS_OVERLAY_TARGET/bin" "$AGENTS_OVERLAY_TARGET/assets"
+cp -a "$AGENTS_OVERLAY_SOURCE/bin/." "$AGENTS_OVERLAY_TARGET/bin/"
+cp -a "$AGENTS_OVERLAY_SOURCE/assets/." "$AGENTS_OVERLAY_TARGET/assets/"
+install -m 644 "$AGENTS_OVERLAY_SOURCE/README.md" "$AGENTS_OVERLAY_TARGET/README.md"
 
 mark_managed() {
   local manifest=$1

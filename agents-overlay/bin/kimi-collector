@@ -1,0 +1,369 @@
+#!/usr/bin/python3
+"""Collect Kimi Code subscription quota from an API key or CLI login."""
+
+from __future__ import annotations
+
+import argparse
+import contextlib
+import hashlib
+import json
+import os
+import shutil
+import tempfile
+import threading
+import time
+import urllib.error
+import urllib.parse
+import urllib.request
+from datetime import datetime, timezone
+from pathlib import Path
+from typing import Any, Iterator
+
+
+CLIENT_ID = "17e5f671-d194-4dfb-9706-5516cb48c098"
+CACHE_SECONDS = 60
+REFRESH_BUFFER_SECONDS = 120
+
+
+def empty_stats() -> dict[str, Any]:
+  return {
+    "todayPrompts": 0, "todaySessions": 0, "todayTotalTokens": 0,
+    "todayTokensByModel": {}, "recentDays": [], "totalPrompts": 0,
+    "totalSessions": 0, "activeDays": 0, "activeDates": [], "modelUsage": {},
+  }
+
+
+def record(**values: Any) -> dict[str, Any]:
+  result: dict[str, Any] = {
+    "schemaVersion": 1, "id": "kimi", "name": "Kimi Code",
+    "updatedAt": datetime.now(timezone.utc).isoformat(), "ready": False,
+    "hasLocalStats": False, "hasPromptStats": False, "scope": "account",
+    "tierLabel": "", "usageStatusText": "", "authHelpText": "", "limits": [],
+  }
+  result.update(empty_stats())
+  result.update(values)
+  return result
+
+
+def cache_path() -> Path:
+  root = Path(os.environ.get("XDG_CACHE_HOME", Path.home() / ".cache")) / "omarchy" / "agent-usage"
+  root.mkdir(parents=True, exist_ok=True)
+  return root / "kimi-limits.json"
+
+
+def settings_path() -> Path:
+  return Path.home() / ".config" / "omarchy" / "agents" / "kimi.json"
+
+
+def kimi_home() -> Path:
+  return Path(os.path.expanduser(os.environ.get("KIMI_CODE_HOME", "~/.kimi-code")))
+
+
+def read_json(path: Path) -> dict[str, Any] | None:
+  try:
+    value = json.loads(path.read_text(encoding="utf-8"))
+    return value if isinstance(value, dict) else None
+  except Exception:
+    return None
+
+
+def write_json(path: Path, value: dict[str, Any], pretty: bool = False) -> None:
+  path.parent.mkdir(parents=True, exist_ok=True)
+  fd, name = tempfile.mkstemp(dir=path.parent, prefix=path.name + ".", suffix=".tmp")
+  tmp = Path(name)
+  try:
+    with os.fdopen(fd, "w", encoding="utf-8") as handle:
+      json.dump(value, handle, indent=2 if pretty else None,
+                separators=None if pretty else (",", ":"), sort_keys=True)
+      handle.write("\n")
+    tmp.chmod(0o600)
+    tmp.replace(path)
+  except BaseException:
+    tmp.unlink(missing_ok=True)
+    raise
+
+
+def safe_settings() -> dict[str, Any]:
+  path = settings_path()
+  if not path.exists():
+    return {}
+  try:
+    if path.stat().st_mode & 0o077:
+      print("kimi-collector: refusing credentials from a non-private kimi.json", file=os.sys.stderr)
+      return {}
+  except OSError:
+    return {}
+  return read_json(path) or {}
+
+
+def region(settings: dict[str, Any]) -> str:
+  value = str(settings.get("region") or os.environ.get("KIMI_REGION") or "").strip().lower()
+  if not value:
+    try:
+      value = (kimi_home() / "region").read_text(encoding="utf-8").strip().lower()
+    except OSError:
+      value = "cn"
+  return "global" if value == "global" else "cn"
+
+
+def endpoints(selected_region: str) -> tuple[str, str, str]:
+  if selected_region == "global":
+    return (
+      "https://api.kimi.ai/coding/v1/usages",
+      "https://api.kimi.ai/coding/v1/me",
+      "https://auth.kimi.ai/api/oauth/token",
+    )
+  return (
+    "https://api.kimi.com/coding/v1/usages",
+    "https://api.kimi.com/coding/v1/me",
+    "https://auth.kimi.com/api/oauth/token",
+  )
+
+
+def credentials_path() -> Path:
+  return kimi_home() / "credentials" / "kimi-code.json"
+
+
+def lock_target() -> Path:
+  return kimi_home() / "oauth" / "kimi-code"
+
+
+def read_credentials() -> dict[str, Any] | None:
+  value = read_json(credentials_path())
+  if not value or not str(value.get("refresh_token") or "").strip():
+    return None
+  return value
+
+
+@contextlib.contextmanager
+def credential_lock() -> Iterator[None]:
+  target = lock_target()
+  lock_dir = Path(str(target) + ".lock")
+  lock_dir.parent.mkdir(parents=True, exist_ok=True)
+  deadline = time.monotonic() + 20
+  while True:
+    try:
+      lock_dir.mkdir()
+      break
+    except FileExistsError:
+      try:
+        age = time.time() - lock_dir.stat().st_mtime
+        if age > 5:
+          shutil.rmtree(lock_dir)
+          continue
+      except OSError:
+        pass
+      if time.monotonic() >= deadline:
+        raise TimeoutError("Kimi credential lock")
+      time.sleep(0.25)
+
+  stopped = threading.Event()
+
+  def heartbeat() -> None:
+    while not stopped.wait(2.5):
+      try:
+        os.utime(lock_dir, None)
+      except OSError:
+        return
+
+  thread = threading.Thread(target=heartbeat, daemon=True)
+  thread.start()
+  try:
+    yield
+  finally:
+    stopped.set()
+    thread.join(timeout=1)
+    shutil.rmtree(lock_dir, ignore_errors=True)
+
+
+def refresh_credentials(token_url: str, prior: dict[str, Any]) -> dict[str, Any]:
+  form = urllib.parse.urlencode({
+    "client_id": CLIENT_ID, "grant_type": "refresh_token",
+    "refresh_token": str(prior.get("refresh_token") or ""),
+  }).encode("utf-8")
+  request = urllib.request.Request(
+    token_url, data=form,
+    headers={"Accept": "application/json", "Content-Type": "application/x-www-form-urlencoded"},
+    method="POST",
+  )
+  with urllib.request.urlopen(request, timeout=15) as response:
+    value = json.loads(response.read(1024 * 1024).decode("utf-8", errors="replace"))
+  if not isinstance(value, dict) or not str(value.get("access_token") or "").strip():
+    raise ValueError("invalid token refresh response")
+  expires_in = int(value.get("expires_in") or 0)
+  if expires_in <= 0:
+    raise ValueError("invalid token expiry")
+  next_value = dict(prior)
+  next_value.update({
+    "access_token": str(value["access_token"]),
+    "refresh_token": str(value.get("refresh_token") or prior.get("refresh_token") or ""),
+    "expires_in": expires_in,
+    "expires_at": int(time.time()) + expires_in,
+  })
+  if value.get("scope") is not None:
+    next_value["scope"] = value["scope"]
+  if value.get("token_type") is not None:
+    next_value["token_type"] = value["token_type"]
+  write_json(credentials_path(), next_value, pretty=True)
+  return next_value
+
+
+def bearer(settings: dict[str, Any], token_url: str) -> tuple[str, str] | None:
+  api_key = str(os.environ.get("KIMI_API_KEY") or settings.get("apiKey") or "").strip()
+  if api_key:
+    return api_key, "key:" + hashlib.sha256(api_key.encode()).hexdigest()
+
+  creds = read_credentials()
+  if creds is None:
+    return None
+  if int(creds.get("expires_at") or 0) < int(time.time()) + REFRESH_BUFFER_SECONDS:
+    with credential_lock():
+      creds = read_credentials()
+      if creds is None:
+        return None
+      if int(creds.get("expires_at") or 0) < int(time.time()) + REFRESH_BUFFER_SECONDS:
+        creds = refresh_credentials(token_url, creds)
+  access = str(creds.get("access_token") or "").strip()
+  refresh = str(creds.get("refresh_token") or "").strip()
+  if not access or not refresh:
+    return None
+  return access, "oauth:" + hashlib.sha256(refresh.encode()).hexdigest()
+
+
+def get_json(url: str, token: str) -> dict[str, Any]:
+  request = urllib.request.Request(url, headers={
+    "Authorization": "Bearer " + token, "Accept": "application/json",
+  })
+  with urllib.request.urlopen(request, timeout=12) as response:
+    value = json.loads(response.read(2 * 1024 * 1024).decode("utf-8", errors="replace"))
+  if not isinstance(value, dict):
+    raise ValueError("response is not an object")
+  return value
+
+
+def number(value: Any) -> float | None:
+  try:
+    result = float(value)
+    return result if result >= 0 else None
+  except (TypeError, ValueError):
+    return None
+
+
+def reset_time(block: dict[str, Any]) -> str:
+  raw = block.get("resetTime") or block.get("resetAt") or block.get("reset_at") or ""
+  if not isinstance(raw, str) or not raw:
+    return ""
+  try:
+    datetime.fromisoformat(raw.replace("Z", "+00:00"))
+    return raw
+  except ValueError:
+    return ""
+
+
+def limit(block: Any, label: str, title: str) -> dict[str, Any]:
+  if not isinstance(block, dict):
+    raise ValueError("missing limit block")
+  total, used, remaining = number(block.get("limit")), number(block.get("used")), number(block.get("remaining"))
+  if total is None or total <= 0 or (used is None and remaining is None):
+    raise ValueError("invalid limit values")
+  if used is None:
+    used = max(0.0, total - float(remaining or 0))
+  result = {"label": label, "title": title, "percent": min(1.0, max(0.0, used / total))}
+  reset = reset_time(block)
+  if reset:
+    result["resetsAt"] = reset
+  return result
+
+
+def five_hour(item: Any) -> bool:
+  if not isinstance(item, dict) or not isinstance(item.get("window"), dict):
+    return False
+  window = item["window"]
+  duration = number(window.get("duration"))
+  unit = str(window.get("timeUnit") or window.get("time_unit") or "").upper()
+  return ((duration == 300 and unit in {"TIME_UNIT_MINUTE", "MINUTE", "MINUTES"})
+          or (duration == 5 and unit in {"TIME_UNIT_HOUR", "HOUR", "HOURS"}))
+
+
+def plan_from_usage(payload: dict[str, Any]) -> str:
+  user = payload.get("user") if isinstance(payload.get("user"), dict) else {}
+  membership = user.get("membership") if isinstance(user.get("membership"), dict) else {}
+  value = str(membership.get("level") or "")
+  if not value:
+    return ""
+  return " ".join(word.capitalize() for word in value.removeprefix("LEVEL_").split("_") if word)
+
+
+def parse_usage(payload: dict[str, Any], plan: str = "") -> dict[str, Any]:
+  limits = [limit(payload.get("usage"), "每周", "每周")]
+  advertised = payload.get("limits")
+  if isinstance(advertised, list):
+    rolling = next((item.get("detail") for item in advertised if five_hour(item)), None)
+    if rolling is not None:
+      limits.insert(0, limit(rolling, "5 小时会话", "会话"))
+  return record(ready=True, limits=limits, tierLabel=plan or plan_from_usage(payload) or "Kimi Coding")
+
+
+def cached(auth_scope: str) -> dict[str, Any] | None:
+  value = read_json(cache_path())
+  if not value or value.get("authScope") != auth_scope:
+    return None
+  stored = value.get("record")
+  return stored if isinstance(stored, dict) and stored.get("ready") is True else None
+
+
+def collect(force: bool) -> dict[str, Any]:
+  settings = safe_settings()
+  usages_url, me_url, token_url = endpoints(region(settings))
+  try:
+    auth = bearer(settings, token_url)
+  except Exception:
+    return record(usageStatusText="Kimi 登录已失效",
+                  authHelpText="运行 Kimi Code CLI 重新登录，或配置 KIMI_API_KEY。")
+  if auth is None:
+    return record(usageStatusText="等待登录",
+                  authHelpText="登录 Kimi Code CLI 或配置 KIMI_API_KEY 后会自动显示。")
+  token, auth_scope = auth
+  prior = cached(auth_scope)
+  raw_cache = read_json(cache_path()) or {}
+  if prior and not force and time.time() - float(raw_cache.get("fetchedAt") or 0) < CACHE_SECONDS:
+    prior["updatedAt"] = datetime.now(timezone.utc).isoformat()
+    return prior
+
+  try:
+    usage = get_json(usages_url, token)
+    label = ""
+    try:
+      profile = get_json(me_url, token)
+      label = str(profile.get("user_level_name") or "").strip()
+    except Exception:
+      pass
+    result = parse_usage(usage, label)
+    write_json(cache_path(), {"fetchedAt": time.time(), "authScope": auth_scope, "record": result})
+    return result
+  except urllib.error.HTTPError as error:
+    auth_error = error.code in (401, 403)
+  except Exception:
+    auth_error = False
+
+  if prior:
+    prior["updatedAt"] = datetime.now(timezone.utc).isoformat()
+    prior["usageStatusText"] = "Kimi 限额暂不可用"
+    prior["authHelpText"] = "正在显示上次成功获取的数据。"
+    return prior
+  return record(usageStatusText="Kimi 限额暂不可用",
+                authHelpText=("Kimi 拒绝了当前凭据，请重新登录。" if auth_error
+                              else "无法连接 Kimi 用量接口，稍后会自动重试。"),
+                retryAdvised=not auth_error)
+
+
+def main() -> None:
+  parser = argparse.ArgumentParser()
+  parser.add_argument("--force", action="store_true")
+  parser.add_argument("--limits-only", action="store_true")
+  args = parser.parse_args()
+  print(json.dumps(collect(args.force), separators=(",", ":"), ensure_ascii=False))
+
+
+if __name__ == "__main__":
+  main()

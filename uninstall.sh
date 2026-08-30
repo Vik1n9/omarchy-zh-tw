@@ -13,6 +13,7 @@ KEYBINDINGS_TARGET="$HOME/.local/bin/omarchy-menu-keybindings-zh"
 UPDATE_TARGET="$HOME/.local/bin/omarchy-update-zh"
 UPDATE_CONFIRM_DIR="$HOME/.local/share/omarchy-zh-cn/bin"
 UPDATE_CONFIRM_TARGET="$UPDATE_CONFIRM_DIR/omarchy-update-confirm"
+AGENTS_OVERLAY_TARGET="$HOME/.local/share/omarchy-zh-cn/agents"
 UPDATE_HELPERS=(
   omarchy-update omarchy-update-pkg-prune omarchy-update-lock
   omarchy-update-requires-free-space omarchy-snapshot omarchy-update-keyring
@@ -131,6 +132,9 @@ if [[ -f $STATE_DIR/original/omarchy-update-confirm ]]; then
   cp -a "$STATE_DIR/original/omarchy-update-confirm" "$UPDATE_CONFIRM_TARGET"
 else
   rm -f "$UPDATE_CONFIRM_TARGET"
+fi
+if [[ -d $AGENTS_OVERLAY_TARGET ]]; then
+  find "$AGENTS_OVERLAY_TARGET" -depth -delete
 fi
 rmdir "$UPDATE_CONFIRM_DIR" "$HOME/.local/share/omarchy-zh-cn" 2>/dev/null || true
 

@@ -36,10 +36,33 @@
 
 ![Omarchy 中文电源面板](docs/images/power.webp)
 
+### AI 助手用量状态栏
+
+在官方 Agents 状态栏的基础上，本项目增加了 Grok Build 与 Kimi Code，并修复新版 Codex CLI 与旧版收集器之间的审批策略兼容问题。组件会按当前 Omarchy 主题自动切换浅色/深色图标；未登录或没有有效数据的服务会自动隐藏。
+
+| 服务 | 用量来源 | 启用方式 |
+| --- | --- | --- |
+| Codex | Codex app-server 与本地会话 | 登录 Codex CLI；兼容脚本不会读取或复制令牌 |
+| Grok | Grok Build 账户限额与余额接口 | 运行 `grok login` |
+| Kimi | Kimi Coding Plan 周额度与 5 小时窗口 | 设置 `KIMI_API_KEY`，或使用权限为 `0600` 的配置文件 |
+
+Kimi 配置文件位于 `~/.config/omarchy/agents/kimi.json`：
+
+```json
+{
+  "apiKey": "你的 API Key",
+  "region": "cn"
+}
+```
+
+`region` 可设为 `cn`（`api.kimi.com`）或 `global`（`api.kimi.ai`）。如果未来 Kimi Code CLI 在 `~/.kimi-code/` 写入登录信息，收集器也会自动识别。凭据仅用于服务端用量查询，不会写入状态栏读取的用量 JSON。
+
 ## 已汉化内容
 
 - Omarchy 主菜单及 300 多个菜单项目
 - 状态栏、插件设置和常用面板
+- AI 助手状态栏新增 Grok、Kimi，用量限额展示和随主题切换的浅色/深色图标
+- 修复新版 Codex CLI 不再接受旧 `untrusted` 审批策略时导致的 `initialize` 错误
 - 音频、蓝牙、网络、显示器、电源和天气
 - 日期、月份、星期及日历
 - 天气使用摄氏度，风速使用 `km/h`，地名保持数据源原文
@@ -94,10 +117,11 @@ cd omarchy-zh-cn
 1. 检查 Omarchy 版本和依赖。
 2. 使用官方 `omarchy plugin clone` 创建 22 个用户插件克隆。
 3. 安装本地化同步器并生成中文插件。
-4. 将天气单位设为公制。
-5. 将 `Super + K` 指向中文快捷键面板。
-6. 从本机当前版本生成中文更新脚本，并将 Omarchy 菜单和状态栏的系统更新入口接入中文更新流程。
-7. 安装 `post-update` 钩子，以便系统更新后自动同步。
+4. 为 Agents 插件安装 Codex/Grok/Kimi 用量收集扩展及主题图标。
+5. 将天气单位设为公制。
+6. 将 `Super + K` 指向中文快捷键面板。
+7. 从本机当前版本生成中文更新脚本，并将 Omarchy 菜单和状态栏的系统更新入口接入中文更新流程。
+8. 安装 `post-update` 钩子，以便系统更新后自动同步。
 
 如果你已经有相同用户名和插件后缀的克隆，安装器会停止，避免覆盖个人修改。只有确认这些克隆就是此前的汉化版本时，才使用：
 

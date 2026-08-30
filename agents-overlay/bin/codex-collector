@@ -1,0 +1,22 @@
+#!/usr/bin/python3
+"""Run Omarchy's Codex collector with a less brittle RPC timeout."""
+
+import runpy
+
+
+collector = runpy.run_path(
+  "/usr/bin/omarchy-agent-usage-codex",
+  run_name="omarchy_agent_usage_codex_compat",
+)
+
+stock_rpc_request = collector["rpc_request"]
+
+
+def rpc_request(proc, request_id, method, params=None, timeout=8):
+  return stock_rpc_request(proc, request_id, method, params, max(timeout, 12))
+
+
+# Functions loaded by runpy keep their own globals dictionary. Replace the
+# lookup there so fetch_codex_rpc() uses the compatibility timeout.
+collector["fetch_codex_rpc"].__globals__["rpc_request"] = rpc_request
+collector["main"]()

@@ -88,6 +88,16 @@ rg -Fq '正在连接…' "$plugin_root/testuser.network/Panel.qml"
 rg -Fq '正在扫描设备…' "$plugin_root/testuser.bluetooth/Panel.qml"
 rg -Fq '|| "设备"' "$plugin_root/testuser.bluetooth/Panel.qml"
 rg -Fq '正在验证…' "$plugin_root/testuser.lock/LockView.qml"
+rg -Fq "$plugin_root/testuser.agents/bin/usage-update" "$plugin_root/testuser.agents/Main.qml"
+jq -e '.barWidget.defaults.providers.grok.enabled == true and .barWidget.defaults.providers.kimi.enabled == true' \
+  "$plugin_root/testuser.agents/manifest.json" >/dev/null
+for collector in codex codex-collector grok-collector kimi-collector usage-update; do
+  test -x "$plugin_root/testuser.agents/bin/$collector"
+done
+test -f "$plugin_root/testuser.agents/assets/grok.svg"
+test -f "$plugin_root/testuser.agents/assets/grok-light.svg"
+test -f "$plugin_root/testuser.agents/assets/kimi.svg"
+test -f "$plugin_root/testuser.agents/assets/kimi-light.svg"
 rg -Fq ' · 当前' "$plugin_root/testuser.monitor/Panel.qml"
 for speed_plugin in speedtest disk-speedtest; do
   rg -Fq 'text: "再次测试"' "$plugin_root/testuser.$speed_plugin/SpeedTestOverlay.qml"

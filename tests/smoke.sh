@@ -9,6 +9,14 @@ bash -n "$ROOT_DIR/uninstall.sh"
 bash -n "$ROOT_DIR/hooks/omarchy-zh-post-update"
 bash -n "$ROOT_DIR/bin/omarchy-update-zh"
 bash -n "$ROOT_DIR/bin/omarchy-update-confirm-zh"
+for script in codex usage-update; do
+  bash -n "$ROOT_DIR/agents-overlay/bin/$script"
+done
+python -c 'import ast, pathlib, sys; [ast.parse(pathlib.Path(item).read_text()) for item in sys.argv[1:]]' \
+  "$ROOT_DIR/agents-overlay/bin/codex-collector" \
+  "$ROOT_DIR/agents-overlay/bin/grok-collector" \
+  "$ROOT_DIR/agents-overlay/bin/kimi-collector"
+python -B -m unittest "$ROOT_DIR/agents-overlay/tests/test_collectors.py"
 node --check "$ROOT_DIR/bin/omarchy-zh-sync"
 "$ROOT_DIR/bin/omarchy-zh-sync" --help >/dev/null
 

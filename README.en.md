@@ -36,10 +36,33 @@ These screenshots were captured on an Omarchy 4 desktop with this project instal
 
 ![Omarchy power panel in Simplified Chinese](docs/images/power.webp)
 
+### AI Agent Usage Bar
+
+This project extends the upstream Agents widget with Grok Build and Kimi Code, and adds a compatibility fix for the approval policy used by newer Codex CLI releases. Grok and Kimi marks switch between light and dark variants with the active Omarchy theme. Providers without a valid login or usable data remain hidden.
+
+| Provider | Usage source | How to enable |
+| --- | --- | --- |
+| Codex | Codex app-server and local sessions | Sign in with Codex CLI; the compatibility scripts never copy tokens |
+| Grok | Grok Build account limits and balance endpoint | Run `grok login` |
+| Kimi | Kimi Coding Plan weekly quota and five-hour window | Set `KIMI_API_KEY` or use a mode-`0600` settings file |
+
+Kimi settings live at `~/.config/omarchy/agents/kimi.json`:
+
+```json
+{
+  "apiKey": "your API key",
+  "region": "cn"
+}
+```
+
+`region` may be `cn` (`api.kimi.com`) or `global` (`api.kimi.ai`). The collector can also discover a future Kimi Code CLI login under `~/.kimi-code/`. Credentials are used only for quota requests and are never written to the usage JSON consumed by the widget.
+
 ## Localized Content
 
 - The Omarchy main menu and more than 300 menu items
 - The status bar, plugin settings, and common panels
+- Grok and Kimi support in the AI Agents usage widget, including quota displays and theme-aware light/dark marks
+- Compatibility for the `initialize` failure caused when a newer Codex CLI rejects the legacy `untrusted` approval policy
 - Audio, Bluetooth, network, display, power, and weather interfaces
 - Dates, months, weekdays, and the calendar
 - Celsius temperatures, `km/h` wind speeds, and original location names from the data source
@@ -94,10 +117,11 @@ The installer will:
 1. Check the Omarchy version and dependencies.
 2. Create 22 user plugin clones through the official `omarchy plugin clone` command.
 3. Install the localization synchronizer and generate the localized plugins.
-4. Configure metric units for weather data.
-5. Map `Super + K` to the Chinese keyboard shortcuts panel.
-6. Generate localized update scripts from the currently installed version and route the Omarchy menu and status-bar update actions through them.
-7. Install a `post-update` hook that automatically resynchronizes after Omarchy updates.
+4. Install the Codex/Grok/Kimi usage extension and theme marks for the Agents plugin.
+5. Configure metric units for weather data.
+6. Map `Super + K` to the Chinese keyboard shortcuts panel.
+7. Generate localized update scripts from the currently installed version and route the Omarchy menu and status-bar update actions through them.
+8. Install a `post-update` hook that automatically resynchronizes after Omarchy updates.
 
 If clones with the same username and plugin suffix already exist, the installer stops to avoid overwriting personal modifications. Use the following command only after confirming that those clones were created by an earlier version of this localization:
 

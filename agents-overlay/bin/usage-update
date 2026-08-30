@@ -1,0 +1,73 @@
+#!/bin/bash
+set -euo pipefail
+
+usage_dir="${XDG_STATE_HOME:-$HOME/.local/state}/omarchy/agents/usage"
+script_dir=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)
+mkdir -p "$usage_dir"
+
+# The Codex shim in this directory only translates the retired approval
+# policy. All unrelated executable lookups continue through the normal PATH.
+export PATH="$script_dir:$PATH"
+
+flags=()
+only=()
+declare -A excluded
+original_args=("$@")
+
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    --force | --limits-only) flags+=("$1") ;;
+    --except)
+      excluded[$2]=1
+      shift
+      ;;
+    *) only+=("$1") ;;
+  esac
+  shift
+done
+
+wants_agent() {
+  local agent=$1
+  [[ -z ${excluded[$agent]:-} ]] || return 1
+  ((${#only[@]} == 0)) && return 0
+  local candidate
+  for candidate in "${only[@]}"; do
+    [[ $candidate == "$agent" ]] && return 0
+  done
+  return 1
+}
+
+collect_agent() {
+  local agent=$1 collector=$2
+  local record tmp
+  if ! record=$("$collector" "${flags[@]}") \
+    || [[ -z $record ]] || ! jq -e . >/dev/null 2>&1 <<<"$record"; then
+    echo "usage-update: $agent collector failed" >&2
+    return 1
+  fi
+  tmp=$(mktemp "$usage_dir/.$agent.XXXXXX")
+  printf '%s\n' "$record" >"$tmp"
+  mv "$tmp" "$usage_dir/$agent.json"
+}
+
+pids=()
+/usr/bin/omarchy-agent-usage-update "${original_args[@]}" \
+  --except codex --except grok --except kimi &
+pids+=($!)
+for entry in \
+  "codex:$script_dir/codex-collector" \
+  "grok:$script_dir/grok-collector" \
+  "kimi:$script_dir/kimi-collector"; do
+  agent=${entry%%:*}
+  collector=${entry#*:}
+  if wants_agent "$agent"; then
+    collect_agent "$agent" "$collector" &
+    pids+=($!)
+  fi
+done
+
+status=0
+for pid in "${pids[@]}"; do
+  wait "$pid" || status=1
+done
+exit "$status"
