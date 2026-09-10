@@ -9,7 +9,7 @@ usage() {
 用法：scripts/iicm-lookup.sh <英文詞彙>...
 
 查詢 IICM 電腦名詞譯名表，輸出「編號 | 原文 | 臺灣用語 | 大陸用語」。
-查照結果請登錄到 docs/glossary.md。
+查照結果請記錄到 docs/glossary.md。
 
 環境變數：
   IICM_TERMS_DIR  對照表目錄（預設：$HOME/Documents/iicm-computer-terms）
