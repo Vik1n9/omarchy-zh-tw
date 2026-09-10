@@ -81,8 +81,8 @@ const zh = {
   "Display": "顯示器", "BRIGHTNESS": "亮度", "FIXED BRIGHTNESS": "固定亮度",
   "TEXT SIZE": "文字大小", "SCALE": "縮放", "DISPLAYS": "顯示器",
   " · focused": " · 目前",
-  "Sun blast": "烈日當空", "Solar flare": "豔陽高照", "Golden hour": "黃金時刻",
-  "Even day": "光線充足", "Soft glow": "光線柔和", "Lamp light": "燈光微亮",
+  "Sun blast": "日正當中", "Solar flare": "豔陽高照", "Golden hour": "午後斜陽",
+  "Even day": "天光明亮", "Soft glow": "夕陽餘暉", "Lamp light": "華燈初上",
   "Candlelit": "燭光微弱", "Night owl": "夜深人靜",
 
   "Network": "網路", "Show QR code": "顯示QR Code", "Run a speed test": "執行網路測速",
