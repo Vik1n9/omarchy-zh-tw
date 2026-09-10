@@ -108,7 +108,7 @@ def parse_limits(config: dict[str, Any]) -> list[dict[str, Any]]:
   period = config.get("currentPeriod") if isinstance(config.get("currentPeriod"), dict) else {}
   period_type = str(period.get("type") or "").upper()
   if "WEEK" in period_type:
-    title = "每周"
+    title = "每週"
   elif "MONTH" in period_type:
     title = "每月"
   elif "DAY" in period_type:
@@ -187,7 +187,7 @@ def collect(force: bool) -> dict[str, Any]:
       ready=bool(saved), limits=saved.get("limits", []) if saved else [],
       balance=saved.get("balance") if saved else None,
       tierLabel=str(saved.get("tierLabel") or "") if saved else "",
-      usageStatusText="等待登录", authHelpText="运行 `grok login` 后会自动显示 Grok 限额。",
+      usageStatusText="等待登入", authHelpText="執行 `grok login` 後會自動顯示 Grok 限額。",
     )
 
   if saved and not force and time.time() - float(saved.get("fetchedAt", 0)) < CACHE_SECONDS:
@@ -226,10 +226,10 @@ def collect(force: bool) -> dict[str, Any]:
   if saved:
     return record(ready=True, limits=saved["limits"], balance=saved.get("balance"),
                   tierLabel=str(saved.get("tierLabel") or ""),
-                  usageStatusText="Grok 限额暂不可用", authHelpText="正在显示上次成功获取的数据。")
-  return record(usageStatusText="Grok 限额暂不可用",
-                authHelpText=("登录已失效，请运行 `grok login`。" if auth_error
-                              else "无法连接 Grok 用量接口，稍后会自动重试。"),
+                  usageStatusText="Grok 限額暫不可用", authHelpText="正在顯示上次成功取得的資料。")
+  return record(usageStatusText="Grok 限額暫不可用",
+                authHelpText=("登入已失效，請執行 `grok login`。" if auth_error
+                              else "無法連線 Grok 用量介面，稍後會自動重試。"),
                 retryAdvised=not auth_error)
 
 

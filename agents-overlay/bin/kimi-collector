@@ -295,12 +295,12 @@ def plan_from_usage(payload: dict[str, Any]) -> str:
 
 
 def parse_usage(payload: dict[str, Any], plan: str = "") -> dict[str, Any]:
-  limits = [limit(payload.get("usage"), "每周", "每周")]
+  limits = [limit(payload.get("usage"), "每週", "每週")]
   advertised = payload.get("limits")
   if isinstance(advertised, list):
     rolling = next((item.get("detail") for item in advertised if five_hour(item)), None)
     if rolling is not None:
-      limits.insert(0, limit(rolling, "5 小时会话", "会话"))
+      limits.insert(0, limit(rolling, "5 小時工作階段", "工作階段"))
   return record(ready=True, limits=limits, tierLabel=plan or plan_from_usage(payload) or "Kimi Coding")
 
 
@@ -318,11 +318,11 @@ def collect(force: bool) -> dict[str, Any]:
   try:
     auth = bearer(settings, token_url)
   except Exception:
-    return record(usageStatusText="Kimi 登录已失效",
-                  authHelpText="运行 Kimi Code CLI 重新登录，或配置 KIMI_API_KEY。")
+    return record(usageStatusText="Kimi 登入已失效",
+                  authHelpText="執行 Kimi Code CLI 重新登入，或設定 KIMI_API_KEY。")
   if auth is None:
-    return record(usageStatusText="等待登录",
-                  authHelpText="登录 Kimi Code CLI 或配置 KIMI_API_KEY 后会自动显示。")
+    return record(usageStatusText="等待登入",
+                  authHelpText="登入 Kimi Code CLI 或設定 KIMI_API_KEY 後會自動顯示。")
   token, auth_scope = auth
   prior = cached(auth_scope)
   raw_cache = read_json(cache_path()) or {}
@@ -348,12 +348,12 @@ def collect(force: bool) -> dict[str, Any]:
 
   if prior:
     prior["updatedAt"] = datetime.now(timezone.utc).isoformat()
-    prior["usageStatusText"] = "Kimi 限额暂不可用"
-    prior["authHelpText"] = "正在显示上次成功获取的数据。"
+    prior["usageStatusText"] = "Kimi 限額暫不可用"
+    prior["authHelpText"] = "正在顯示上次成功取得的資料。"
     return prior
-  return record(usageStatusText="Kimi 限额暂不可用",
-                authHelpText=("Kimi 拒绝了当前凭据，请重新登录。" if auth_error
-                              else "无法连接 Kimi 用量接口，稍后会自动重试。"),
+  return record(usageStatusText="Kimi 限額暫不可用",
+                authHelpText=("Kimi 拒絕了目前憑證，請重新登入。" if auth_error
+                              else "無法連線 Kimi 用量介面，稍後會自動重試。"),
                 retryAdvised=not auth_error)
 
 

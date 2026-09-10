@@ -5,7 +5,7 @@ set -euo pipefail
 ROOT_DIR=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)
 
 if [[ ! -d /usr/share/omarchy/shell || ! -x /usr/share/omarchy/bin/omarchy-menu-keybindings ]]; then
-  echo "非 Omarchy 环境，跳过安装周期检查。"
+  echo "非 Omarchy 環境，跳過安裝週期檢查。"
   exit 0
 fi
 
@@ -47,7 +47,7 @@ case "${1:-} ${2:-}" in
   "restart shell")
     ;;
   *)
-    echo "未处理的 omarchy 测试调用：$*" >&2
+    echo "未處理的 omarchy 測試呼叫：$*" >&2
     exit 1
     ;;
 esac
@@ -71,19 +71,19 @@ chmod 755 "$stub_bin/omarchy" "$stub_bin/omarchy-shell" "$stub_bin/hyprctl"
 test_path="$stub_bin:$PATH"
 
 mkdir -p "$sandbox_home/.local/bin" \
-  "$sandbox_home/.local/share/omarchy-zh-cn/bin" \
+  "$sandbox_home/.local/share/omarchy-zh-tw/bin" \
   "$sandbox_home/.config/omarchy/hooks/post-update.d" \
   "$sandbox_home/.config/omarchy"
-printf '#!/usr/bin/env bash\necho old-sync\n' >"$sandbox_home/.local/bin/omarchy-zh-sync"
-printf '#!/usr/bin/env bash\necho old-keybindings\n' >"$sandbox_home/.local/bin/omarchy-menu-keybindings-zh"
-printf '#!/usr/bin/env bash\necho old-update\n' >"$sandbox_home/.local/bin/omarchy-update-zh"
-printf '#!/usr/bin/env bash\necho old-update-confirm\n' >"$sandbox_home/.local/share/omarchy-zh-cn/bin/omarchy-update-confirm"
-printf '#!/usr/bin/env bash\necho old-hook\n' >"$sandbox_home/.config/omarchy/hooks/post-update.d/omarchy-zh-post-update"
-chmod 755 "$sandbox_home/.local/bin/omarchy-zh-sync" \
-  "$sandbox_home/.local/bin/omarchy-menu-keybindings-zh" \
-  "$sandbox_home/.local/bin/omarchy-update-zh" \
-  "$sandbox_home/.local/share/omarchy-zh-cn/bin/omarchy-update-confirm" \
-  "$sandbox_home/.config/omarchy/hooks/post-update.d/omarchy-zh-post-update"
+printf '#!/usr/bin/env bash\necho old-sync\n' >"$sandbox_home/.local/bin/omarchy-zh-tw-sync"
+printf '#!/usr/bin/env bash\necho old-keybindings\n' >"$sandbox_home/.local/bin/omarchy-menu-keybindings-zh-tw"
+printf '#!/usr/bin/env bash\necho old-update\n' >"$sandbox_home/.local/bin/omarchy-update-zh-tw"
+printf '#!/usr/bin/env bash\necho old-update-confirm\n' >"$sandbox_home/.local/share/omarchy-zh-tw/bin/omarchy-update-confirm"
+printf '#!/usr/bin/env bash\necho old-hook\n' >"$sandbox_home/.config/omarchy/hooks/post-update.d/omarchy-zh-tw-post-update"
+chmod 755 "$sandbox_home/.local/bin/omarchy-zh-tw-sync" \
+  "$sandbox_home/.local/bin/omarchy-menu-keybindings-zh-tw" \
+  "$sandbox_home/.local/bin/omarchy-update-zh-tw" \
+  "$sandbox_home/.local/share/omarchy-zh-tw/bin/omarchy-update-confirm" \
+  "$sandbox_home/.config/omarchy/hooks/post-update.d/omarchy-zh-tw-post-update"
 cat >"$sandbox_home/.config/omarchy/shell.json" <<'JSON'
 {
   "version": 1,
@@ -101,32 +101,32 @@ JSON
 
 HOME="$sandbox_home" USER=testuser PATH="$test_path" "$ROOT_DIR/install.sh" >/dev/null
 
-test -x "$sandbox_home/.local/bin/omarchy-zh-sync"
-test -x "$sandbox_home/.local/bin/omarchy-menu-keybindings-zh"
-test -x "$sandbox_home/.local/bin/omarchy-update-zh"
-test -x "$sandbox_home/.local/share/omarchy-zh-cn/bin/omarchy-update-confirm"
-test -x "$sandbox_home/.local/share/omarchy-zh-cn/bin/omarchy-update"
-test -x "$sandbox_home/.local/share/omarchy-zh-cn/bin/omarchy-update-restart"
-test -x "$sandbox_home/.local/share/omarchy-zh-cn/agents/bin/grok-collector"
-test -x "$sandbox_home/.local/share/omarchy-zh-cn/agents/bin/kimi-collector"
-test -x "$sandbox_home/.config/omarchy/hooks/post-update.d/omarchy-zh-post-update"
-rg -Fq '准备更新吗？' "$sandbox_home/.local/share/omarchy-zh-cn/bin/omarchy-update-confirm"
-rg -Fq -- '-- >>> omarchy-zh-cn' "$sandbox_home/.config/hypr/bindings.lua"
+test -x "$sandbox_home/.local/bin/omarchy-zh-tw-sync"
+test -x "$sandbox_home/.local/bin/omarchy-menu-keybindings-zh-tw"
+test -x "$sandbox_home/.local/bin/omarchy-update-zh-tw"
+test -x "$sandbox_home/.local/share/omarchy-zh-tw/bin/omarchy-update-confirm"
+test -x "$sandbox_home/.local/share/omarchy-zh-tw/bin/omarchy-update"
+test -x "$sandbox_home/.local/share/omarchy-zh-tw/bin/omarchy-update-restart"
+test -x "$sandbox_home/.local/share/omarchy-zh-tw/agents/bin/grok-collector"
+test -x "$sandbox_home/.local/share/omarchy-zh-tw/agents/bin/kimi-collector"
+test -x "$sandbox_home/.config/omarchy/hooks/post-update.d/omarchy-zh-tw-post-update"
+rg -Fq '準備更新嗎？' "$sandbox_home/.local/share/omarchy-zh-tw/bin/omarchy-update-confirm"
+rg -Fq -- '-- >>> omarchy-zh-tw' "$sandbox_home/.config/hypr/bindings.lua"
 [[ $(find "$sandbox_home/.config/omarchy/plugins" -mindepth 2 -maxdepth 2 -name manifest.json | wc -l) -eq 22 ]]
 [[ $(jq -r '.bar.layout.center[0].unit' "$sandbox_home/.config/omarchy/shell.json") == metric ]]
 
 HOME="$sandbox_home" USER=testuser PATH="$test_path" "$ROOT_DIR/uninstall.sh" --yes >/dev/null
 
-rg -Fq 'old-sync' "$sandbox_home/.local/bin/omarchy-zh-sync"
-rg -Fq 'old-keybindings' "$sandbox_home/.local/bin/omarchy-menu-keybindings-zh"
-rg -Fq 'old-update' "$sandbox_home/.local/bin/omarchy-update-zh"
-rg -Fq 'old-update-confirm' "$sandbox_home/.local/share/omarchy-zh-cn/bin/omarchy-update-confirm"
-test ! -e "$sandbox_home/.local/share/omarchy-zh-cn/bin/omarchy-update"
-test ! -e "$sandbox_home/.local/share/omarchy-zh-cn/bin/omarchy-update-restart"
-test ! -e "$sandbox_home/.local/share/omarchy-zh-cn/agents"
-rg -Fq 'old-hook' "$sandbox_home/.config/omarchy/hooks/post-update.d/omarchy-zh-post-update"
+rg -Fq 'old-sync' "$sandbox_home/.local/bin/omarchy-zh-tw-sync"
+rg -Fq 'old-keybindings' "$sandbox_home/.local/bin/omarchy-menu-keybindings-zh-tw"
+rg -Fq 'old-update' "$sandbox_home/.local/bin/omarchy-update-zh-tw"
+rg -Fq 'old-update-confirm' "$sandbox_home/.local/share/omarchy-zh-tw/bin/omarchy-update-confirm"
+test ! -e "$sandbox_home/.local/share/omarchy-zh-tw/bin/omarchy-update"
+test ! -e "$sandbox_home/.local/share/omarchy-zh-tw/bin/omarchy-update-restart"
+test ! -e "$sandbox_home/.local/share/omarchy-zh-tw/agents"
+rg -Fq 'old-hook' "$sandbox_home/.config/omarchy/hooks/post-update.d/omarchy-zh-tw-post-update"
 test ! -e "$sandbox_home/.config/omarchy/extensions/omarchy-menu.jsonc"
-! rg -Fq -- '-- >>> omarchy-zh-cn' "$sandbox_home/.config/hypr/bindings.lua"
+! rg -Fq -- '-- >>> omarchy-zh-tw' "$sandbox_home/.config/hypr/bindings.lua"
 [[ $(jq -r '.bar.layout.center[0].unit' "$sandbox_home/.config/omarchy/shell.json") == imperial ]]
 
-echo "隔离安装与卸载周期检查通过。"
+echo "隔離安裝與卸載週期檢查透過。"

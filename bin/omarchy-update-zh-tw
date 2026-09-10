@@ -2,12 +2,12 @@
 
 set -euo pipefail
 
-LOCALIZER_BIN="$HOME/.local/share/omarchy-zh-cn/bin"
+LOCALIZER_BIN="$HOME/.local/share/omarchy-zh-tw/bin"
 LOCALIZED_UPDATE="$LOCALIZER_BIN/omarchy-update"
 
 [[ -x $LOCALIZED_UPDATE ]] || {
-  echo "找不到已生成的 Omarchy 中文更新命令：$LOCALIZED_UPDATE" >&2
-  echo "请先运行 omarchy-zh-sync，然后重试。" >&2
+  echo "找不到已產生的 Omarchy 中文更新指令：$LOCALIZED_UPDATE" >&2
+  echo "請先執行 omarchy-zh-tw-sync，然後重試。" >&2
   exit 1
 }
 

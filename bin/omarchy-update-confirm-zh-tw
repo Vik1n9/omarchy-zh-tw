@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+gum style --border normal --padding "1 2" \
+  "準備更新嗎？" \
+  "" \
+  "• 更新開始後將無法中止！" \
+  "• 請確保裝置已連線電源或電池電量充足" \
+  "" \
+  "更新內容：https://github.com/omacom/omarchy/releases/latest"
+
+echo
+
+if ! gum confirm "繼續更新嗎？" \
+  --affirmative "是" \
+  --negative "否" \
+  --no-show-help; then
+  echo "已取消更新"
+  exit 1
+fi

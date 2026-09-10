@@ -1,44 +1,36 @@
-# Omarchy Simplified Chinese Localization
+# Omarchy Traditional Chinese (Taiwan) Localization
 
-[简体中文](README.md) | **English**
+[繁體中文](README.md) | **English**
 
-An unofficial Simplified Chinese localization project for Omarchy 4. It generates user-scoped plugin clones from the Omarchy sources currently installed on the machine. It never modifies `/usr/share/omarchy` and does not redistribute Omarchy plugin source code in this repository.
+An unofficial Traditional Chinese (Taiwan, zh-TW) localization project for Omarchy 4. It generates user-scoped plugin clones from the Omarchy sources currently installed on the machine. It never modifies `/usr/share/omarchy` and does not redistribute Omarchy plugin source code in this repository.
+
+This project is derived from the Simplified Chinese localization at QueedWen/omarchy-zh-cn, with translations and interface wording adapted to Taiwan conventions (zh-TW).
 
 ## Preview
 
 These screenshots were captured on an Omarchy 4 desktop with this project installed. Wallpapers, themes, and weather data will vary by environment.
 
-### Chinese Main Menu
+### Traditional Chinese Main Menu
 
-![Omarchy main menu in Simplified Chinese](docs/images/menu.webp)
+![Omarchy main menu in Traditional Chinese](docs/images/menu.webp)
 
-### Chinese Keyboard Shortcuts Panel
+### Traditional Chinese Keyboard Shortcuts Panel
 
-![Omarchy keyboard shortcuts panel in Simplified Chinese](docs/images/shortcuts.webp)
+![Omarchy keyboard shortcuts panel in Traditional Chinese](docs/images/shortcuts.webp)
 
 ### Weather and Date
 
-| Celsius, `km/h`, and Chinese weather fields | Chinese dates, months, and weekdays |
+| Celsius, `km/h`, and Traditional Chinese weather fields | Traditional Chinese dates, months, and weekdays |
 | --- | --- |
-| ![Omarchy weather panel in Simplified Chinese](docs/images/weather.webp) | ![Omarchy calendar panel in Simplified Chinese](docs/images/calendar.webp) |
+| ![Omarchy weather panel in Traditional Chinese](docs/images/weather.webp) | ![Omarchy calendar panel in Traditional Chinese](docs/images/calendar.webp) |
 
-### Common System Panels
+### Display Panel
 
-| Display and scaling | Audio input and output |
-| --- | --- |
-| ![Omarchy display panel in Simplified Chinese](docs/images/display.webp) | ![Omarchy audio panel in Simplified Chinese](docs/images/audio.webp) |
-
-| Network and DNS | Bluetooth devices |
-| --- | --- |
-| ![Omarchy network panel in Simplified Chinese](docs/images/network.webp) | ![Omarchy Bluetooth panel in Simplified Chinese](docs/images/bluetooth.webp) |
-
-### Power and Performance Profiles
-
-![Omarchy power panel in Simplified Chinese](docs/images/power.webp)
+![Omarchy display panel in Traditional Chinese](docs/images/display.webp)
 
 ### AI Agent Usage Bar
 
-This project extends the upstream Agents widget with Grok Build and Kimi Code, and adds a compatibility fix for the approval policy used by newer Codex CLI releases. Grok and Kimi marks switch between light and dark variants with the active Omarchy theme. Providers without a valid login or usable data remain hidden.
+This project extends the upstream Agents widget with Grok Build and Kimi Code, and adds a compatibility fix for the approval policy used by newer Codex CLI releases. The widget switches between light and dark marks with the active Omarchy theme. Providers without a valid login or usable data remain hidden.
 
 | Provider | Usage source | How to enable |
 | --- | --- | --- |
@@ -68,7 +60,7 @@ Kimi settings live at `~/.config/omarchy/agents/kimi.json`:
 - Celsius temperatures, `km/h` wind speeds, and original location names from the data source
 - Reminders, notification history, and Omarchy activity notifications
 - System tray, clipboard, emoji and image pickers, speed tests, and Wi-Fi QR codes
-- Chinese emoji search keywords when a local Fcitx 5/Rime emoji annotation file is available
+- Traditional Chinese emoji search keywords when a local Fcitx 5/Rime emoji annotation file is available
 - Lock screen, authentication, and Omarchy-controlled snapshot, package, migration, error, and restart messages during updates
 - The `Super + K` keyboard shortcuts panel and command descriptions
 - Automatic resynchronization after Omarchy updates
@@ -90,8 +82,8 @@ This project generates localized clones against the plugin structure installed o
 If your AI assistant can read local files and run terminal commands, send it the complete prompt below:
 
 ```text
-Please install this Simplified Chinese localization project on the current Omarchy 4 system:
-https://github.com/QueedWen/omarchy-zh-cn
+Please install this Traditional Chinese (Taiwan) localization project on the current Omarchy 4 system:
+https://github.com/Vik1n9/omarchy-zh-tw
 
 Requirements:
 1. Read README.md, README.en.md, and install.sh first, then check whether the current system, Omarchy version, and dependencies are compatible.
@@ -106,8 +98,8 @@ Requirements:
 ### Manual Installation
 
 ```bash
-git clone https://github.com/QueedWen/omarchy-zh-cn.git
-cd omarchy-zh-cn
+git clone https://github.com/Vik1n9/omarchy-zh-tw.git
+cd omarchy-zh-tw
 ./install.sh --dry-run
 ./install.sh
 ```
@@ -119,7 +111,7 @@ The installer will:
 3. Install the localization synchronizer and generate the localized plugins.
 4. Install the Codex/Grok/Kimi usage extension and theme marks for the Agents plugin.
 5. Configure metric units for weather data.
-6. Map `Super + K` to the Chinese keyboard shortcuts panel.
+6. Map `Super + K` to the Traditional Chinese keyboard shortcuts panel.
 7. Generate localized update scripts from the currently installed version and route the Omarchy menu and status-bar update actions through them.
 8. Install a `post-update` hook that automatically resynchronizes after Omarchy updates.
 
@@ -132,7 +124,7 @@ If clones with the same username and plugin suffix already exist, the installer 
 ## Manual Synchronization
 
 ```bash
-omarchy-zh-sync
+omarchy-zh-tw-sync
 ```
 
 Available options:
@@ -166,8 +158,8 @@ The project writes only to the following user directories:
 ~/.config/omarchy/shell.json
 ~/.config/hypr/bindings.lua
 ~/.local/bin/
-~/.local/share/omarchy-zh-cn/
-~/.local/state/omarchy-zh-cn/
+~/.local/share/omarchy-zh-tw/
+~/.local/state/omarchy-zh-tw/
 ```
 
 `/usr/share/omarchy` always remains read-only. The installer does not collect or upload notification history, network information, location data, tokens, or other user data.
@@ -180,8 +172,10 @@ The project writes only to the following user directories:
 
 On an Omarchy system, the tests also generate an isolated copy from the currently installed system plugins under a temporary `HOME`; they do not touch the real user configuration.
 
-Read [CONTRIBUTING.md](CONTRIBUTING.md) before contributing translations.
+See [docs/glossary.md](docs/glossary.md) for terminology and read [CONTRIBUTING.md](CONTRIBUTING.md) before contributing translations.
 
 ## Disclaimer
 
-This is a community project and is not affiliated with the official Omarchy project. Omarchy and its source code are governed by their upstream licenses. This repository contains only the installation logic, synchronization logic, and Chinese translations written for this project, and is licensed under the MIT License.
+This is a community project and is not affiliated with the official Omarchy project. It is derived from [QueedWen/omarchy-zh-cn](https://github.com/QueedWen/omarchy-zh-cn) (Simplified Chinese, MIT), and the Traditional Chinese (Taiwan) translation and adjustments are maintained by [Vik1n9](https://github.com/Vik1n9).
+
+Omarchy and its source code are governed by their upstream licenses. This repository contains only the installation logic, synchronization logic, and Traditional Chinese translations written for this project, and is licensed under the MIT License.

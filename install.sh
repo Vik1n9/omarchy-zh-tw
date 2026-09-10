@@ -3,23 +3,23 @@
 set -euo pipefail
 
 ROOT_DIR=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)
-SYNC_SOURCE="$ROOT_DIR/bin/omarchy-zh-sync"
-HOOK_SOURCE="$ROOT_DIR/hooks/omarchy-zh-post-update"
-UPDATE_SOURCE="$ROOT_DIR/bin/omarchy-update-zh"
-UPDATE_CONFIRM_SOURCE="$ROOT_DIR/bin/omarchy-update-confirm-zh"
-SYNC_TARGET="$HOME/.local/bin/omarchy-zh-sync"
-KEYBINDINGS_TARGET="$HOME/.local/bin/omarchy-menu-keybindings-zh"
-UPDATE_TARGET="$HOME/.local/bin/omarchy-update-zh"
-UPDATE_CONFIRM_DIR="$HOME/.local/share/omarchy-zh-cn/bin"
+SYNC_SOURCE="$ROOT_DIR/bin/omarchy-zh-tw-sync"
+HOOK_SOURCE="$ROOT_DIR/hooks/omarchy-zh-tw-post-update"
+UPDATE_SOURCE="$ROOT_DIR/bin/omarchy-update-zh-tw"
+UPDATE_CONFIRM_SOURCE="$ROOT_DIR/bin/omarchy-update-confirm-zh-tw"
+SYNC_TARGET="$HOME/.local/bin/omarchy-zh-tw-sync"
+KEYBINDINGS_TARGET="$HOME/.local/bin/omarchy-menu-keybindings-zh-tw"
+UPDATE_TARGET="$HOME/.local/bin/omarchy-update-zh-tw"
+UPDATE_CONFIRM_DIR="$HOME/.local/share/omarchy-zh-tw/bin"
 UPDATE_CONFIRM_TARGET="$UPDATE_CONFIRM_DIR/omarchy-update-confirm"
 AGENTS_OVERLAY_SOURCE="$ROOT_DIR/agents-overlay"
-AGENTS_OVERLAY_TARGET="$HOME/.local/share/omarchy-zh-cn/agents"
-HOOK_TARGET="$HOME/.config/omarchy/hooks/post-update.d/omarchy-zh-post-update"
+AGENTS_OVERLAY_TARGET="$HOME/.local/share/omarchy-zh-tw/agents"
+HOOK_TARGET="$HOME/.config/omarchy/hooks/post-update.d/omarchy-zh-tw-post-update"
 PLUGIN_ROOT="$HOME/.config/omarchy/plugins"
 MENU_FILE="$HOME/.config/omarchy/extensions/omarchy-menu.jsonc"
 BINDINGS_FILE="$HOME/.config/hypr/bindings.lua"
 SHELL_FILE="$HOME/.config/omarchy/shell.json"
-STATE_DIR="$HOME/.local/state/omarchy-zh-cn"
+STATE_DIR="$HOME/.local/state/omarchy-zh-tw"
 BACKUP_DIR="$STATE_DIR/original"
 DRY_RUN=0
 ADOPT_EXISTING=0
@@ -37,9 +37,9 @@ usage() {
   cat <<'EOF'
 用法：./install.sh [--dry-run] [--adopt-existing]
 
-安装 Omarchy 4 简体中文界面。
-  --dry-run         只检查环境并显示将执行的操作
-  --adopt-existing  接管用户名下来源匹配的现有 Omarchy 插件克隆
+安裝 Omarchy 4 繁體中文介面。
+  --dry-run         只檢查環境並顯示將執行的操作
+  --adopt-existing  接管使用者名稱下、來源相符的現有 Omarchy 外掛複製
 EOF
 }
 
@@ -48,51 +48,51 @@ while (($# > 0)); do
     --dry-run) DRY_RUN=1 ;;
     --adopt-existing) ADOPT_EXISTING=1 ;;
     -h|--help) usage; exit 0 ;;
-    *) echo "未知参数：$1" >&2; usage >&2; exit 2 ;;
+    *) echo "未知引數：$1" >&2; usage >&2; exit 2 ;;
   esac
   shift
 done
 
 for command_name in node jq gum omarchy omarchy-plugin-catalog omarchy-shell; do
   command -v "$command_name" >/dev/null || {
-    echo "缺少命令：$command_name" >&2
+    echo "缺少指令：$command_name" >&2
     exit 1
   }
 done
 
 version=$(omarchy version 2>/dev/null || true)
 [[ $version == 4.* ]] || {
-  echo "当前仅支持 Omarchy 4，检测到：${version:-未知版本}" >&2
+  echo "目前僅支援 Omarchy 4，檢測到：${version:-未知版本}" >&2
   exit 1
 }
 
 user_name=${USER:-$(id -un)}
 [[ $user_name =~ ^[A-Za-z0-9][A-Za-z0-9._-]*$ ]] || {
-  echo "用户名无法安全地用于插件 ID：$user_name" >&2
+  echo "使用者名稱無法安全地用於外掛 ID：$user_name" >&2
   exit 1
 }
 
 [[ -f $SYNC_SOURCE && -f $HOOK_SOURCE && -f $UPDATE_SOURCE && -f $UPDATE_CONFIRM_SOURCE && -d $AGENTS_OVERLAY_SOURCE ]] || {
-  echo "项目文件不完整，请从仓库根目录运行安装器。" >&2
+  echo "專案檔案不完整，請從倉庫根目錄執行安裝器。" >&2
   exit 1
 }
 
 echo "Omarchy：$version"
-echo "将安装 ${#PLUGIN_IDS[@]} 个中文插件克隆。"
+echo "將安裝 ${#PLUGIN_IDS[@]} 個繁體中文外掛複製。"
 
 if ((DRY_RUN)); then
   for source_id in "${PLUGIN_IDS[@]}"; do
     target_id="$user_name.${source_id#omarchy.}"
     if [[ -d $PLUGIN_ROOT/$target_id ]]; then
-      echo "检查现有插件：$target_id"
+      echo "檢查現有外掛：$target_id"
     else
-      echo "将克隆：$source_id -> $target_id"
+      echo "將複製：$source_id -> $target_id"
     fi
   done
-  echo "将安装：$SYNC_TARGET"
-  echo "将安装：$UPDATE_TARGET（中文更新流程）"
-  echo "将安装：$AGENTS_OVERLAY_TARGET（Codex/Grok/Kimi 用量扩展与主题图标）"
-  echo "将安装 post-update 自动同步钩子，并把 Super+K 指向中文快捷键面板。"
+  echo "將安裝：$SYNC_TARGET"
+  echo "將安裝：$UPDATE_TARGET（繁體中文更新流程）"
+  echo "將安裝：$AGENTS_OVERLAY_TARGET（Codex/Grok/Kimi 用量擴充套件與主題圖示）"
+  echo "將安裝 post-update 自動同步掛鉤，並把 Super+K 指向繁體中文快捷鍵面板。"
   exit 0
 fi
 
@@ -106,9 +106,9 @@ if [[ ! -e $STATE_DIR/install.version ]]; then
     : >"$BACKUP_DIR/menu-was-absent"
   fi
   [[ -f $SHELL_FILE ]] && cp -a "$SHELL_FILE" "$BACKUP_DIR/shell.json"
-  [[ -f $SYNC_TARGET ]] && cp -a "$SYNC_TARGET" "$BACKUP_DIR/omarchy-zh-sync"
-  [[ -f $KEYBINDINGS_TARGET ]] && cp -a "$KEYBINDINGS_TARGET" "$BACKUP_DIR/omarchy-menu-keybindings-zh"
-  [[ -f $HOOK_TARGET ]] && cp -a "$HOOK_TARGET" "$BACKUP_DIR/omarchy-zh-post-update"
+  [[ -f $SYNC_TARGET ]] && cp -a "$SYNC_TARGET" "$BACKUP_DIR/omarchy-zh-tw-sync"
+  [[ -f $KEYBINDINGS_TARGET ]] && cp -a "$KEYBINDINGS_TARGET" "$BACKUP_DIR/omarchy-menu-keybindings-zh-tw"
+  [[ -f $HOOK_TARGET ]] && cp -a "$HOOK_TARGET" "$BACKUP_DIR/omarchy-zh-tw-post-update"
 fi
 
 backup_once() {
@@ -124,7 +124,7 @@ backup_once() {
   fi
 }
 
-backup_once "$UPDATE_TARGET" "$BACKUP_DIR/omarchy-update-zh" "$BACKUP_DIR/omarchy-update-zh-was-absent"
+backup_once "$UPDATE_TARGET" "$BACKUP_DIR/omarchy-update-zh-tw" "$BACKUP_DIR/omarchy-update-zh-tw-was-absent"
 backup_once "$UPDATE_CONFIRM_TARGET" "$BACKUP_DIR/omarchy-update-confirm" "$BACKUP_DIR/omarchy-update-confirm-was-absent"
 
 install -m 755 "$SYNC_SOURCE" "$SYNC_TARGET"
@@ -140,7 +140,7 @@ mark_managed() {
   local source_id=$2
   local temporary="$manifest.zh-new-$$"
   jq --arg source "$source_id" '
-    .omarchy = ((.omarchy // {}) + {clonedFrom: $source, zhCnManaged: true})
+    .omarchy = ((.omarchy // {}) + {clonedFrom: $source, zhTwManaged: true})
   ' "$manifest" >"$temporary"
   mv "$temporary" "$manifest"
 }
@@ -157,37 +157,37 @@ for source_id in "${PLUGIN_IDS[@]}"; do
   fi
 
   [[ -f $manifest ]] || {
-    echo "现有路径不是有效插件，拒绝覆盖：$target_dir" >&2
+    echo "現有路徑不是有效外掛，拒絕覆蓋：$target_dir" >&2
     exit 1
   }
 
-  managed=$(jq -r '.omarchy.zhCnManaged // false' "$manifest")
+  managed=$(jq -r '.omarchy.zhTwManaged // false' "$manifest")
   cloned_from=$(jq -r '.omarchy.clonedFrom // empty' "$manifest")
   if [[ $managed == true ]]; then
     [[ $cloned_from == "$source_id" ]] || {
-      echo "受管理插件的来源不匹配：$target_id" >&2
+      echo "受管理外掛的來源不匹配：$target_id" >&2
       exit 1
     }
   elif ((ADOPT_EXISTING)) && [[ $cloned_from == "$source_id" ]]; then
     mark_managed "$manifest" "$source_id"
   else
-    echo "发现非本项目管理的同名插件：$target_dir" >&2
-    echo "如确认它是此前的汉化克隆，请重新运行：./install.sh --adopt-existing" >&2
+    echo "發現非本專案管理的同名外掛：$target_dir" >&2
+    echo "如確認它是此前的繁體化複製，請重新執行：./install.sh --adopt-existing" >&2
     exit 1
   fi
 done
 
 mkdir -p "$(dirname "$BINDINGS_FILE")"
 [[ -f $BINDINGS_FILE ]] || : >"$BINDINGS_FILE"
-if ! grep -Fq -- '-- >>> omarchy-zh-cn' "$BINDINGS_FILE" && \
-   ! grep -Fq 'omarchy-menu-keybindings-zh' "$BINDINGS_FILE"; then
+if ! grep -Fq -- '-- >>> omarchy-zh-tw' "$BINDINGS_FILE" && \
+   ! grep -Fq 'omarchy-menu-keybindings-zh-tw' "$BINDINGS_FILE"; then
   cat >>"$BINDINGS_FILE" <<'EOF'
 
--- >>> omarchy-zh-cn
--- 将 Omarchy 默认的英文快捷键面板替换为中文面板。
+-- >>> omarchy-zh-tw
+-- 將 Omarchy 預設的英文快捷鍵面板替換為繁體中文面板。
 hl.unbind("SUPER + K")
-o.bind("SUPER + K", "快捷键", os.getenv("HOME") .. "/.local/bin/omarchy-menu-keybindings-zh")
--- <<< omarchy-zh-cn
+o.bind("SUPER + K", "快捷鍵", os.getenv("HOME") .. "/.local/bin/omarchy-menu-keybindings-zh-tw")
+-- <<< omarchy-zh-tw
 EOF
 fi
 
@@ -204,4 +204,4 @@ if command -v hyprctl >/dev/null; then
 fi
 
 printf '%s\n' "${PLUGIN_IDS[@]}" >"$STATE_DIR/plugin-sources"
-echo "安装完成。按 Super+K 可打开中文快捷键面板；系统更新流程也已汉化。"
+echo "安裝完成。按 Super+K 可開啟繁體中文快捷鍵面板；系統更新流程也已繁體中文化。"

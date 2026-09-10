@@ -1,17 +1,17 @@
-# Omarchy 中文版 Agents 用量扩展
+# Omarchy 繁體中文版 Agents 用量擴充套件
 
-此目录由 `omarchy-zh-cn` 同步器叠加到系统自带的 Agents 插件，不复制或替换上游 QML 源码。
+此目錄由 `omarchy-zh-tw` 同步器疊加到系統內建的 Agents 外掛，不複製或替換上游 QML 原始碼。
 
-新增内容：
+新增內容：
 
-- Grok Build：读取 `~/.grok/auth.json` 中现有登录，通过 Grok CLI 的用量接口显示周期限额与预付余额。
-- Kimi Code：通过 `KIMI_API_KEY`、权限为 `0600` 的 `~/.config/omarchy/agents/kimi.json`，或 Kimi Code CLI 登录读取 Coding Plan 配额。
-- Codex 兼容层：把已废弃的 `untrusted` 审批值转换为当前 CLI 接受的值，并为 app-server 初始化留出更合理的等待时间。
-- Grok/Kimi 深浅主题图标。
+- Grok Build：讀取 `~/.grok/auth.json` 中現有登入，透過 Grok CLI 的用量介面顯示週期限額與預付餘額。
+- Kimi Code：透過 `KIMI_API_KEY`、權限為 `0600` 的 `~/.config/omarchy/agents/kimi.json`，或 Kimi Code CLI 登入後讀取 Coding Plan 配額。
+- Codex 相容層：把已棄用的 `untrusted` 核准值轉換為目前 CLI 接受的值，並為 app-server 初始化留出更合理的等待時間。
+- Grok/Kimi 淺色與深色主題圖示。
 
-未配置或登录失效的服务只会生成不可用记录，Agents 插件会将其隐藏。访问令牌不会写入 `~/.local/state/omarchy/agents/usage/` 的展示数据。
+未設定或登入失效的服務只會產生不可用記錄，Agents 外掛會將其隱藏。存取權杖不會寫入 `~/.local/state/omarchy/agents/usage/` 的顯示資料。
 
-Kimi 配置示例：
+Kimi 設定範例：
 
 ```json
 {
@@ -20,6 +20,6 @@ Kimi 配置示例：
 }
 ```
 
-`region` 支持 `cn` 与 `global`。请运行 `chmod 600 ~/.config/omarchy/agents/kimi.json`，否则收集器会拒绝读取其中的凭据。
+`region` 支援 `cn` 與 `global`。請執行 `chmod 600 ~/.config/omarchy/agents/kimi.json`，否則收集器會拒絕讀取其中的憑證。
 
-图标来源与许可见 `assets/NOTICE.md`。
+圖示來源與授權可見 `assets/NOTICE.md`。

@@ -2,18 +2,18 @@
 
 set -euo pipefail
 
-STATE_DIR="$HOME/.local/state/omarchy-zh-cn"
+STATE_DIR="$HOME/.local/state/omarchy-zh-tw"
 PLUGIN_ROOT="$HOME/.config/omarchy/plugins"
 MENU_FILE="$HOME/.config/omarchy/extensions/omarchy-menu.jsonc"
 BINDINGS_FILE="$HOME/.config/hypr/bindings.lua"
 SHELL_FILE="$HOME/.config/omarchy/shell.json"
-HOOK_FILE="$HOME/.config/omarchy/hooks/post-update.d/omarchy-zh-post-update"
-SYNC_TARGET="$HOME/.local/bin/omarchy-zh-sync"
-KEYBINDINGS_TARGET="$HOME/.local/bin/omarchy-menu-keybindings-zh"
-UPDATE_TARGET="$HOME/.local/bin/omarchy-update-zh"
-UPDATE_CONFIRM_DIR="$HOME/.local/share/omarchy-zh-cn/bin"
+HOOK_FILE="$HOME/.config/omarchy/hooks/post-update.d/omarchy-zh-tw-post-update"
+SYNC_TARGET="$HOME/.local/bin/omarchy-zh-tw-sync"
+KEYBINDINGS_TARGET="$HOME/.local/bin/omarchy-menu-keybindings-zh-tw"
+UPDATE_TARGET="$HOME/.local/bin/omarchy-update-zh-tw"
+UPDATE_CONFIRM_DIR="$HOME/.local/share/omarchy-zh-tw/bin"
 UPDATE_CONFIRM_TARGET="$UPDATE_CONFIRM_DIR/omarchy-update-confirm"
-AGENTS_OVERLAY_TARGET="$HOME/.local/share/omarchy-zh-cn/agents"
+AGENTS_OVERLAY_TARGET="$HOME/.local/share/omarchy-zh-tw/agents"
 UPDATE_HELPERS=(
   omarchy-update omarchy-update-pkg-prune omarchy-update-lock
   omarchy-update-requires-free-space omarchy-snapshot omarchy-update-keyring
@@ -31,18 +31,18 @@ while (($# > 0)); do
   case "$1" in
     --yes|-y) ASSUME_YES=1 ;;
     -h|--help) echo "用法：./uninstall.sh [--yes]"; exit 0 ;;
-    *) echo "未知参数：$1" >&2; exit 2 ;;
+    *) echo "未知引數：$1" >&2; exit 2 ;;
   esac
   shift
 done
 
 [[ -f $STATE_DIR/install.version ]] || {
-  echo "没有找到 omarchy-zh-cn 的安装状态，停止卸载。" >&2
+  echo "沒有找到 omarchy-zh-tw 的安裝狀態，停止卸載。" >&2
   exit 1
 }
 
 if ((!ASSUME_YES)); then
-  read -r -p "卸载 Omarchy 简体中文界面并恢复原菜单？[y/N] " answer
+  read -r -p "卸載 Omarchy 繁體中文介面並還原原選單？[y/N] " answer
   [[ $answer == y || $answer == Y ]] || exit 0
 fi
 
@@ -59,13 +59,13 @@ for source_id in "${plugin_sources[@]}"; do
   [[ -n $source_id ]] || continue
   target_id="$user_name.${source_id#omarchy.}"
   manifest="$PLUGIN_ROOT/$target_id/manifest.json"
-  if [[ -f $manifest ]] && [[ $(jq -r '.omarchy.zhCnManaged // false' "$manifest") == true ]]; then
+  if [[ -f $manifest ]] && [[ $(jq -r '.omarchy.zhTwManaged // false' "$manifest") == true ]]; then
     omarchy plugin remove "$target_id" --yes
   fi
 done
 
 if [[ -f $MENU_FILE ]]; then
-  cp -a "$MENU_FILE" "$MENU_FILE.omarchy-zh-cn-uninstall-$timestamp.bak"
+  cp -a "$MENU_FILE" "$MENU_FILE.omarchy-zh-tw-uninstall-$timestamp.bak"
 fi
 if [[ -f $STATE_DIR/original/omarchy-menu.jsonc ]]; then
   mkdir -p "$(dirname "$MENU_FILE")"
@@ -74,12 +74,12 @@ elif [[ -f $STATE_DIR/original/menu-was-absent ]]; then
   rm -f "$MENU_FILE"
 fi
 
-if [[ -f $BINDINGS_FILE ]] && grep -Fq -- '-- >>> omarchy-zh-cn' "$BINDINGS_FILE"; then
-  cp -a "$BINDINGS_FILE" "$BINDINGS_FILE.omarchy-zh-cn-uninstall-$timestamp.bak"
+if [[ -f $BINDINGS_FILE ]] && grep -Fq -- '-- >>> omarchy-zh-tw' "$BINDINGS_FILE"; then
+  cp -a "$BINDINGS_FILE" "$BINDINGS_FILE.omarchy-zh-tw-uninstall-$timestamp.bak"
   temporary="$BINDINGS_FILE.zh-new-$$"
   awk '
-    $0 == "-- >>> omarchy-zh-cn" { managed = 1; next }
-    $0 == "-- <<< omarchy-zh-cn" { managed = 0; next }
+    $0 == "-- >>> omarchy-zh-tw" { managed = 1; next }
+    $0 == "-- <<< omarchy-zh-tw" { managed = 0; next }
     !managed { print }
   ' "$BINDINGS_FILE" >"$temporary"
   mv "$temporary" "$BINDINGS_FILE"
@@ -102,25 +102,25 @@ if [[ -f $STATE_DIR/original/shell.json && -f $SHELL_FILE ]]; then
   mv "$temporary" "$SHELL_FILE"
 fi
 
-if [[ -f $STATE_DIR/original/omarchy-zh-post-update ]]; then
+if [[ -f $STATE_DIR/original/omarchy-zh-tw-post-update ]]; then
   mkdir -p "$(dirname "$HOOK_FILE")"
-  cp -a "$STATE_DIR/original/omarchy-zh-post-update" "$HOOK_FILE"
+  cp -a "$STATE_DIR/original/omarchy-zh-tw-post-update" "$HOOK_FILE"
 elif [[ -f $HOOK_FILE ]]; then
   mv "$HOOK_FILE" "$HOOK_FILE.uninstalled-$timestamp.bak"
 fi
 
-if [[ -f $STATE_DIR/original/omarchy-zh-sync ]]; then
-  cp -a "$STATE_DIR/original/omarchy-zh-sync" "$SYNC_TARGET"
+if [[ -f $STATE_DIR/original/omarchy-zh-tw-sync ]]; then
+  cp -a "$STATE_DIR/original/omarchy-zh-tw-sync" "$SYNC_TARGET"
 else
   rm -f "$SYNC_TARGET"
 fi
-if [[ -f $STATE_DIR/original/omarchy-menu-keybindings-zh ]]; then
-  cp -a "$STATE_DIR/original/omarchy-menu-keybindings-zh" "$KEYBINDINGS_TARGET"
+if [[ -f $STATE_DIR/original/omarchy-menu-keybindings-zh-tw ]]; then
+  cp -a "$STATE_DIR/original/omarchy-menu-keybindings-zh-tw" "$KEYBINDINGS_TARGET"
 else
   rm -f "$KEYBINDINGS_TARGET"
 fi
-if [[ -f $STATE_DIR/original/omarchy-update-zh ]]; then
-  cp -a "$STATE_DIR/original/omarchy-update-zh" "$UPDATE_TARGET"
+if [[ -f $STATE_DIR/original/omarchy-update-zh-tw ]]; then
+  cp -a "$STATE_DIR/original/omarchy-update-zh-tw" "$UPDATE_TARGET"
 else
   rm -f "$UPDATE_TARGET"
 fi
@@ -136,12 +136,12 @@ fi
 if [[ -d $AGENTS_OVERLAY_TARGET ]]; then
   find "$AGENTS_OVERLAY_TARGET" -depth -delete
 fi
-rmdir "$UPDATE_CONFIRM_DIR" "$HOME/.local/share/omarchy-zh-cn" 2>/dev/null || true
+rmdir "$UPDATE_CONFIRM_DIR" "$HOME/.local/share/omarchy-zh-tw" 2>/dev/null || true
 
 if command -v hyprctl >/dev/null; then hyprctl reload >/dev/null || true; fi
 omarchy restart shell >/dev/null || true
 
-archive="$HOME/.local/state/omarchy-zh-cn-uninstalled-$timestamp"
+archive="$HOME/.local/state/omarchy-zh-tw-uninstalled-$timestamp"
 mv "$STATE_DIR" "$archive"
-echo "卸载完成。插件和修改过的配置均保留了可恢复备份。"
-echo "卸载状态备份：$archive"
+echo "卸載完成。外掛和修改過的設定均保留了可還原備份。"
+echo "卸載狀態備份：$archive"

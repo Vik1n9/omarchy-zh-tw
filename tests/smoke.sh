@@ -6,9 +6,9 @@ ROOT_DIR=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)
 
 bash -n "$ROOT_DIR/install.sh"
 bash -n "$ROOT_DIR/uninstall.sh"
-bash -n "$ROOT_DIR/hooks/omarchy-zh-post-update"
-bash -n "$ROOT_DIR/bin/omarchy-update-zh"
-bash -n "$ROOT_DIR/bin/omarchy-update-confirm-zh"
+bash -n "$ROOT_DIR/hooks/omarchy-zh-tw-post-update"
+bash -n "$ROOT_DIR/bin/omarchy-update-zh-tw"
+bash -n "$ROOT_DIR/bin/omarchy-update-confirm-zh-tw"
 for script in codex usage-update; do
   bash -n "$ROOT_DIR/agents-overlay/bin/$script"
 done
@@ -17,31 +17,32 @@ python -c 'import ast, pathlib, sys; [ast.parse(pathlib.Path(item).read_text()) 
   "$ROOT_DIR/agents-overlay/bin/grok-collector" \
   "$ROOT_DIR/agents-overlay/bin/kimi-collector"
 python -B -m unittest "$ROOT_DIR/agents-overlay/tests/test_collectors.py"
-node --check "$ROOT_DIR/bin/omarchy-zh-sync"
-"$ROOT_DIR/bin/omarchy-zh-sync" --help >/dev/null
+node --check "$ROOT_DIR/bin/omarchy-zh-tw-sync"
+"$ROOT_DIR/bin/omarchy-zh-tw-sync" --help >/dev/null
 
 if rg -n '/home/[[:alnum:]_.-]+|/Users/[[:alnum:]_.-]+' "$ROOT_DIR" \
   -g '!tests/smoke.sh' -g '!tests/integration.sh'; then
-  echo "发现个人路径或用户名。" >&2
+  echo "發現個人路徑或使用者名稱。" >&2
   exit 1
 fi
 
 for expected in \
-  '"scrolling": "滚动布局"' \
-  '"dwindle": "螺旋平铺"' \
-  '"WIND": "风速"' \
-  'omarchy-menu-select '\''快捷键'\''' \
-  '系统更新插件结构已变化：更新入口'; do
-  rg -Fq "$expected" "$ROOT_DIR/bin/omarchy-zh-sync" || {
-    echo "缺少关键翻译：$expected" >&2
+  '"scrolling": "捲動版面配置"' \
+  '"dwindle": "Dwindle 平鋪"' \
+  '"WIND": "風速"' \
+  'omarchy-menu-select '\''快捷鍵'\''' \
+  '系統更新外掛結構已變化：更新入口'; do
+  rg -Fq "$expected" "$ROOT_DIR/bin/omarchy-zh-tw-sync" || {
+    echo "缺少關鍵翻譯：$expected" >&2
     exit 1
   }
 done
 
-rg -Fq '准备更新吗？' "$ROOT_DIR/bin/omarchy-update-confirm-zh"
-rg -Fq -- '--affirmative "是"' "$ROOT_DIR/bin/omarchy-update-confirm-zh"
-rg -Fq -- '--negative "否"' "$ROOT_DIR/bin/omarchy-update-confirm-zh"
+rg -Fq '準備更新嗎？' "$ROOT_DIR/bin/omarchy-update-confirm-zh-tw"
+rg -Fq -- '--affirmative "是"' "$ROOT_DIR/bin/omarchy-update-confirm-zh-tw"
+rg -Fq -- '--negative "否"' "$ROOT_DIR/bin/omarchy-update-confirm-zh-tw"
 
-echo "静态检查通过。"
+echo "靜態檢查透過。"
+"$ROOT_DIR/tests/terminology.sh"
 "$ROOT_DIR/tests/integration.sh"
 "$ROOT_DIR/tests/install-cycle.sh"

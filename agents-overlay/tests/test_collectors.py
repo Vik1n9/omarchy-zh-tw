@@ -31,7 +31,7 @@ class CollectorTests(unittest.TestCase):
         "end": "2026-08-31T00:00:00Z",
       },
     })
-    self.assertEqual(limits[0]["title"], "每周")
+    self.assertEqual(limits[0]["title"], "每週")
     self.assertEqual(limits[0]["percent"], 0.425)
     self.assertEqual(limits[0]["resetsAt"], "2026-08-31T00:00:00Z")
 
@@ -46,7 +46,7 @@ class CollectorTests(unittest.TestCase):
     })
     self.assertTrue(result["ready"])
     self.assertEqual(result["tierLabel"], "Intermediate")
-    self.assertEqual([item["title"] for item in result["limits"]], ["会话", "每周"])
+    self.assertEqual([item["title"] for item in result["limits"]], ["工作階段", "每週"])
     self.assertEqual(result["limits"][0]["percent"], 0.15)
     self.assertEqual(result["limits"][1]["percent"], 0.26)
 

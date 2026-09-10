@@ -1,52 +1,44 @@
-# Omarchy 简体中文界面
+# Omarchy 繁體中文（台灣）介面
 
-**简体中文** | [English](README.en.md)
+**繁體中文** | [English](README.en.md)
 
-面向 Omarchy 4 的非官方简体中文本地化项目。它从本机当前安装的 Omarchy 源文件生成用户级插件克隆，不修改 `/usr/share/omarchy`，也不在仓库中重新分发 Omarchy 的插件源码。
+面向 Omarchy 4 的非官方台灣繁體中文本地化專案。它從本機目前安裝的 Omarchy 原始檔產生使用者級外掛複製，不修改 `/usr/share/omarchy`，也不在倉庫中重新散布 Omarchy 的外掛原始碼。
 
-## 效果预览
+本專案衍生自 QueedWen/omarchy-zh-cn 的簡體中文版，將其翻譯與介面調整為台灣用語（zh-TW）。
 
-以下截图来自实际安装本项目的 Omarchy 4 桌面。具体壁纸、主题和天气数据会因用户环境而异。
+## 效果預覽
 
-### 中文主菜单
+以下截圖來自實際安裝本專案的 Omarchy 4 桌面。具體桌布、主題和天氣資料會因使用者環境而異。
 
-![Omarchy 中文主菜单](docs/images/menu.webp)
+### 繁體中文主選單
 
-### 中文快捷键面板
+![Omarchy 繁體中文主選單](docs/images/menu.webp)
 
-![Omarchy 中文快捷键面板](docs/images/shortcuts.webp)
+### 繁體中文快捷鍵面板
 
-### 天气与日期
+![Omarchy 繁體中文快捷鍵面板](docs/images/shortcuts.webp)
 
-| 摄氏度、`km/h` 与中文天气字段 | 中文日期、月份和星期 |
+### 天氣與日期
+
+| 攝氏、`km/h` 與繁體中文天氣欄位 | 繁體中文日期、月份和星期 |
 | --- | --- |
-| ![Omarchy 中文天气面板](docs/images/weather.webp) | ![Omarchy 中文日历面板](docs/images/calendar.webp) |
+| ![Omarchy 繁體中文天氣面板](docs/images/weather.webp) | ![Omarchy 繁體中文行事曆面板](docs/images/calendar.webp) |
 
-### 常用系统面板
+### 顯示器面板
 
-| 显示器与缩放 | 音频输入输出 |
-| --- | --- |
-| ![Omarchy 中文显示器面板](docs/images/display.webp) | ![Omarchy 中文音频面板](docs/images/audio.webp) |
+![Omarchy 繁體中文顯示器面板](docs/images/display.webp)
 
-| 网络与 DNS | 蓝牙设备 |
-| --- | --- |
-| ![Omarchy 中文网络面板](docs/images/network.webp) | ![Omarchy 中文蓝牙面板](docs/images/bluetooth.webp) |
+### AI 助理用量狀態列
 
-### 电源与性能模式
+在官方 Agents 狀態列的基礎上，本專案增加了 Grok Build 與 Kimi Code，並修復新版 Codex CLI 與舊版收集器之間的核准策略相容問題。小工具會依目前 Omarchy 主題自動切換淺色／深色圖示；未登入或沒有有效資料的服務會自動隱藏。
 
-![Omarchy 中文电源面板](docs/images/power.webp)
-
-### AI 助手用量状态栏
-
-在官方 Agents 状态栏的基础上，本项目增加了 Grok Build 与 Kimi Code，并修复新版 Codex CLI 与旧版收集器之间的审批策略兼容问题。组件会按当前 Omarchy 主题自动切换浅色/深色图标；未登录或没有有效数据的服务会自动隐藏。
-
-| 服务 | 用量来源 | 启用方式 |
+| 服務 | 用量來源 | 啟用方式 |
 | --- | --- | --- |
-| Codex | Codex app-server 与本地会话 | 登录 Codex CLI；兼容脚本不会读取或复制令牌 |
-| Grok | Grok Build 账户限额与余额接口 | 运行 `grok login` |
-| Kimi | Kimi Coding Plan 周额度与 5 小时窗口 | 设置 `KIMI_API_KEY`，或使用权限为 `0600` 的配置文件 |
+| Codex | Codex app-server 與本機工作階段 | 登入 Codex CLI；相容指令碼不會讀取或複製權杖 |
+| Grok | Grok Build 帳戶限額與餘額介面 | 執行 `grok login` |
+| Kimi | Kimi Coding Plan 週額度與 5 小時視窗 | 設定 `KIMI_API_KEY`，或使用權限為 `0600` 的設定檔 |
 
-Kimi 配置文件位于 `~/.config/omarchy/agents/kimi.json`：
+Kimi 設定檔位於 `~/.config/omarchy/agents/kimi.json`：
 
 ```json
 {
@@ -55,109 +47,109 @@ Kimi 配置文件位于 `~/.config/omarchy/agents/kimi.json`：
 }
 ```
 
-`region` 可设为 `cn`（`api.kimi.com`）或 `global`（`api.kimi.ai`）。如果未来 Kimi Code CLI 在 `~/.kimi-code/` 写入登录信息，收集器也会自动识别。凭据仅用于服务端用量查询，不会写入状态栏读取的用量 JSON。
+`region` 可設為 `cn`（`api.kimi.com`）或 `global`（`api.kimi.ai`）。如果未來 Kimi Code CLI 在 `~/.kimi-code/` 寫入登入資訊，收集器也會自動辨識。憑證僅用於伺服器端用量查詢，不會寫入狀態列讀取的用量 JSON。
 
-## 已汉化内容
+## 已繁體中文化內容
 
-- Omarchy 主菜单及 300 多个菜单项目
-- 状态栏、插件设置和常用面板
-- AI 助手状态栏新增 Grok、Kimi，用量限额展示和随主题切换的浅色/深色图标
-- 修复新版 Codex CLI 不再接受旧 `untrusted` 审批策略时导致的 `initialize` 错误
-- 音频、蓝牙、网络、显示器、电源和天气
-- 日期、月份、星期及日历
-- 天气使用摄氏度，风速使用 `km/h`，地名保持数据源原文
-- 提醒、通知历史和 Omarchy 动态通知
-- 系统托盘、剪贴板、表情、图片选择器、测速和 Wi-Fi 二维码
-- 检测到 Fcitx 5/Rime 表情注释文件时，为表情选择器补充中文搜索关键词
-- 锁屏、权限认证，以及 Omarchy 更新过程中的快照、软件包、迁移、错误与重启提示
-- `Super + K` 快捷键面板及功能说明
-- Omarchy 更新后的自动重新同步
+- Omarchy 主選單及 300 多個選單項目
+- 狀態列、外掛設定和常用面板
+- AI 助理狀態列新增 Grok、Kimi，用量限額顯示和隨主題切換的淺色／深色圖示
+- 修復新版 Codex CLI 不再接受舊 `untrusted` 核准策略時導致的 `initialize` 錯誤
+- 音訊、藍牙、網路、顯示器、電源和天氣
+- 日期、月份、星期及行事曆
+- 天氣使用攝氏，風速使用 `km/h`，地名保持資料來源原文
+- 提醒、通知歷史和 Omarchy 動態通知
+- 系統匣、剪貼簿、表情符號、圖片選擇器、測速和 Wi-Fi QR Code
+- 偵測到 Fcitx 5/Rime 表情符號註解檔時，為表情符號選擇器補充繁體中文搜尋關鍵字
+- 鎖定畫面、權限驗證，以及 Omarchy 更新過程中的快照、套件、遷移、錯誤與重新啟動提示
+- `Super + K` 快捷鍵面板及功能說明
+- Omarchy 更新後的自動重新同步
 
-专有名称、命令、真实文件路径和第三方应用内容不会强制翻译，例如 Omarchy、Hyprland、Codex、DNS、Docker 和 `Downloads`。
+專有名稱、指令、真實檔案路徑和第三方應用程式內容不會強制翻譯，例如 Omarchy、Hyprland、Codex、DNS、Docker 和 `Downloads`。
 
-## 兼容性
+## 相容性
 
 - Omarchy `4.x`
-- Node.js、jq、gum（Omarchy 4 默认环境已提供）
-- 需要正在运行的 Omarchy Shell
+- Node.js、jq、gum（Omarchy 4 預設環境已提供）
+- 需要正在執行的 Omarchy Shell
 
-本项目跟随系统已安装的插件结构生成汉化克隆。Omarchy 更新改变界面源码时，同步器会重新生成插件；如果上游结构发生不兼容变化，同步会明确失败并保留上一份可用版本。
+本專案跟隨系統已安裝的外掛結構產生繁體化複製。Omarchy 更新改變介面原始碼時，同步器會重新產生外掛；如果上游結構發生不相容變化，同步會明確失敗並保留上一份可用版本。
 
-## 安装
+## 安裝
 
-### 使用 AI 助手安装
+### 使用 AI 助理安裝
 
-如果你的 AI 助手能够在本机读取文件并执行终端命令，可以把下面的提示词完整发送给它：
+如果你的 AI 助理能夠在本機讀取檔案並執行終端機指令，可以把下面的提示詞完整發送給它：
 
 ```text
-请帮我在当前这台 Omarchy 4 系统上安装这个简体中文本地化项目：
-https://github.com/QueedWen/omarchy-zh-cn
+請幫我在目前這臺 Omarchy 4 系統上安裝這個台灣繁體中文本地化專案：
+https://github.com/Vik1n9/omarchy-zh-tw
 
 要求：
-1. 先阅读仓库的 README.md 和 install.sh，并检查当前系统、Omarchy 版本及依赖是否兼容。
-2. 将仓库克隆到合适的用户目录；如果目标目录已经存在，不要覆盖，先检查现状。
-3. 先运行 ./install.sh --dry-run。只有 dry-run 成功后，才运行 ./install.sh。
-4. 不要修改 /usr/share/omarchy，也不要覆盖现有用户插件或个人配置。
-5. 如果发现同名插件克隆或其他冲突，立即停止并告诉我具体情况；未经我明确确认，不要使用 --adopt-existing。
-6. 任何需要密码、提权或覆盖文件的操作，都要先征得我的明确确认。
-7. 安装完成后运行项目测试，检查同步结果和 Hyprland 配置错误，并告诉我修改了哪些位置、测试结果以及如何卸载。
+1. 先閱讀倉庫的 README.md 和 install.sh，並檢查目前系統、Omarchy 版本及依賴是否相容。
+2. 將倉庫複製到合適的使用者目錄；如果目標目錄已經存在，不要覆蓋，先檢查現狀。
+3. 先執行 ./install.sh --dry-run。只有 dry-run 成功後，才執行 ./install.sh。
+4. 不要修改 /usr/share/omarchy，也不要覆蓋現有使用者外掛或個人設定。
+5. 如果發現同名外掛複製或其他衝突，立即停止並告訴我具體情況；未經我明確確認，不要使用 --adopt-existing。
+6. 任何需要密碼、提權或覆蓋檔案的操作，都要先徵得我的明確確認。
+7. 安裝完成後執行專案測試，檢查同步結果和 Hyprland 設定錯誤，並告訴我修改了哪些位置、測試結果以及如何卸載。
 ```
 
-### 手动安装
+### 手動安裝
 
 ```bash
-git clone https://github.com/QueedWen/omarchy-zh-cn.git
-cd omarchy-zh-cn
+git clone https://github.com/Vik1n9/omarchy-zh-tw.git
+cd omarchy-zh-tw
 ./install.sh --dry-run
 ./install.sh
 ```
 
-安装器会：
+安裝器會：
 
-1. 检查 Omarchy 版本和依赖。
-2. 使用官方 `omarchy plugin clone` 创建 22 个用户插件克隆。
-3. 安装本地化同步器并生成中文插件。
-4. 为 Agents 插件安装 Codex/Grok/Kimi 用量收集扩展及主题图标。
-5. 将天气单位设为公制。
-6. 将 `Super + K` 指向中文快捷键面板。
-7. 从本机当前版本生成中文更新脚本，并将 Omarchy 菜单和状态栏的系统更新入口接入中文更新流程。
-8. 安装 `post-update` 钩子，以便系统更新后自动同步。
+1. 檢查 Omarchy 版本和依賴。
+2. 使用官方 `omarchy plugin clone` 建立 22 個使用者外掛複製。
+3. 安裝本地化同步器並產生繁體中文外掛。
+4. 為 Agents 外掛安裝 Codex/Grok/Kimi 用量收集擴充套件及主題圖示。
+5. 將天氣單位設為公制。
+6. 將 `Super + K` 指向繁體中文快捷鍵面板。
+7. 從本機目前版本產生繁體中文更新指令碼，並將 Omarchy 選單和狀態列的系統更新入口接入繁體中文更新流程。
+8. 安裝 `post-update` 掛鉤，以便系統更新後自動同步。
 
-如果你已经有相同用户名和插件后缀的克隆，安装器会停止，避免覆盖个人修改。只有确认这些克隆就是此前的汉化版本时，才使用：
+如果你已經有相同使用者名稱和外掛字尾的複製，安裝器會停止，避免覆蓋個人修改。只有確認這些複製就是此前的繁體化版本時，才使用：
 
 ```bash
 ./install.sh --adopt-existing
 ```
 
-## 手动同步
+## 手動同步
 
 ```bash
-omarchy-zh-sync
+omarchy-zh-tw-sync
 ```
 
-可用参数：
+可用引數：
 
 ```text
---quiet           仅在失败时输出
---no-restart      同步后不重启 Omarchy Shell
---adopt-existing  接管来源匹配的现有插件克隆
+--quiet           僅在失敗時輸出
+--no-restart      同步後不重新啟動 Omarchy Shell
+--adopt-existing  接管來源相符的現有外掛複製
 ```
 
-## 系统语言与输入法
+## 系統語言與輸入法
 
-安装器不会自动修改系统区域设置或安装软件包。需要中文系统区域、字体或 Fcitx 5/Rime 输入法时，请参阅 [系统中文环境与输入法](docs/system-setup.md)。
+安裝器不會自動修改系統地區設定或安裝套件。需要繁體中文系統地區、字型或 Fcitx 5/Rime 輸入法時，請參閱 [系統中文環境與輸入法](docs/system-setup.md)。
 
-## 卸载
+## 卸載
 
 ```bash
 ./uninstall.sh
 ```
 
-卸载器会恢复安装前的菜单和更新命令，移除受本项目管理的插件克隆，并恢复 `Super + K` 配置。Omarchy 的插件删除命令和卸载器都会保留带时间戳的备份，不会直接销毁用户配置。
+卸載器會還原安裝前的選單和更新指令，移除受本專案管理的外掛複製，並還原 `Super + K` 設定。Omarchy 的外掛移除指令和卸載器都會保留帶時間戳的備份，不會直接銷燬使用者設定。
 
-## 修改范围
+## 修改範圍
 
-项目只写入以下用户目录：
+專案只寫入以下使用者目錄：
 
 ```text
 ~/.config/omarchy/plugins/
@@ -166,22 +158,24 @@ omarchy-zh-sync
 ~/.config/omarchy/shell.json
 ~/.config/hypr/bindings.lua
 ~/.local/bin/
-~/.local/share/omarchy-zh-cn/
-~/.local/state/omarchy-zh-cn/
+~/.local/share/omarchy-zh-tw/
+~/.local/state/omarchy-zh-tw/
 ```
 
-`/usr/share/omarchy` 始终只读。安装器不会收集或上传通知历史、网络信息、位置、令牌或其他用户数据。
+`/usr/share/omarchy` 始終唯讀。安裝器不會收集或上傳通知歷史、網路資訊、位置、權杖或其他使用者資料。
 
-## 开发与检查
+## 開發與檢查
 
 ```bash
 ./tests/smoke.sh
 ```
 
-在 Omarchy 机器上，测试还会使用临时 `HOME` 从系统当前插件生成一套隔离副本；不会触碰真实用户配置。
+在 Omarchy 機器上，測試還會使用臨時 `HOME` 從系統目前外掛產生一套隔離副本；不會觸碰真實使用者設定。
 
-贡献翻译前请阅读 [CONTRIBUTING.md](CONTRIBUTING.md)。
+翻譯詞彙請參閱 [docs/glossary.md](docs/glossary.md)；貢獻前請閱讀 [CONTRIBUTING.md](CONTRIBUTING.md)。
 
-## 声明
+## 宣告
 
-这是社区项目，与 Omarchy 官方无隶属关系。Omarchy 及其源码遵循其上游许可证；本仓库只包含本项目编写的安装逻辑、同步逻辑和中文翻译，采用 MIT 许可证。
+這是社群專案，與 Omarchy 官方無隸屬關係。本專案改作自 [QueedWen/omarchy-zh-cn](https://github.com/QueedWen/omarchy-zh-cn)（簡體中文版，MIT 授權），繁體中文（台灣）翻譯與調整由 [Vik1n9](https://github.com/Vik1n9) 維護。
+
+Omarchy 及其原始碼遵循其上游授權條款；本倉庫只包含本專案編寫的安裝邏輯、同步邏輯和繁體中文翻譯，採用 MIT 授權條款。
