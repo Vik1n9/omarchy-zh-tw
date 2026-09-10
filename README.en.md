@@ -174,8 +174,11 @@ On an Omarchy system, the tests also generate an isolated copy from the currentl
 
 See [docs/glossary.md](docs/glossary.md) for terminology and read [CONTRIBUTING.md](CONTRIBUTING.md) before contributing translations.
 
-## Disclaimer
+## Acknowledgements and Disclaimer
 
-This is a community project and is not affiliated with the official Omarchy project. It is derived from [QueedWen/omarchy-zh-cn](https://github.com/QueedWen/omarchy-zh-cn) (Simplified Chinese, MIT), and the Traditional Chinese (Taiwan) translation and adjustments are maintained by [Vik1n9](https://github.com/Vik1n9).
+- Thanks to [QueedWen](https://github.com/QueedWen) for creating the [omarchy-zh-cn](https://github.com/QueedWen/omarchy-zh-cn) Simplified Chinese localization, from which this project is derived (MIT).
+- A tip of the hat to [DHH](https://github.com/dhh) and the Omarchy team for building this beautiful, fun, and agentic Linux distribution.
+
+This is a community project and is not affiliated with the official Omarchy project. The Traditional Chinese (Taiwan) translation and adjustments were kick-started by [Vik1n9](https://github.com/Vik1n9); Vik1n9 does not guarantee ongoing maintenance or updates, and anyone is welcome to take over or contribute.
 
 Omarchy and its source code are governed by their upstream licenses. This repository contains only the installation logic, synchronization logic, and Traditional Chinese translations written for this project, and is licensed under the MIT License.

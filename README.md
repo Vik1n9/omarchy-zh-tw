@@ -174,8 +174,11 @@ omarchy-zh-tw-sync
 
 翻譯詞彙請參閱 [docs/glossary.md](docs/glossary.md)；貢獻前請閱讀 [CONTRIBUTING.md](CONTRIBUTING.md)。
 
-## 宣告
+## 致謝與宣告
 
-這是社群專案，與 Omarchy 官方無隸屬關係。本專案改作自 [QueedWen/omarchy-zh-cn](https://github.com/QueedWen/omarchy-zh-cn)（簡體中文版，MIT 授權），繁體中文（台灣）翻譯與調整由 [Vik1n9](https://github.com/Vik1n9) 維護。
+- 感謝 [QueedWen](https://github.com/QueedWen) 建立 [omarchy-zh-cn](https://github.com/QueedWen/omarchy-zh-cn) 簡體中文本地化專案；本專案即由其改作而來（MIT 授權）。
+- 向 [DHH](https://github.com/dhh) 與 Omarchy 團隊致意，感謝打造這套美麗、有趣且充滿代理精神的 Linux 發行版。
+
+這是社群專案，與 Omarchy 官方無隸屬關係。本專案的繁體中文（台灣）翻譯與調整由 [Vik1n9](https://github.com/Vik1n9) 協助起頭；Vik1n9 不保證後續維護或更新，歡迎任何人接手或參與維護。
 
 Omarchy 及其原始碼遵循其上游授權條款；本倉庫只包含本專案編寫的安裝邏輯、同步邏輯和繁體中文翻譯，採用 MIT 授權條款。
