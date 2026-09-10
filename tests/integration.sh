@@ -99,6 +99,8 @@ test -f "$plugin_root/testuser.agents/assets/grok-light.svg"
 test -f "$plugin_root/testuser.agents/assets/kimi.svg"
 test -f "$plugin_root/testuser.agents/assets/kimi-light.svg"
 rg -Fq ' · 目前' "$plugin_root/testuser.monitor/Panel.qml"
+rg -Fq 'return "驕陽似火"' "$plugin_root/testuser.monitor/Model.js"
+rg -Fq 'return "夜闌人靜"' "$plugin_root/testuser.monitor/Model.js"
 for speed_plugin in speedtest disk-speedtest; do
   rg -Fq 'text: "再次測試"' "$plugin_root/testuser.$speed_plugin/SpeedTestOverlay.qml"
 done

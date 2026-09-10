@@ -7,6 +7,7 @@
 - 依現代台灣桌面慣例重譯全部介面字串，並以 IICM 電腦名詞譯名表查照。
 - Qt 地區改為 `zh_TW`，星期顯示為週一至週日，日期格式為 `yyyy年M月`。
 - 顯示引號改為台灣慣用的「」，移除不必要的引號。
+- 顯示器面板亮度分級改為四字詞：驕陽似火、烈日當空、黃金時刻、日光和煦、柔光如紗、燈火微明、燭影搖紅、夜闌人靜。
 - 新增 `docs/glossary.md` 詞彙表、`scripts/iicm-lookup.sh` 查表工具與 `tests/terminology.sh` 術語檢查。
 - 沿用並轉換 Agents 狀態列擴充：Grok Build 與 Kimi Code 用量、主題淺色／深色圖示、新版 Codex CLI 核准策略相容。
 - 更新 `docs/system-setup.md`：`zh_TW.UTF-8` 地區設定、`libreoffice-fresh-zh-tw` 與 `man-pages-zh_tw` 語言套件。
