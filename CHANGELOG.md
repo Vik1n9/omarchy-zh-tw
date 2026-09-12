@@ -8,6 +8,8 @@
 - 修正 `tests/terminology.sh`：`git grep -P` 缺少 `(*UTF)` 導致整份術語檢查靜默跳過；ripgrep 後備改以 `\p{Han}` 選檔，涵蓋無副檔名的腳本。
 - `tests/terminology.sh` 從禁用詞移除「通過」（它是檢查結果的正確用詞），並補上本次確認的大陸用語與誤轉詞；未安裝 opencc 時改為失敗，需 `ALLOW_MISSING_OPENCC=1` 才略過。
 - `docs/glossary.md` 補上本次查照的詞條與一對多異體字的取用原則。
+- uninstall 改採「解除安裝」（台灣微軟與樂詞網一致），禁用詞清單同步移除該詞。
+- threshold 的通用譯名改採 GNOME 的「臨界值」；電池面板的 `Threshold` 仍依語境作「充電保護」。
 - 翻譯政策改為四層順位：GNOME／KDE 的 zh-TW 社群定論 → 台灣微軟 → 樂詞網《電子計算機名詞》→ 特別翻譯或保留原文；並註明 `support.microsoft.com` 部分頁面為機器翻譯。
 - 新增 `scripts/naer-lookup.sh` 查詢樂詞網《電子計算機名詞》，補上第三順位的查照工具。
 - `tests/terminology.sh` 的異體字正規化補上「纔／才」，避免把正確的「才」誤報為簡體字。
@@ -34,4 +36,4 @@
 - 本地化主選單、快捷鍵面板和 Omarchy 動態通知。
 - 日期與星期使用 `zh_CN` 地區格式。
 - 天氣預設使用攝氏和 `km/h`。
-- 增加安裝、卸載、更新後同步和靜態檢查指令碼。
+- 增加安裝、解除安裝、更新後同步和靜態檢查指令碼。

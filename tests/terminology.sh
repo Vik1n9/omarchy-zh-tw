@@ -39,9 +39,10 @@ banned=(
   快捷方式 進程 後台 添加 博客 鏈接 端口 獲取 接口 配置文件 命令行
 )
 # 轉碼後字形已是繁體、但用詞仍為大陸慣例，或 OpenCC s2twp 的過度轉換產物。
-# 「解除安裝」「銷燬」「透過」分別是 卸载／销毁／通过 的誤轉；「通過」本身是正確用詞，不列入。
+# 「銷燬」「透過」是 销毁／通过 的誤轉；「通過」本身是正確用詞，不列入。
+# 「解除安裝」雖然也是轉換結果，但同時是台灣微軟的正式用語，故不禁用。
 banned+=(
-  解除安裝 銷燬 檢查透過 測試透過 驗證透過
+  銷燬 檢查透過 測試透過 驗證透過
   丟包 倉庫 預裝 匹配 歷史記錄 始終 無需 按需 一條通知
 )
 for term in "${banned[@]}"; do
@@ -78,7 +79,7 @@ else
 fi
 
 rg -Fq 'Qt.locale("zh_TW")' bin/omarchy-zh-tw-sync || report "同步器缺少 zh_TW 地區設定"
-rg -Fq '卸載' bin/omarchy-zh-tw-sync || report "同步器缺少「卸載」"
+rg -Fq '解除安裝' bin/omarchy-zh-tw-sync || report "同步器缺少「解除安裝」"
 for preferred in 網路 檔案 預設 設定 搜尋 快取 剪貼簿 螢幕 裝置 套件; do
   rg -Fq -- "$preferred" bin/omarchy-zh-tw-sync || report "同步器缺少偏好詞「$preferred」"
 done

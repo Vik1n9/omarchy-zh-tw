@@ -162,7 +162,7 @@ const zh = {
 
   "Omarchy menu": "Omarchy 選單", "Quickshell-powered Omarchy command menu": "基於 Quickshell 的 Omarchy 指令選單",
   "Launches the Omarchy menu": "開啟 Omarchy 選單", "Compositor": "合成器",
-  "Go": "開始", "Input": "輸入", "Select": "選擇", "Uninstall": "卸載",
+  "Go": "開始", "Input": "輸入", "Select": "選擇", "Uninstall": "解除安裝",
   "Cancel": "取消", "Nothing here yet": "這裡暫時沒有內容",
   "Notifications": "通知", "Notification daemon, popups, DND, and history": "通知服務、彈出視窗、勿擾模式和歷程記錄",
   "No recent notifications": "沒有最近的通知",
@@ -1467,11 +1467,11 @@ function rebuildPlugin(catalogEntry) {
         after = after
           .replace(
             'message: "Do you want to uninstall " + ((root.deleteTarget && root.deleteTarget.label) || "") + "?"',
-            'message: "確定要卸載「" + ((root.deleteTarget && root.deleteTarget.label) || "") + "」嗎？"'
+            'message: "確定要解除安裝「" + ((root.deleteTarget && root.deleteTarget.label) || "") + "」嗎？"'
           )
           .replace(
-            'confirmText: "卸載"',
-            'confirmText: "卸載"\n          cancelText: "取消"'
+            'confirmText: "解除安裝"',
+            'confirmText: "解除安裝"\n          cancelText: "取消"'
           );
         // Third-party clones do not receive the shell-owned appLibrary, which
         // leaves the Apps submenu empty. Fall back to a local AppLibrary so

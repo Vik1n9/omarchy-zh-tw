@@ -129,4 +129,4 @@ test ! -e "$sandbox_home/.config/omarchy/extensions/omarchy-menu.jsonc"
 ! rg -Fq -- '-- >>> omarchy-zh-tw' "$sandbox_home/.config/hypr/bindings.lua"
 [[ $(jq -r '.bar.layout.center[0].unit' "$sandbox_home/.config/omarchy/shell.json") == imperial ]]
 
-echo "隔離安裝與卸載週期檢查通過。"
+echo "隔離安裝與解除安裝週期檢查通過。"
