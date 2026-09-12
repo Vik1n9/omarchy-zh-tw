@@ -106,7 +106,7 @@
 | match | 相符／符合 | 匹配；相配；符合 | 介面採「相符」，避免大陸慣用的「匹配」 |
 | history | 歷程記錄 | 歷史記錄 | 偏離舊譯，依 GNOME／MS zh-TW |
 | help | 說明 | 求助 | 介面採「說明」，不用「幫助」 |
-| preinstalled | 內建 | （無條目；bundled software 作「附隨軟體」） | 「預裝」為大陸簡稱 |
+| preinstalled | 預安裝 | pre-install 作「預安裝」（bundled software 作「附隨軟體」） | 台灣微軟與樂詞網皆作「預安裝」；「預裝」是大陸簡縮寫法 |
 | color picker | 取色器 | （無條目） | 沿用本專案既有譯名 |
 | list | 列表 | 表列；清單；串列 | 沿用本專案既有譯名 |
 

@@ -808,7 +808,7 @@ const menuZh = {
     "label": "Windows 虛擬機器"
   },
   "install.preinstalls": {
-    "label": "內建軟體"
+    "label": "預安裝軟體"
   },
   "install.service.chromium-account": {
     "label": "Chromium 帳戶"
@@ -872,7 +872,7 @@ const menuZh = {
     "label": "Windows 虛擬機器"
   },
   "remove.preinstalls": {
-    "label": "內建軟體"
+    "label": "預安裝軟體"
   },
   "remove.security": {
     "label": "安全",
