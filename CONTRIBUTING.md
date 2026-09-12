@@ -5,6 +5,7 @@
 ## 翻譯原則
 
 - 使用台灣繁體中文（zh-TW），優先採用現代台灣 Linux 桌面慣例（GNOME／KDE／Windows zh-TW 譯法）。
+- 譯名沒有定論時，以台灣微軟的在地化用語為優先參考；`support.microsoft.com` 部分頁面是機器翻譯，引用前請確認是人工在地化內容。
 - 詞彙以 [docs/glossary.md](docs/glossary.md) 為準；新增詞彙時請查照 IICM 電腦名詞譯名表，並在詞彙表記錄採用譯名與偏離理由。
 - Omarchy、Hyprland、應用程式名稱、協定名稱和程式碼識別字保持原文。
 - 不翻譯真實檔案路徑、指令引數、鍵名和使用者輸入內容。

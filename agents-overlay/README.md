@@ -1,4 +1,4 @@
-# Omarchy 繁體中文版 Agents 用量擴充套件
+# Omarchy 繁體中文版 Agents 用量擴充功能
 
 此目錄由 `omarchy-zh-tw` 同步器疊加到系統內建的 Agents 外掛，不複製或替換上游 QML 原始碼。
 

@@ -109,7 +109,7 @@ cd omarchy-zh-tw
 1. 檢查 Omarchy 版本和依賴。
 2. 使用官方 `omarchy plugin clone` 建立 22 個使用者外掛複製。
 3. 安裝本地化同步器並產生繁體中文外掛。
-4. 為 Agents 外掛安裝 Codex/Grok/Kimi 用量收集擴充套件及主題圖示。
+4. 為 Agents 外掛安裝 Codex/Grok/Kimi 用量收集擴充功能及主題圖示。
 5. 將天氣單位設為公制。
 6. 將 `Super + K` 指向繁體中文快捷鍵面板。
 7. 從本機目前版本產生繁體中文更新指令碼，並將 Omarchy 選單和狀態列的系統更新入口接入繁體中文更新流程。

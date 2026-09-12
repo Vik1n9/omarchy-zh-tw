@@ -10,6 +10,10 @@
   - IICM 條目偏舊、語境不合或資料異常時，採用現代慣例並在本表「備註」記錄理由。
   - IICM 無條目時，採用現代桌面慣例。
 - 查表工具：`scripts/iicm-lookup.sh <英文詞彙>`（預設讀 `$HOME/Documents/iicm-computer-terms`，可用 `IICM_TERMS_DIR` 覆寫）。
+- **譯名沒有定論時，以台灣微軟的在地化用語為優先參考**：台灣使用者對這套用語最熟悉。
+  - 來源以產品介面與人工在地化頁面為準（Windows／Microsoft 365 的 zh-TW 介面、`support.microsoft.com/zh-tw`）。
+  - `support.microsoft.com` 有部分頁面是機器翻譯，同一站內會出現「功能表／選單」「快速鍵／快捷鍵」並存；引用前先確認該頁是人工在地化內容。
+  - Linux 桌面已有穩固慣例時仍以桌面慣例為準，並在「備註」記下與微軟的差異（見 menu、shortcut、account 三列）。
 - 產品名稱、指令、真實路徑與第三方內容保持原文。
 
 ## 標點
@@ -54,13 +58,13 @@
 | orphan | 孤兒 | 孤兒 | 一致 |
 | reset / conflict | 重設／衝突 | 重設；重新開始；重置／衝突 | 一致 |
 | signature | 簽章 | 簽章分析 | 軟體簽章語境 |
-| account / user | 帳號／使用者 | 帳戶／用戶；使用者 | 依桌面慣例 |
+| account / user | 帳號／使用者 | 帳戶／用戶；使用者 | 依桌面慣例；台灣微軟作「帳戶」 |
 | authentication | 驗證／認證 | 鑑別；鑑定 | 依桌面慣例 |
 | authorization | 授權 | 授權 | 一致 |
 | performance | 效能 | 性能；效能 | 採「效能」 |
 | adapter / device | 配接器／裝置 | 配接器；附加卡／裝置；設備 | 一致 |
 | provider | 供應商 | 供應者 | 依桌面慣例 |
-| menu | 選單 | 菜單；功能表；選單 | 依 GNOME／KDE |
+| menu | 選單 | 菜單；功能表；選單 | 依 GNOME／KDE；台灣微軟作「功能表」，Linux 桌面採「選單」 |
 | clipboard | 剪貼簿 | 剪輯板 | 依現代桌面慣例 |
 | audio | 音訊 | 聲頻 | 依現代桌面慣例 |
 | video | 影片／視訊 | 視頻（video adapter 作「視訊配接器」） | 依語境與現代慣例 |
@@ -72,7 +76,7 @@
 | layout | 版面配置 | 布局；布置 | 依 MS／GNOME |
 | stream | 串流 | 流 | 多媒體語境 |
 | theme | 主題 | 文題（疑為資料錯誤） | 依現代慣例 |
-| shortcut / keybinding | 快捷鍵 | （accelerator key 作「加速鍵」） | 依現代桌面慣例 |
+| shortcut / keybinding | 快捷鍵 | （accelerator key 作「加速鍵」） | 依現代桌面慣例；台灣微軟作「鍵盤快速鍵」 |
 | screenshot | 截圖／螢幕擷取 | （無直接條目） | 依現代慣例 |
 | passphrase | 密語 | 通行片語 | 依現代慣例 |
 | token / credential | 權杖／憑證 | 符記；訊標／身份碼 | 依現代慣例 |
@@ -85,7 +89,7 @@
 | emoji / dictation | 表情符號／聽寫 | （無條目） | — |
 | DNS | DNS（正文：領域名稱服務） | 領域名稱服務 | 介面保留 DNS |
 | crash | 當機 | （無直接條目） | 依現代慣例 |
-| extension | 擴充套件 | 擴充 | 一致 |
+| extension | 擴充功能 | 擴充 | 台灣微軟（Edge）與 GNOME 皆作「擴充功能」；「擴充套件」是簡轉繁的轉換產物 |
 | packet loss | 封包遺失率 | （無條目） | 「丟包」為大陸用語 |
 | destroy | 銷毀 | 銷毀 | 「銷燬」是 OpenCC s2twp 的過度轉換產物 |
 | pass（檢查結果） | 通過 | 傳遞；通過 | 檢查結果用「通過」；「透過」只能用於 via／through |

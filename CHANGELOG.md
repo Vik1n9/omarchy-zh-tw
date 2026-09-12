@@ -8,6 +8,9 @@
 - 修正 `tests/terminology.sh`：`git grep -P` 缺少 `(*UTF)` 導致整份術語檢查靜默跳過；ripgrep 後備改以 `\p{Han}` 選檔，涵蓋無副檔名的腳本。
 - `tests/terminology.sh` 從禁用詞移除「通過」（它是檢查結果的正確用詞），並補上本次確認的大陸用語與誤轉詞；未安裝 opencc 時改為失敗，需 `ALLOW_MISSING_OPENCC=1` 才略過。
 - `docs/glossary.md` 補上本次查照的詞條與一對多異體字的取用原則。
+- 翻譯政策新增：譯名沒有定論時以台灣微軟的在地化用語為優先參考，並註明 `support.microsoft.com` 部分頁面為機器翻譯。
+- extension 改採「擴充功能」（台灣微軟與 GNOME 一致）；原本的「擴充套件」是簡轉繁的轉換產物。
+- 於詞彙表註明 menu、shortcut、account 三項刻意沿用 Linux 桌面慣例而非微軟用語的理由。
 
 ## 0.2.0 - 2026-09-11
 

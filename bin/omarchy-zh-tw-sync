@@ -1299,11 +1299,11 @@ function copyEntry(sourceDir, source, stage, target = source) {
 }
 
 function applyAgentsOverlay(stage, targetDir) {
-  if (!agentsOverlayDir) throw new Error("找不到 Agents 用量擴充套件檔案，請重新執行安裝器");
+  if (!agentsOverlayDir) throw new Error("找不到 Agents 用量擴充功能檔案，請重新執行安裝器");
 
   for (const directory of ["bin", "assets"]) {
     const source = path.join(agentsOverlayDir, directory);
-    if (!fs.existsSync(source)) throw new Error(`Agents 用量擴充套件不完整：${source}`);
+    if (!fs.existsSync(source)) throw new Error(`Agents 用量擴充功能不完整：${source}`);
     fs.cpSync(source, path.join(stage, directory), { recursive: true, dereference: true });
   }
   for (const script of ["codex", "codex-collector", "grok-collector", "kimi-collector", "usage-update"]) {
