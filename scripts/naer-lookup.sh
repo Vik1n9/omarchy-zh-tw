@@ -49,7 +49,7 @@ for term in "$@"; do
     | to_entries
     | map(select((.key | ascii_downcase) == $q))
     | if length == 0 then empty
-      else .[] | "  [完全相符] \(.key) → \(.value.zh)（\(.value.id)）"
+      else .[] | "  [完全相符] \(.key) → \(.value | if type == "array" then map(.zh) | join("；") else .zh end)"
       end
   ' "$NAER_TERMS_JSON"
   jq -r --arg term "$term" '
@@ -58,6 +58,6 @@ for term in "$@"; do
     | map(select((.key | ascii_downcase) != $q and (.key | ascii_downcase | contains($q))))
     | sort_by(.key | length)
     | .[:8][]
-    | "  \(.key) → \(.value.zh)（\(.value.id)）"
+    | "  \(.key) → \(.value | if type == "array" then map(.zh) | join("；") else .zh end)"
   ' "$NAER_TERMS_JSON"
 done

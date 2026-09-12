@@ -6,7 +6,8 @@
 
 - 使用台灣繁體中文（zh-TW）。譯名依序取決於：GNOME／KDE 的 zh-TW 社群定論、台灣微軟的在地化用語、樂詞網《電子計算機名詞》，最後才是特別翻譯或保留原文。
 - `support.microsoft.com` 部分頁面是機器翻譯，引用前請確認是人工在地化內容。
-- 詞彙以 [docs/glossary.md](docs/glossary.md) 為準；新增詞彙時請以 `scripts/naer-lookup.sh` 或 `scripts/iicm-lookup.sh` 查照，並在詞彙表記錄採用譯名與偏離理由。
+- 詞彙以 [docs/glossary.md](docs/glossary.md) 為準；新增詞彙前請先用 `scripts/term-lookup.sh <英文詞彙>` 查詞庫（詞庫以 `scripts/build-termbase.sh` 建立），並在詞彙表記錄採用譯名與偏離理由。
+- 四個來源都查不到時，於「備註」註明「各來源皆無條目」，不要憑印象造詞。
 - Omarchy、Hyprland、應用程式名稱、協定名稱和程式碼識別字保持原文。
 - 不翻譯真實檔案路徑、指令引數、鍵名和使用者輸入內容。
 - 第三方應用程式通知保持原文，只翻譯 `omarchy-action` 發出的已知系統通知。

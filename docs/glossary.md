@@ -21,10 +21,29 @@
 
 查表工具：
 
+```bash
+./scripts/build-termbase.sh          # 建立詞庫，約 17 萬詞條
+./scripts/term-lookup.sh menu        # 依順位列出各來源譯名
+```
+
+`scripts/build-termbase.sh` 每次執行都從官方網址重新取得資料，本倉庫不散布任何來源詞庫；
+產出預設寫到 `$XDG_CACHE_HOME/omarchy-zh-tw/termbase.json`，不進版本控制。
+
+| 來源 | 取得方式 | 說明 |
+| --- | --- | --- |
+| GNOME zh_TW | `gitlab.gnome.org/GNOME/<模組>/-/raw/<分支>/po/zh_TW.po` | 15 個桌面核心模組 |
+| KDE zh_TW | `websvn.kde.org/trunk/l10n-kf6/zh_TW/messages/…?view=co` | 9 個 Plasma／KDE 模組 |
+| 台灣微軟 | Microsoft Terminology Collection 的 `CHINESE (TRADITIONAL).tbx` | 只採 `geographicalUsage` 標記 `TWN` 或未標地區者，排除港澳用語 |
+| 樂詞網 | 國教院《電子計算機名詞》JSON | 需自行下載，以 `NAER_TERMS_JSON` 指定 |
+
+單一來源的查表工具（保留供交叉核對）：
+
 | 工具 | 來源 | 預設路徑 | 覆寫 |
 | --- | --- | --- | --- |
 | `scripts/naer-lookup.sh <英文詞彙>` | 樂詞網《電子計算機名詞》JSON | `$HOME/Documents/電子計算機名詞.json` | `NAER_TERMS_JSON` |
 | `scripts/iicm-lookup.sh <英文詞彙>` | IICM 電腦名詞譯名表（78,396 筆） | `$HOME/Documents/iicm-computer-terms` | `IICM_TERMS_DIR` |
+
+**查不到就是查不到**：四個來源都沒有對應條目時，於「備註」記錄「各來源皆無條目」與自訂譯法的理由，不要憑印象造詞。
 
 ## 標點
 
@@ -68,13 +87,13 @@
 | orphan | 孤兒 | 孤兒 | 一致 |
 | reset / conflict | 重設／衝突 | 重設；重新開始；重置／衝突 | 一致 |
 | signature | 簽章 | 簽章分析 | 軟體簽章語境 |
-| account / user | 帳號／使用者 | 帳戶／用戶；使用者 | 依桌面慣例；台灣微軟作「帳戶」 |
+| account / user | 帳號／使用者 | 帳戶／用戶；使用者 | GNOME 作「帳號」；台灣微軟「帳戶」與「帳號」並收 |
 | authentication | 驗證／認證 | 鑑別；鑑定 | 依桌面慣例 |
 | authorization | 授權 | 授權 | 一致 |
 | performance | 效能 | 性能；效能 | 採「效能」 |
 | adapter / device | 配接器／裝置 | 配接器；附加卡／裝置；設備 | 一致 |
 | provider | 供應商 | 供應者 | 依桌面慣例 |
-| menu | 選單 | 菜單；功能表；選單 | 依 GNOME／KDE；台灣微軟作「功能表」，Linux 桌面採「選單」 |
+| menu | 選單 | 菜單；功能表；選項單 | GNOME 與 KDE 皆作「選單」；台灣微軟「功能表」與「選單」並收 |
 | clipboard | 剪貼簿 | 剪輯板 | 依現代桌面慣例 |
 | audio | 音訊 | 聲頻 | 依現代桌面慣例 |
 | video | 影片／視訊 | 視頻（video adapter 作「視訊配接器」） | 依語境與現代慣例 |
@@ -86,7 +105,7 @@
 | layout | 版面配置 | 布局；布置 | 依 MS／GNOME |
 | stream | 串流 | 流 | 多媒體語境 |
 | theme | 主題 | 文題（疑為資料錯誤） | 依現代慣例 |
-| shortcut / keybinding | 快捷鍵 | （accelerator key 作「加速鍵」） | 依現代桌面慣例；台灣微軟作「鍵盤快速鍵」 |
+| shortcut / keybinding | 快捷鍵 | 捷徑（accelerator key 作「加速鍵」） | GNOME 作「快捷鍵」；台灣微軟作「快速鍵／鍵盤快速鍵」 |
 | screenshot | 截圖／螢幕擷取 | （無直接條目） | 依現代慣例 |
 | passphrase | 密語 | 通行片語 | 依現代慣例 |
 | token / credential | 權杖／憑證 | 符記；訊標／身份碼 | 依現代慣例 |
@@ -99,7 +118,7 @@
 | emoji / dictation | 表情符號／聽寫 | （無條目） | — |
 | DNS | DNS（正文：領域名稱服務） | 領域名稱服務 | 介面保留 DNS |
 | crash | 當機 | （無直接條目） | 依現代慣例 |
-| extension | 擴充功能 | 擴充 | 台灣微軟（Edge）與 GNOME 皆作「擴充功能」；「擴充套件」是簡轉繁的轉換產物 |
+| extension / extensions | 擴充套件 | 延伸；副檔名 | GNOME 的 extensions 作「擴充套件」；單數 extension 在各來源多指副檔名 |
 | packet loss | 封包遺失率 | （無條目） | 「丟包」為大陸用語 |
 | destroy | 銷毀 | 銷毀 | 「銷燬」是 OpenCC s2twp 的過度轉換產物 |
 | pass（檢查結果） | 通過 | 傳遞；通過 | 檢查結果用「通過」；「透過」只能用於 via／through |
