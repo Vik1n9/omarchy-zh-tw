@@ -23,8 +23,12 @@
 
 ```bash
 ./scripts/build-termbase.sh          # 建立詞庫，約 17 萬詞條
-./scripts/term-lookup.sh menu        # 依順位列出各來源譯名
+./scripts/term-lookup.sh menu        # 依順位列出各來源譯名與出處
+./scripts/audit-glossary.sh          # 核對本表有哪些譯名沒有來源支持
 ```
+
+`term-lookup.sh` 會把 GNOME／KDE 的譯名標上「模組:原始 msgid」，用來判斷語境是否適用；
+查詢一律精確比對，不自動補複數或詞形變化——變體是獨立條目，自動擴充會把別的語境的譯名當成定論。
 
 `scripts/build-termbase.sh` 每次執行都從官方網址重新取得資料，本儲存庫不散布任何來源詞庫；
 產出預設寫到 `$XDG_CACHE_HOME/omarchy-zh-tw/termbase.json`，不進版本控制。

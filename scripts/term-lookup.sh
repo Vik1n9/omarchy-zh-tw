@@ -1,11 +1,10 @@
 #!/usr/bin/env bash
 #
 # 依 docs/glossary.md 的順位查詢譯名詞庫（scripts/build-termbase.sh 建立）。
-# 查不到就明說查不到，不要自行造詞。
+# 查不到就明說查不到，不要自行造詞；查到也要看出處，同一個詞在不同語境可能有不同譯法。
 
 set -euo pipefail
 
-ROOT_DIR=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)
 CACHE_DIR="${OMARCHY_TERMBASE_CACHE:-${XDG_CACHE_HOME:-$HOME/.cache}/omarchy-zh-tw}"
 TERMBASE="${OMARCHY_TERMBASE:-$CACHE_DIR/termbase.json}"
 
@@ -14,7 +13,7 @@ usage() {
 用法：scripts/term-lookup.sh [--near] <英文詞彙>...
 
 依順位輸出各來源的譯名：GNOME → KDE → 台灣微軟 → 樂詞網。
-先列完全相符，再列含有該詞的鄰近條目。
+GNOME 與 KDE 的譯名會標出「模組:原始 msgid」，供判斷語境是否適用。
 
 選項：
   --near   只列鄰近條目，不列完全相符
@@ -51,36 +50,4 @@ done
   exit 1
 }
 
-TERMBASE="$TERMBASE" NEAR_ONLY="$NEAR_ONLY" python3 - "${args[@]}" <<'PY'
-import json, os, sys
-
-LABEL = {"gnome": "GNOME", "kde": "KDE", "ms": "台灣微軟", "naer": "樂詞網"}
-ORDER = ["gnome", "kde", "ms", "naer"]
-
-data = json.load(open(os.environ["TERMBASE"], encoding="utf-8"))
-terms = data["terms"]
-near_only = os.environ["NEAR_ONLY"] == "1"
-meta = data.get("_meta", {})
-print(f"# 詞庫建立於 {meta.get('built', '?')}，共 {len(terms)} 個詞條")
-
-for query in sys.argv[1:]:
-    key = query.lower()
-    print(f"\n== {query} ==")
-    entry = terms.get(key)
-    if entry and not near_only:
-        for source in ORDER:
-            if source in entry:
-                print(f"  {LABEL[source]:8s} {'、'.join(entry[source])}")
-    elif not entry:
-        print("  查無完全相符的條目。")
-
-    near = [k for k in terms if k != key and key in k.split()]
-    near.sort(key=len)
-    if near:
-        print("  -- 鄰近條目 --")
-        for k in near[:6]:
-            parts = [
-                f"{LABEL[s]}：{'、'.join(terms[k][s])}" for s in ORDER if s in terms[k]
-            ]
-            print(f"  {k} → {'；'.join(parts)}")
-PY
+TERMBASE="$TERMBASE" NEAR_ONLY="$NEAR_ONLY" python3 "$(dirname -- "${BASH_SOURCE[0]}")/termbase_query.py" "${args[@]}"

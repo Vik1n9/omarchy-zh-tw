@@ -9,11 +9,12 @@
     {
       "_meta": {"built": "...", "sources": {...}},
       "terms": {
-        "menu": {"gnome": ["選單"], "kde": ["選單"], "ms": ["功能表", "選單"]}
+        "screenshots": {"gnome": {"螢幕快照": ["gnome-shell:Screenshots"]}}
       }
     }
 
-鍵一律是小寫英文詞彙；值依來源分組，方便依 docs/glossary.md 的順位裁決。
+鍵一律是小寫英文詞彙；值依來源分組，每個譯名附上出處（po 來源為「模組:原始
+msgid」），因為同一個詞在不同語境可能有不同譯法，光看譯名無法判斷是否適用。
 """
 
 from __future__ import annotations
@@ -123,7 +124,10 @@ def collect_po(paths: list[pathlib.Path], terms: dict, source: str) -> int:
         for msgid, msgstr in parse_po(text):
             if not is_term(msgid):
                 continue
-            terms[msgid.lower().rstrip(":")][source].add(msgstr.rstrip("："))
+            origin = f"{path.stem}:{msgid}"
+            terms[msgid.lower().rstrip(":")][source].setdefault(
+                msgstr.rstrip("："), set()
+            ).add(origin)
             added += 1
     return added
 
@@ -152,7 +156,7 @@ def collect_tbx(archive: pathlib.Path, member: str, terms: dict, source: str) ->
             for en in english:
                 for zh in chinese:
                     if en and zh:
-                        terms[en.lower()][source].add(zh)
+                        terms[en.lower()][source].setdefault(zh, set()).add(en)
                         added += 1
             element.clear()
     return added
@@ -180,7 +184,7 @@ def collect_naer(path: pathlib.Path, terms: dict, source: str) -> int:
             continue
         for chinese in naer_readings(entry):
             if chinese:
-                terms[english.lower()][source].add(chinese)
+                terms[english.lower()][source].setdefault(chinese, set()).add(english)
                 added += 1
     return added
 
@@ -196,7 +200,7 @@ def main() -> int:
     parser.add_argument("--source-note", action="append", default=[])
     args = parser.parse_args()
 
-    terms: dict = collections.defaultdict(lambda: collections.defaultdict(set))
+    terms: dict = collections.defaultdict(lambda: collections.defaultdict(dict))
     counts = {}
 
     if args.gnome_dir and args.gnome_dir.is_dir():
@@ -220,7 +224,10 @@ def main() -> int:
             "order": ["gnome", "kde", "ms", "naer"],
         },
         "terms": {
-            key: {src: sorted(vals) for src, vals in sorted(by_source.items())}
+            key: {
+                src: {zh: sorted(origins) for zh, origins in sorted(vals.items())}
+                for src, vals in sorted(by_source.items())
+            }
             for key, by_source in sorted(terms.items())
         },
     }
