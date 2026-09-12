@@ -4,7 +4,7 @@
 
 An unofficial Traditional Chinese (Taiwan, zh-TW) localization project for Omarchy 4. It generates user-scoped plugin clones from the Omarchy sources currently installed on the machine. It never modifies `/usr/share/omarchy` and does not redistribute Omarchy plugin source code in this repository.
 
-This project is derived from the Simplified Chinese localization at QueedWen/omarchy-zh-cn, with translations and interface wording adapted to Taiwan conventions (zh-TW).
+This project is derived from the Simplified Chinese localization at [QueedWen/omarchy-zh-cn](https://github.com/QueedWen/omarchy-zh-cn) (MIT), with translations and interface wording adapted to Taiwan conventions (zh-TW).
 
 ## Preview
 

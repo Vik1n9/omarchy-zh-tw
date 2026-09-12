@@ -4,7 +4,7 @@
 
 面向 Omarchy 4 的非官方台灣繁體中文本地化專案。它從本機目前安裝的 Omarchy 原始檔產生使用者級外掛複製，不修改 `/usr/share/omarchy`，也不在倉庫中重新散布 Omarchy 的外掛原始碼。
 
-本專案衍生自 QueedWen/omarchy-zh-cn 的簡體中文版，將其翻譯與介面調整為台灣用語（zh-TW）。
+本專案衍生自 [QueedWen/omarchy-zh-cn](https://github.com/QueedWen/omarchy-zh-cn) 的簡體中文版（MIT 授權），將其翻譯與介面調整為台灣用語（zh-TW）。
 
 ## 效果預覽
 
