@@ -26,7 +26,7 @@
 ./scripts/term-lookup.sh menu        # 依順位列出各來源譯名
 ```
 
-`scripts/build-termbase.sh` 每次執行都從官方網址重新取得資料，本倉庫不散布任何來源詞庫；
+`scripts/build-termbase.sh` 每次執行都從官方網址重新取得資料，本儲存庫不散布任何來源詞庫；
 產出預設寫到 `$XDG_CACHE_HOME/omarchy-zh-tw/termbase.json`，不進版本控制。
 
 | 來源 | 取得方式 | 說明 |
