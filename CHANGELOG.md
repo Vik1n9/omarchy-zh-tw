@@ -10,6 +10,8 @@
 - `docs/glossary.md` 補上本次查照的詞條與一對多異體字的取用原則。
 - uninstall 改採「解除安裝」（台灣微軟與樂詞網一致），禁用詞清單同步移除該詞。
 - threshold 的通用譯名改採 GNOME 的「臨界值」；電池面板的 `Threshold` 仍依語境作「充電保護」。
+- hook 改採微軟的「勾點」（原用的「掛鉤」各來源皆未收），同步更新整合檢查的斷言。
+- DNS 正文改採微軟的「網域名稱服務」；介面仍保留 `DNS`。
 - 翻譯政策改為四層順位：GNOME／KDE 的 zh-TW 社群定論 → 台灣微軟 → 樂詞網《電子計算機名詞》→ 特別翻譯或保留原文；並註明 `support.microsoft.com` 部分頁面為機器翻譯。
 - 新增 `scripts/naer-lookup.sh` 查詢樂詞網《電子計算機名詞》，補上第三順位的查照工具。
 - `tests/terminology.sh` 的異體字正規化補上「纔／才」，避免把正確的「才」誤報為簡體字。
@@ -19,7 +21,7 @@
 ## 0.2.0 - 2026-09-11
 
 - 由 [QueedWen/omarchy-zh-cn](https://github.com/QueedWen/omarchy-zh-cn) 衍生，轉換為台灣繁體中文（zh-TW）。
-- 全面更名為 `omarchy-zh-tw`：同步指令、更新指令、掛鉤、資料目錄、manifest 鍵 `zhTwManaged` 與選單標記。
+- 全面更名為 `omarchy-zh-tw`：同步指令、更新指令、勾點、資料目錄、manifest 鍵 `zhTwManaged` 與選單標記。
 - 依現代台灣桌面慣例重譯全部介面字串，並以 IICM 電腦名詞譯名表查照。
 - Qt 地區改為 `zh_TW`，星期顯示為週一至週日，日期格式為 `yyyy年M月`。
 - 顯示引號改為台灣慣用的「」，移除不必要的引號。

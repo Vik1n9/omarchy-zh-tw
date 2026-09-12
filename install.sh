@@ -92,7 +92,7 @@ if ((DRY_RUN)); then
   echo "將安裝：$SYNC_TARGET"
   echo "將安裝：$UPDATE_TARGET（繁體中文更新流程）"
   echo "將安裝：$AGENTS_OVERLAY_TARGET（Codex/Grok/Kimi 用量擴充套件與主題圖示）"
-  echo "將安裝 post-update 自動同步掛鉤，並把 Super+K 指向繁體中文快捷鍵面板。"
+  echo "將安裝 post-update 自動同步勾點，並把 Super+K 指向繁體中文快捷鍵面板。"
   exit 0
 fi
 

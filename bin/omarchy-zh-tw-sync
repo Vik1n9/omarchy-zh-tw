@@ -316,7 +316,7 @@ const updateScriptReplacements = {
   ],
   "omarchy-hook": [
     ["Usage: omarchy-hook [name] [args...]", "用法：omarchy-hook [名稱] [引數...]", "用法"],
-    ["Hook failed:", "掛鉤執行失敗：", "失敗提示"]
+    ["Hook failed:", "勾點執行失敗：", "失敗提示"]
   ]
 };
 

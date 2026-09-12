@@ -114,13 +114,13 @@
 | passphrase | 密語 | 通行片語 | 依現代慣例 |
 | token / credential | 權杖／憑證 | 符記；訊標／身份碼 | 依現代慣例 |
 | threshold | 臨界值 | 定限（微軟作「閾值」） | GNOME 作「臨界值」；電池面板的 `Threshold` 依語境意譯為「充電保護」 |
-| hook | 掛鉤 | 鉤（微軟作「勾點」） | **無來源支持**：各來源皆未收「掛鉤」，沿用專案既有譯名 |
+| hook | 勾點 | 鉤（樂詞網）；勾點（微軟） | 微軟的軟體語境作「勾點」（「聽筒架」為電話語境）；原用「掛鉤」各來源皆未收 |
 | OCR | 光學字元辨識 | 光學字元閱讀機 | 一致 |
 | Wi-Fi / Bluetooth | 無線網路／藍牙 | （無條目） | — |
 | screensaver / wallpaper | 螢幕保護程式／桌布 | （無條目） | 依 MS zh-TW |
 | plugin / widget | 外掛／小工具 | plug-in 作「插入」（語境不合） | 依 GNOME／MS |
 | emoji / dictation | 表情符號／聽寫 | （無條目） | — |
-| DNS | DNS（正文：領域名稱服務） | 領域名稱服務 | 介面保留 DNS |
+| DNS | DNS（正文：網域名稱服務） | 網域名稱服務（微軟）；領域名稱服務（樂詞網） | 介面保留 DNS；正文採微軟用語 |
 | crash | 當機 | （無直接條目） | 依現代慣例 |
 | extension / extensions | 擴充套件 | 延伸；副檔名 | GNOME 的 extensions 作「擴充套件」；單數 extension 在各來源多指副檔名 |
 | packet loss | 封包遺失率 | （四來源皆無條目） | **自訂譯法**：各來源皆無此詞，依 loss「遺失」與 packet「封包」組合；「丟包」為大陸用語 |
