@@ -12,6 +12,8 @@ bash -n "$ROOT_DIR/bin/omarchy-update-confirm-zh-tw"
 for script in codex usage-update; do
   bash -n "$ROOT_DIR/agents-overlay/bin/$script"
 done
+bash -n "$ROOT_DIR/scripts/naer-lookup.sh"
+bash -n "$ROOT_DIR/scripts/iicm-lookup.sh"
 python -c 'import ast, pathlib, sys; [ast.parse(pathlib.Path(item).read_text()) for item in sys.argv[1:]]' \
   "$ROOT_DIR/agents-overlay/bin/codex-collector" \
   "$ROOT_DIR/agents-overlay/bin/grok-collector" \
