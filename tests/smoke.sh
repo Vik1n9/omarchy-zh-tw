@@ -42,7 +42,7 @@ rg -Fq '準備更新嗎？' "$ROOT_DIR/bin/omarchy-update-confirm-zh-tw"
 rg -Fq -- '--affirmative "是"' "$ROOT_DIR/bin/omarchy-update-confirm-zh-tw"
 rg -Fq -- '--negative "否"' "$ROOT_DIR/bin/omarchy-update-confirm-zh-tw"
 
-echo "靜態檢查透過。"
+echo "靜態檢查通過。"
 "$ROOT_DIR/tests/terminology.sh"
 "$ROOT_DIR/tests/integration.sh"
 "$ROOT_DIR/tests/install-cycle.sh"

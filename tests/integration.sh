@@ -163,4 +163,4 @@ if rg -n '/home/[[:alnum:]_.-]+|/Users/[[:alnum:]_.-]+' "$sandbox_home"; then
   exit 1
 fi
 
-echo "Omarchy 隔離整合檢查透過。"
+echo "Omarchy 隔離整合檢查通過。"

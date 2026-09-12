@@ -1,5 +1,14 @@
 # 更新記錄
 
+## 未發行
+
+- 清除殘留的大陸用語與 OpenCC 過度轉換，共 13 處介面與文件字串：封包遺失率、銷毀、儲存庫、上一則通知、內建軟體、相符、歷程記錄、如需說明、不需、視需要。
+- 測試輸出的結語更正為「檢查通過」；原本的「透過」是簡體原文機械轉換後的誤譯，只能用於 via／through。
+- 異體字統一：「臺」一律改用「台」。
+- 修正 `tests/terminology.sh`：`git grep -P` 缺少 `(*UTF)` 導致整份術語檢查靜默跳過；ripgrep 後備改以 `\p{Han}` 選檔，涵蓋無副檔名的腳本。
+- `tests/terminology.sh` 從禁用詞移除「通過」（它是檢查結果的正確用詞），並補上本次確認的大陸用語與誤轉詞；未安裝 opencc 時改為失敗，需 `ALLOW_MISSING_OPENCC=1` 才略過。
+- `docs/glossary.md` 補上本次查照的詞條與一對多異體字的取用原則。
+
 ## 0.2.0 - 2026-09-11
 
 - 由 [QueedWen/omarchy-zh-cn](https://github.com/QueedWen/omarchy-zh-cn) 衍生，轉換為台灣繁體中文（zh-TW）。

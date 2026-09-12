@@ -73,7 +73,7 @@ user_name=${USER:-$(id -un)}
 }
 
 [[ -f $SYNC_SOURCE && -f $HOOK_SOURCE && -f $UPDATE_SOURCE && -f $UPDATE_CONFIRM_SOURCE && -d $AGENTS_OVERLAY_SOURCE ]] || {
-  echo "專案檔案不完整，請從倉庫根目錄執行安裝器。" >&2
+  echo "專案檔案不完整，請從儲存庫根目錄執行安裝器。" >&2
   exit 1
 }
 
@@ -165,7 +165,7 @@ for source_id in "${PLUGIN_IDS[@]}"; do
   cloned_from=$(jq -r '.omarchy.clonedFrom // empty' "$manifest")
   if [[ $managed == true ]]; then
     [[ $cloned_from == "$source_id" ]] || {
-      echo "受管理外掛的來源不匹配：$target_id" >&2
+      echo "受管理外掛的來源不符：$target_id" >&2
       exit 1
     }
   elif ((ADOPT_EXISTING)) && [[ $cloned_from == "$source_id" ]]; then

@@ -2,7 +2,7 @@
 
 **繁體中文** | [English](README.en.md)
 
-面向 Omarchy 4 的非官方台灣繁體中文本地化專案。它從本機目前安裝的 Omarchy 原始檔產生使用者級外掛複製，不修改 `/usr/share/omarchy`，也不在倉庫中重新散布 Omarchy 的外掛原始碼。
+面向 Omarchy 4 的非官方台灣繁體中文本地化專案。它從本機目前安裝的 Omarchy 原始檔產生使用者級外掛複製，不修改 `/usr/share/omarchy`，也不在儲存庫中重新散布 Omarchy 的外掛原始碼。
 
 本專案衍生自 [QueedWen/omarchy-zh-cn](https://github.com/QueedWen/omarchy-zh-cn) 的簡體中文版（MIT 授權），將其翻譯與介面調整為台灣用語（zh-TW）。
 
@@ -58,7 +58,7 @@ Kimi 設定檔位於 `~/.config/omarchy/agents/kimi.json`：
 - 音訊、藍牙、網路、顯示器、電源和天氣
 - 日期、月份、星期及行事曆
 - 天氣使用攝氏，風速使用 `km/h`，地名保持資料來源原文
-- 提醒、通知歷史和 Omarchy 動態通知
+- 提醒、通知歷程和 Omarchy 動態通知
 - 系統匣、剪貼簿、表情符號、圖片選擇器、測速和 Wi-Fi QR Code
 - 偵測到 Fcitx 5/Rime 表情符號註解檔時，為表情符號選擇器補充繁體中文搜尋關鍵字
 - 鎖定畫面、權限驗證，以及 Omarchy 更新過程中的快照、套件、遷移、錯誤與重新啟動提示
@@ -82,12 +82,12 @@ Kimi 設定檔位於 `~/.config/omarchy/agents/kimi.json`：
 如果你的 AI 助理能夠在本機讀取檔案並執行終端機指令，可以把下面的提示詞完整發送給它：
 
 ```text
-請幫我在目前這臺 Omarchy 4 系統上安裝這個台灣繁體中文本地化專案：
+請幫我在目前這台 Omarchy 4 系統上安裝這個台灣繁體中文本地化專案：
 https://github.com/Vik1n9/omarchy-zh-tw
 
 要求：
-1. 先閱讀倉庫的 README.md 和 install.sh，並檢查目前系統、Omarchy 版本及依賴是否相容。
-2. 將倉庫複製到合適的使用者目錄；如果目標目錄已經存在，不要覆蓋，先檢查現狀。
+1. 先閱讀儲存庫的 README.md 和 install.sh，並檢查目前系統、Omarchy 版本及依賴是否相容。
+2. 將儲存庫複製到合適的使用者目錄；如果目標目錄已經存在，不要覆蓋，先檢查現狀。
 3. 先執行 ./install.sh --dry-run。只有 dry-run 成功後，才執行 ./install.sh。
 4. 不要修改 /usr/share/omarchy，也不要覆蓋現有使用者外掛或個人設定。
 5. 如果發現同名外掛複製或其他衝突，立即停止並告訴我具體情況；未經我明確確認，不要使用 --adopt-existing。
@@ -145,7 +145,7 @@ omarchy-zh-tw-sync
 ./uninstall.sh
 ```
 
-卸載器會還原安裝前的選單和更新指令，移除受本專案管理的外掛複製，並還原 `Super + K` 設定。Omarchy 的外掛移除指令和卸載器都會保留帶時間戳的備份，不會直接銷燬使用者設定。
+卸載器會還原安裝前的選單和更新指令，移除受本專案管理的外掛複製，並還原 `Super + K` 設定。Omarchy 的外掛移除指令和卸載器都會保留帶時間戳的備份，不會直接銷毀使用者設定。
 
 ## 修改範圍
 
@@ -162,7 +162,7 @@ omarchy-zh-tw-sync
 ~/.local/state/omarchy-zh-tw/
 ```
 
-`/usr/share/omarchy` 始終唯讀。安裝器不會收集或上傳通知歷史、網路資訊、位置、權杖或其他使用者資料。
+`/usr/share/omarchy` 全程維持唯讀。安裝器不會收集或上傳通知歷程、網路資訊、位置、權杖或其他使用者資料。
 
 ## 開發與檢查
 
@@ -181,4 +181,4 @@ omarchy-zh-tw-sync
 
 這是社群專案，與 Omarchy 官方無隸屬關係。本專案的繁體中文（台灣）翻譯與調整由 [Vik1n9](https://github.com/Vik1n9) 協助起頭；Vik1n9 不保證後續維護或更新，歡迎任何人接手或參與維護。
 
-Omarchy 及其原始碼遵循其上游授權條款；本倉庫只包含本專案編寫的安裝邏輯、同步邏輯和繁體中文翻譯，採用 MIT 授權條款。
+Omarchy 及其原始碼遵循其上游授權條款；本儲存庫只包含本專案編寫的安裝邏輯、同步邏輯和繁體中文翻譯，採用 MIT 授權條款。

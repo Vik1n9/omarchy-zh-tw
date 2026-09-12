@@ -8,7 +8,7 @@ usage() {
   cat <<'EOF'
 用法：scripts/iicm-lookup.sh <英文詞彙>...
 
-查詢 IICM 電腦名詞譯名表，輸出「編號 | 原文 | 臺灣用語 | 大陸用語」。
+查詢 IICM 電腦名詞譯名表，輸出「編號 | 原文 | 台灣用語 | 大陸用語」。
 查照結果請記錄到 docs/glossary.md。
 
 環境變數：
