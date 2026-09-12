@@ -10,6 +10,7 @@
 - `docs/glossary.md` 補上本次查照的詞條與一對多異體字的取用原則。
 - 翻譯政策改為四層順位：GNOME／KDE 的 zh-TW 社群定論 → 台灣微軟 → 樂詞網《電子計算機名詞》→ 特別翻譯或保留原文；並註明 `support.microsoft.com` 部分頁面為機器翻譯。
 - 新增 `scripts/naer-lookup.sh` 查詢樂詞網《電子計算機名詞》，補上第三順位的查照工具。
+- `tests/terminology.sh` 的異體字正規化補上「纔／才」，避免把正確的「才」誤報為簡體字。
 - extension 改採「擴充功能」（台灣微軟與 GNOME 一致）；原本的「擴充套件」是簡轉繁的轉換產物。
 - 於詞彙表註明 menu、shortcut、account 三項刻意沿用 Linux 桌面慣例而非微軟用語的理由。
 

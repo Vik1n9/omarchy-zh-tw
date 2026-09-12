@@ -68,7 +68,7 @@ else
     sed -e 's/臺/台/g' -e 's/錶/表/g' -e 's/覈/核/g' -e 's/佈/布/g' -e 's/遊/游/g' \
       -e 's/羣/群/g' -e 's/妳/你/g' -e 's/佔/占/g' -e 's/祕/秘/g' -e 's/儘/盡/g' \
       -e 's/着/著/g' -e 's/週/周/g' -e 's/爲/為/g' -e 's/裏/裡/g' -e 's/麽/麼/g' \
-      -e 's/啓/啟/g' -e 's/藉/借/g' -e 's/準/准/g'
+      -e 's/啓/啟/g' -e 's/藉/借/g' -e 's/準/准/g' -e 's/纔/才/g'
   }
   for f in "${files[@]}"; do
     if ! cmp -s <(normalize_stream <"$f") <(opencc -c s2t.json <"$f" | normalize_stream); then
