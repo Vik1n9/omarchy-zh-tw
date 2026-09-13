@@ -172,7 +172,22 @@ omarchy-zh-tw-sync
 
 在 Omarchy 機器上，測試還會使用臨時 `HOME` 從系統目前外掛產生一套隔離副本；不會觸碰真實使用者設定。
 
-翻譯詞彙請參閱 [docs/glossary.md](docs/glossary.md)；貢獻前請閱讀 [CONTRIBUTING.md](CONTRIBUTING.md)。
+### 譯名查證
+
+譯名依序取決於 GNOME／KDE 的 zh-TW 社群定論、台灣微軟、樂詞網《電子計算機名詞》，
+再來才是本專案自訂或保留原文。決定譯名前請先查詞庫，不要憑印象造詞：
+
+```bash
+./scripts/build-termbase.sh          # 從各來源官方端點建立詞庫
+./scripts/term-lookup.sh menu        # 依順位列出各來源譯名與出處
+./scripts/audit-glossary.sh          # 核對詞彙表有哪些譯名缺乏依據
+```
+
+詞庫在執行時下載，不隨本儲存庫散布；查詢結果會標出 GNOME／KDE 的原始 msgid，
+供判斷語境是否適用。四個來源都查不到的譯名收錄在 [docs/terms-local.json](docs/terms-local.json)，
+每筆都附採用理由。
+
+翻譯詞彙與完整政策請參閱 [docs/glossary.md](docs/glossary.md)；貢獻前請閱讀 [CONTRIBUTING.md](CONTRIBUTING.md)。
 
 ## 致謝與宣告
 
