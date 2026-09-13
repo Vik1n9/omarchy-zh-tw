@@ -10,14 +10,15 @@
 2. **台灣微軟**。桌面社群沒有定論時，比對台灣微軟的在地化用語，來源以產品介面與人工在地化頁面為準（Windows／Microsoft 365 的 zh-TW 介面、`support.microsoft.com/zh-tw`）。
    - `support.microsoft.com` 有部分頁面是機器翻譯，同一站內會出現「功能表／選單」「快速鍵／快捷鍵」並存；引用前先確認該頁是人工在地化內容。
 3. **樂詞網**。前兩層都沒有依據時，採國家教育研究院樂詞網《電子計算機名詞》的譯名；中華民國資訊學會 IICM 電腦名詞譯名表作為補充對照。
-4. **特別翻譯或保留原文**。以上都不適用時另行決定譯法，或保留原文，並在本表「備註」記錄理由。
+4. **本專案自訂**（`docs/terms-local.json`）。四來源皆無條目，或來源條目語境不合時，
+   由本專案決定譯法並收錄，每筆都要寫明理由。這份詞庫隨儲存庫版控，不是第三方資料。
+5. **保留原文**。產品名稱、指令、真實路徑與第三方內容一律保持原文。
 
 其他規則：
 
 - 名詞審譯來源的條目偏舊、語境不合或資料異常時，採用上位順位的用語，並在「備註」記錄理由。
 - 上位順位與下位順位衝突時，於「備註」寫明差異，避免日後被誤認為疏漏（見 menu、shortcut、account 三列）。
-- 產品名稱、指令、真實路徑與第三方內容一律保持原文。
-- 新增或變更詞彙時，一併更新本表。
+- 新增或變更詞彙時，一併更新本表；屬於第四順位的，同時收錄到 `docs/terms-local.json`。
 
 查表工具：
 
@@ -39,6 +40,7 @@
 | KDE zh_TW | `websvn.kde.org/trunk/l10n-kf6/zh_TW/messages/…?view=co` | 9 個 Plasma／KDE 模組 |
 | 台灣微軟 | Microsoft Terminology Collection 的 `CHINESE (TRADITIONAL).tbx` | 只採 `geographicalUsage` 標記 `TWN` 或未標地區者，排除港澳用語 |
 | 樂詞網 | 國教院《電子計算機名詞》JSON | 需自行下載，以 `NAER_TERMS_JSON` 指定 |
+| 本專案 | `docs/terms-local.json` | 隨儲存庫版控，自訂譯名與理由 |
 
 單一來源的查表工具（保留供交叉核對）：
 
@@ -47,7 +49,8 @@
 | `scripts/naer-lookup.sh <英文詞彙>` | 樂詞網《電子計算機名詞》JSON | `$HOME/Documents/電子計算機名詞.json` | `NAER_TERMS_JSON` |
 | `scripts/iicm-lookup.sh <英文詞彙>` | IICM 電腦名詞譯名表（78,396 筆） | `$HOME/Documents/iicm-computer-terms` | `IICM_TERMS_DIR` |
 
-**查不到就是查不到**：四個來源都沒有對應條目時，於「備註」記錄「各來源皆無條目」與自訂譯法的理由，不要憑印象造詞。
+**查不到就是查不到**：四個來源都沒有對應條目時，收錄到 `docs/terms-local.json` 並寫明理由，
+不要憑印象造詞。`audit-glossary.sh` 會把已收錄的詞單獨列為 C 類，A、B 兩類才是待處理的。
 
 **查到也要看語境**：同一個詞在來源裡可能因語境而有不同譯法，單數與複數形也可能分屬不同用途。
 採用前先回原始 po 檔確認該條目的語境，例如 GNOME 的 `Screenshots` 是 `~/Pictures` 底下的資料夾名稱，

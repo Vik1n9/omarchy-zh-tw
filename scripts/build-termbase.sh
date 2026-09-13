@@ -9,6 +9,7 @@
 #   3. 台灣微軟     Microsoft Terminology Collection 的 CHINESE (TRADITIONAL).tbx
 #                   只採 geographicalUsage 標記 TWN 或未標地區的譯名
 #   4. 樂詞網       國家教育研究院《電子計算機名詞》JSON，需自行下載後指定路徑
+#   5. 本專案       docs/terms-local.json，本專案自訂譯名（進版控，非第三方資料）
 
 set -euo pipefail
 
@@ -17,6 +18,7 @@ ROOT_DIR=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)
 CACHE_DIR="${OMARCHY_TERMBASE_CACHE:-${XDG_CACHE_HOME:-$HOME/.cache}/omarchy-zh-tw}"
 OUT="${OMARCHY_TERMBASE:-$CACHE_DIR/termbase.json}"
 NAER_TERMS_JSON="${NAER_TERMS_JSON:-$HOME/Documents/電子計算機名詞.json}"
+LOCAL_TERMS_JSON="${LOCAL_TERMS_JSON:-$ROOT_DIR/docs/terms-local.json}"
 
 MS_URL="https://download.microsoft.com/download/b/2/d/b2db7a7c-8d33-47f3-b2c1-ee5e6445cf45/MicrosoftTermCollection.zip"
 GNOME_RAW="https://gitlab.gnome.org/GNOME"
@@ -54,6 +56,7 @@ usage() {
   OMARCHY_TERMBASE        輸出路徑（預設 $XDG_CACHE_HOME/omarchy-zh-tw/termbase.json）
   OMARCHY_TERMBASE_CACHE  下載暫存目錄
   NAER_TERMS_JSON         樂詞網《電子計算機名詞》JSON 路徑
+  LOCAL_TERMS_JSON        自訂詞庫路徑（預設 docs/terms-local.json）
 EOF
 }
 
@@ -150,6 +153,14 @@ else
   echo "找不到樂詞網詞庫（$NAER_TERMS_JSON），略過該來源。" >&2
 fi
 
+local_args=()
+if [[ -f $LOCAL_TERMS_JSON ]]; then
+  local_args=(--local-json "$LOCAL_TERMS_JSON")
+  notes+=("local: docs/terms-local.json")
+else
+  echo "找不到自訂詞庫（$LOCAL_TERMS_JSON），略過該來源。" >&2
+fi
+
 note_args=()
 for note in "${notes[@]}"; do
   note_args+=(--source-note "$note")
@@ -161,4 +172,5 @@ python3 "$ROOT_DIR/scripts/termbase_build.py" \
   --kde-dir "$CACHE_DIR/kde" \
   "${ms_args[@]}" \
   "${naer_args[@]}" \
+  "${local_args[@]}" \
   "${note_args[@]}"

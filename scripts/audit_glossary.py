@@ -3,8 +3,12 @@
 
 由 scripts/audit-glossary.sh 呼叫，輸出兩類結果：
 
-  A. 四來源皆無條目 —— 自訂譯法，詞彙表「備註」必須說明理由。
-  B. 採用譯名不在任一來源 —— 與來源不一致，需要理由或改採來源用語。
+  A. 四來源皆無條目，且未收錄於自訂詞庫 —— 需要查證或收錄。
+  B. 採用譯名不在任一來源，且未收錄於自訂詞庫 —— 需要理由或改採來源用語。
+  C. 已收錄於 docs/terms-local.json —— 專案已決議，僅列出供覆核。
+
+自訂詞庫是第五順位，稽核時單獨計算：把它算進「有來源」會讓稽核永遠通過，
+完全不算又會讓已定案的詞每次都被當成漏網詞重複提出。
 
 比對規則刻意保守：
   * 只用詞彙表「原文」欄列出的詞查詢，不自動補複數或詞形變化。
@@ -19,8 +23,9 @@ import os
 import re
 import sys
 
-LABEL = {"gnome": "GNOME", "kde": "KDE", "ms": "微軟", "naer": "樂詞網"}
+LABEL = {"gnome": "GNOME", "kde": "KDE", "ms": "微軟", "naer": "樂詞網", "local": "本專案"}
 ORDER = ["gnome", "kde", "ms", "naer"]
+LOCAL = "local"
 SPLIT = re.compile(r"[；;、，,／/]")
 PAREN = re.compile(r"（[^）]*）|\([^)]*\)")
 ROW = re.compile(r"\|\s*([^|]+?)\s*\|\s*([^|]+?)\s*\|")
@@ -58,17 +63,24 @@ def main() -> int:
         terms = json.load(handle)["terms"]
     rows = glossary_rows(os.environ["GLOSSARY"])
 
-    missing, mismatch = [], []
+    missing, mismatch, decided = [], [], []
     for english, chinese in rows:
         queries = [q.strip().lower() for q in SPLIT.split(PAREN.sub("", english)) if q.strip()]
         adopted = readings([chinese])
         found: dict[str, set[str]] = {}
+        local: set[str] = set()
         for query in queries:
             entry = terms.get(query)
             if not entry:
                 continue
             for source, values in entry.items():
-                found.setdefault(source, set()).update(values)
+                if source == LOCAL:
+                    local |= readings(values)
+                else:
+                    found.setdefault(source, set()).update(values)
+        if adopted & local:
+            decided.append((english, chinese))
+            continue
         if not found:
             missing.append((english, chinese))
             continue
@@ -82,14 +94,21 @@ def main() -> int:
             mismatch.append((english, chinese, detail))
 
     print(f"詞彙表共 {len(rows)} 列")
-    print(f"\n### A. 四來源皆無條目（{len(missing)} 項）")
+    print(f"\n### A. 四來源皆無條目，且未收錄於自訂詞庫（{len(missing)} 項）")
     for english, chinese in missing:
         print(f"  {english:26s} 採用「{chinese}」")
-    print(f"\n### B. 採用譯名不在任一來源（{len(mismatch)} 項）")
+    print(f"\n### B. 採用譯名不在任一來源，且未收錄於自訂詞庫（{len(mismatch)} 項）")
     for english, chinese, detail in mismatch:
         print(f"  {english:26s} 採用「{chinese}」")
         print(f"      {detail}")
-    print("\n兩類都不是錯誤，但都必須在詞彙表「備註」說明理由。")
+    print(f"\n### C. 已收錄於 docs/terms-local.json（{len(decided)} 項）")
+    for english, chinese in decided:
+        print(f"  {english:26s} 採用「{chinese}」")
+
+    if missing or mismatch:
+        print("\nA、B 兩類請查證後改採來源用語，或收錄到 docs/terms-local.json 並寫明理由。")
+    else:
+        print("\n所有採用譯名都有來源支持或已收錄於自訂詞庫。")
     return 0
 
 

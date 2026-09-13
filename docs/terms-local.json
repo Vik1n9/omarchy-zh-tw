@@ -1,0 +1,48 @@
+{
+  "_meta": {
+    "note": "本專案自訂的譯名，順位排在 GNOME、KDE、台灣微軟、樂詞網之後（第五順位）。只收兩類詞：四來源皆無條目的，以及來源條目語境不合而另行決定的。每筆都必須寫 note 說明理由，並與 docs/glossary.md 保持一致。",
+    "order": 5
+  },
+  "terms": {
+    "packet loss": {
+      "zh": ["封包遺失率"],
+      "note": "四來源皆無此詞；依 packet「封包」與 loss「遺失」組合。「丟包」為大陸用語。"
+    },
+    "preinstalled": {
+      "zh": ["預安裝"],
+      "note": "四來源皆無 preinstalled；依台灣微軟與樂詞網的 pre-install「預安裝」。"
+    },
+    "orphan": {
+      "zh": ["孤兒"],
+      "note": "Arch 套件語境（孤兒套件）。微軟「孤列」、樂詞網「孤行」為排版術語，語境不合。"
+    },
+    "screenshot": {
+      "zh": ["截圖", "螢幕擷取"],
+      "note": "與 snapshot「快照」區隔，避免和 Snapper 系統快照混淆。GNOME 的「螢幕快照」僅用於資料夾與檔名，動作語境作「擷取螢幕畫面」。"
+    },
+    "color picker": {
+      "zh": ["取色器"],
+      "note": "沿用本專案既有譯名。台灣微軟作「色彩選擇器」。"
+    },
+    "compositor": {
+      "zh": ["合成器"],
+      "note": "Wayland 合成器語境。樂詞網「文字編排者」為排版術語，語境不合。"
+    },
+    "scratchpad": {
+      "zh": ["暫存區"],
+      "note": "四來源皆無此詞；Hyprland 的特殊工作區，依功能命名。"
+    },
+    "screencast": {
+      "zh": ["螢幕錄製"],
+      "note": "四來源皆無此詞；與 screenshot「截圖」區分。"
+    },
+    "cheatsheet": {
+      "zh": ["快捷鍵面板"],
+      "note": "四來源皆無此詞；Omarchy 的 Super + K 面板，依功能命名。"
+    },
+    "tiling": {
+      "zh": ["平鋪"],
+      "note": "Hyprland 視窗排列語境。樂詞網「磚式／舖磚式視窗」偏舊。"
+    }
+  }
+}

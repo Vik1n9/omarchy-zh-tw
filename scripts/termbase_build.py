@@ -176,6 +176,19 @@ def naer_readings(entry) -> list[str]:
     return []
 
 
+def collect_local(path: pathlib.Path, terms: dict, source: str) -> int:
+    """本專案自訂譯名，順位最後，但必須查得到——否則稽核會把已定案的詞
+    當成漏網詞重複提出。"""
+    data = json.loads(path.read_text(encoding="utf-8"))
+    added = 0
+    for english, entry in data.get("terms", {}).items():
+        note = entry.get("note", "")
+        for chinese in entry.get("zh", []):
+            terms[english.lower()][source].setdefault(chinese, set()).add(note or english)
+            added += 1
+    return added
+
+
 def collect_naer(path: pathlib.Path, terms: dict, source: str) -> int:
     data = json.loads(path.read_text(encoding="utf-8"))
     added = 0
@@ -197,6 +210,7 @@ def main() -> int:
     parser.add_argument("--ms-zip", type=pathlib.Path)
     parser.add_argument("--ms-member", default="CHINESE (TRADITIONAL).tbx")
     parser.add_argument("--naer-json", type=pathlib.Path)
+    parser.add_argument("--local-json", type=pathlib.Path)
     parser.add_argument("--source-note", action="append", default=[])
     args = parser.parse_args()
 
@@ -211,6 +225,8 @@ def main() -> int:
         counts["ms"] = collect_tbx(args.ms_zip, args.ms_member, terms, "ms")
     if args.naer_json and args.naer_json.is_file():
         counts["naer"] = collect_naer(args.naer_json, terms, "naer")
+    if args.local_json and args.local_json.is_file():
+        counts["local"] = collect_local(args.local_json, terms, "local")
 
     if not counts:
         print("沒有任何可用的來源。", file=sys.stderr)
@@ -221,7 +237,7 @@ def main() -> int:
             "built": date.today().isoformat(),
             "entries": counts,
             "sources": args.source_note,
-            "order": ["gnome", "kde", "ms", "naer"],
+            "order": ["gnome", "kde", "ms", "naer", "local"],
         },
         "terms": {
             key: {

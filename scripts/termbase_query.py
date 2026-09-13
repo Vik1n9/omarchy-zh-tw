@@ -16,8 +16,8 @@ import json
 import os
 import sys
 
-LABEL = {"gnome": "GNOME", "kde": "KDE", "ms": "台灣微軟", "naer": "樂詞網"}
-ORDER = ["gnome", "kde", "ms", "naer"]
+LABEL = {"gnome": "GNOME", "kde": "KDE", "ms": "台灣微軟", "naer": "樂詞網", "local": "本專案"}
+ORDER = ["gnome", "kde", "ms", "naer", "local"]
 PO_SOURCES = ("gnome", "kde")
 
 
@@ -28,7 +28,12 @@ def show(key: str, entry: dict, indent: str = "  ") -> None:
             continue
         for zh, origins in readings.items():
             hint = ""
-            if source in PO_SOURCES:
+            if source == "local":
+                # 自訂詞庫的出處就是採用理由，直接顯示。
+                reason = next((o for o in origins if o and o.lower() != key), "")
+                if reason:
+                    hint = f"  ← {reason}"
+            elif source in PO_SOURCES:
                 # 原始 msgid 與查詢鍵不同的出處最能說明語境，優先顯示。
                 distinct = [o for o in origins if o.split(":", 1)[-1].lower() != key]
                 shown = (distinct or list(origins))[:2]

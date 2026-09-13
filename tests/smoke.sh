@@ -25,6 +25,7 @@ python -c 'import ast, pathlib, sys; [ast.parse(pathlib.Path(item).read_text()) 
   "$ROOT_DIR/agents-overlay/bin/grok-collector" \
   "$ROOT_DIR/agents-overlay/bin/kimi-collector"
 python -B -m unittest "$ROOT_DIR/agents-overlay/tests/test_collectors.py"
+python -c 'import json, sys; json.load(open(sys.argv[1]))' "$ROOT_DIR/docs/terms-local.json"
 node --check "$ROOT_DIR/bin/omarchy-zh-tw-sync"
 "$ROOT_DIR/bin/omarchy-zh-tw-sync" --help >/dev/null
 

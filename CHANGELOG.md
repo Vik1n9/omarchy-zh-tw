@@ -17,6 +17,7 @@
 - `tests/terminology.sh` 的異體字正規化補上「纔／才」，避免把正確的「才」誤報為簡體字。
 - 新增 `scripts/build-termbase.sh`、`scripts/termbase_build.py`、`scripts/term-lookup.sh` 與 `scripts/termbase_query.py`：從 GNOME、KDE、台灣微軟術語集與樂詞網建立可查詢的譯名詞庫，GNOME／KDE 的譯名附上「模組:原始 msgid」出處，避免憑印象造詞或誤判語境。
 - 新增 `scripts/audit-glossary.sh` 與 `scripts/audit_glossary.py`：核對詞彙表有哪些採用譯名沒有來源支持，比對一律精確、不自動補複數。
+- 新增 `docs/terms-local.json` 自訂詞庫（第五順位，隨儲存庫版控）：收錄四來源查不到或語境不合而自訂的譯名與理由，避免已定案的詞每次稽核都被當成漏網詞。
 - 於詞彙表註明 menu、shortcut、account 三項刻意沿用 Linux 桌面慣例而非微軟用語的理由。
 
 ## 0.2.0 - 2026-09-11
