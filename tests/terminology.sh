@@ -31,6 +31,13 @@ fi
   exit 1
 }
 
+# 記錄譯名決策的檔案必須引用不採用的詞（例如說明為何不用「丟包」），
+# 因此不套用禁用詞與引號規則；簡體字檢查仍然涵蓋它們。
+wording_files=()
+for f in "${files[@]}"; do
+  [[ $f == docs/terms-local.json ]] || wording_files+=("$f")
+done
+
 # 簡體字形的大陸用語。
 banned=(
   網絡 軟件 硬件 屏幕 鼠標 打印機 視頻 音頻 默認 設置 搜索 文件夾 剪貼板 登錄 賬
@@ -46,13 +53,13 @@ banned+=(
   丟包 倉庫 預裝 匹配 歷史記錄 始終 無需 按需 一條通知
 )
 for term in "${banned[@]}"; do
-  if hits=$(rg -nF --no-heading -- "$term" "${files[@]}" 2>/dev/null) && [[ -n $hits ]]; then
+  if hits=$(rg -nF --no-heading -- "$term" "${wording_files[@]}" 2>/dev/null) && [[ -n $hits ]]; then
     report "禁用詞「$term」：
 $hits"
   fi
 done
 
-if punct_hits=$(rg -nF -e '“' -e '”' -e '‘' -e '’' "${files[@]}" 2>/dev/null \
+if punct_hits=$(rg -nF -e '“' -e '”' -e '‘' -e '’' "${wording_files[@]}" 2>/dev/null \
   | grep -v '"No matches for “"' || true) && [[ -n $punct_hits ]]; then
   report "顯示引號請使用「」／『』：
 $punct_hits"
