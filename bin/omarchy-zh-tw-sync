@@ -49,7 +49,7 @@ if (process.argv.includes("--help")) {
 從目前安裝的 Omarchy 4 原始檔重建繁體中文使用者外掛。
   --quiet           僅在失敗時輸出
   --no-restart      同步後不重新啟動 Omarchy Shell
-  --adopt-existing  接管同名且來源匹配的現有外掛複製`);
+  --adopt-existing  接管同名且來源相符的現有外掛複製`);
   process.exit(0);
 }
 
@@ -87,7 +87,7 @@ const zh = {
 
   "Network": "網路", "Show QR code": "顯示QR Code", "Run a speed test": "執行網路測速",
   "Ethernet": "乙太網路", "Disconnected": "未連線", "No connection": "無網路連線",
-  "NOT CONNECTED": "未連線", "Ping": "延遲", "Packet Loss": "丟包率",
+  "NOT CONNECTED": "未連線", "Ping": "延遲", "Packet Loss": "封包遺失率",
   "Receiving": "接收速度", "Sending": "傳送速度", "Downloaded": "已下載",
   "Uploaded": "已上傳", "IP Address": "IP 位址", "Copy IP": "複製 IP 位址",
   "Gateway": "閘道器", "Copy gateway": "複製閘道器", "AUTOMATIC": "自動",
@@ -155,16 +155,16 @@ const zh = {
   "Do not disturb": "勿擾模式", "Notification silencing": "靜音通知",
   "Stay awake": "保持清醒", "Stay Awake": "保持清醒",
   "Idle lock and screensaver override": "閒置鎖定與螢幕保護程式覆寫",
-  "Always Show": "一律顯示", "Show inactive indicators without waiting for hover.": "始終顯示未啟用的指示器，無需等待滑鼠游標停留。",
+  "Always Show": "一律顯示", "Show inactive indicators without waiting for hover.": "一律顯示未啟用的指示器，不需等待滑鼠游標停留。",
   "Dictate": "語音輸入", "Day Light": "關閉夜燈", "Allow Notifications": "允許通知",
   "Silence Notifications": "靜音通知", "Stop recording": "停止錄影",
   "Allow Idle Lock & Screensaver": "允許閒置鎖定與螢幕保護程式",
 
   "Omarchy menu": "Omarchy 選單", "Quickshell-powered Omarchy command menu": "基於 Quickshell 的 Omarchy 指令選單",
   "Launches the Omarchy menu": "開啟 Omarchy 選單", "Compositor": "合成器",
-  "Go": "開始", "Input": "輸入", "Select": "選擇", "Uninstall": "卸載",
+  "Go": "開始", "Input": "輸入", "Select": "選擇", "Uninstall": "解除安裝",
   "Cancel": "取消", "Nothing here yet": "這裡暫時沒有內容",
-  "Notifications": "通知", "Notification daemon, popups, DND, and history": "通知服務、彈出視窗、勿擾模式和歷史記錄",
+  "Notifications": "通知", "Notification daemon, popups, DND, and history": "通知服務、彈出視窗、勿擾模式和歷程記錄",
   "No recent notifications": "沒有最近的通知",
 
   "Enter Password": "請輸入密碼", "Authentication failed (": "驗證失敗（",
@@ -176,7 +176,7 @@ const zh = {
   "Delete entire clipboard history?": "確定清空全部剪貼簿記錄嗎？", "Delete": "刪除",
   "Search clipboard…": "搜尋剪貼簿…", " files": " 個檔案", " from ": "，時間：",
   "Image": "圖片", "Screenshot": "截圖", "Emojis": "表情符號", "Search emojis…": "搜尋表情…",
-  "No matches for “": "沒有匹配「", "Image picker": "圖片選擇器", "No matches": "沒有匹配項",
+  "No matches for “": "沒有相符項目「", "Image picker": "圖片選擇器", "No matches": "沒有相符項目",
   "Reminders": "提醒", "Enter the number of minutes": "請輸入分鐘數",
   "Invalid reminder": "提醒時間無效", "Remind in minutes": "多少分鐘後提醒",
   "Reminder message": "提醒內容",
@@ -198,7 +198,7 @@ const zh = {
   "Battery, power profile, and system stats": "電池、電源模式和系統狀態",
   "Weather pill with detail popup": "天氣和詳細預報",
   "Status notifier items": "系統匣項目", "Indicates available Omarchy updates": "顯示可用的 Omarchy 更新",
-  "A clipboard manager to view and paste history": "檢視和貼上歷史記錄的剪貼簿管理器",
+  "A clipboard manager to view and paste history": "檢視和貼上歷程記錄的剪貼簿管理器",
   "Search, copy, and type emojis": "搜尋、複製和輸入表情符號",
   "Image-grid selector overlay used for wallpapers, themes, and any other directory of images": "用於桌布、主題和圖片資料夾的圖片選擇器",
   "Interactive reminder setup flow": "互動式提醒設定",
@@ -213,7 +213,7 @@ const zh = {
   "Sync folder": "同步資料夾", "Snapshot file name": "快照檔名", "Device id": "裝置識別碼",
   "When On, write this machine's local usage snapshot and merge snapshots from other machines.": "開啟後儲存本機用量快照，並合併其他裝置的快照。",
   "A folder synced by Syncthing, Dropbox, rsync, etc.": "由 Syncthing、Dropbox 或 rsync 等工具同步的資料夾。",
-  "Optional. Defaults to <hostname>.json. Use a different file name on each machine, such as laptop.json or desktop.json.": "可選。預設為 <hostname>.json；每臺裝置應使用不同檔名。",
+  "Optional. Defaults to <hostname>.json. Use a different file name on each machine, such as laptop.json or desktop.json.": "可選。預設為 <hostname>.json；每台裝置應使用不同檔名。",
   "Optional stable device name used inside synced aggregate snapshots.": "可選。用於彙總快照的固定裝置名稱。"
 };
 
@@ -221,7 +221,7 @@ const updateScriptReplacements = {
   "omarchy-update": [
     ["Something went wrong during the update!", "更新過程中出現錯誤！", "錯誤標題"],
     ["Please review the output above carefully, correct the error, and retry the update.", "請仔細檢查上方輸出，修正錯誤後重新更新。", "錯誤說明"],
-    ["If you need assistance, get help from the community at https://omarchy.org/discord", "如需幫助，請前往社群：https://omarchy.org/discord", "求助說明"],
+    ["If you need assistance, get help from the community at https://omarchy.org/discord", "如需說明，請前往社群：https://omarchy.org/discord", "求助說明"],
     ["Continuing the update without a snapshot.", "未建立快照，將繼續更新。", "無快照提示"]
   ],
   "omarchy-update-pkg-prune": [
@@ -316,7 +316,7 @@ const updateScriptReplacements = {
   ],
   "omarchy-hook": [
     ["Usage: omarchy-hook [name] [args...]", "用法：omarchy-hook [名稱] [引數...]", "用法"],
-    ["Hook failed:", "掛鉤執行失敗：", "失敗提示"]
+    ["Hook failed:", "勾點執行失敗：", "失敗提示"]
   ]
 };
 
@@ -371,7 +371,7 @@ const keybindingZh = {
   "Close all windows": "關閉所有視窗", "Close window": "關閉視窗",
   "Color picker": "取色器", "Copy URL from Web App": "複製網頁應用程式網址",
   "Disable touchpad": "停用觸控板", "Dismiss all notifications": "關閉所有通知",
-  "Dismiss last notification": "關閉上一條通知", "Display": "顯示器",
+  "Dismiss last notification": "關閉上一則通知", "Display": "顯示器",
   "Download Video from Web App": "從網頁應用程式下載影片", "Editor": "編輯器",
   "Eject media": "彈出媒體", "Email": "電子郵件", "Emojis": "表情符號",
   "Enable touchpad": "啟用觸控板", "Expand window down": "向下擴展視窗",
@@ -385,7 +385,7 @@ const keybindingZh = {
   "Focus on previous window": "聚焦上一個視窗", "Focus on right window": "聚焦右側視窗",
   "Former workspace": "返回先前工作區", "Full screen": "全螢幕",
   "Full width": "佔滿寬度", "Hardware menu": "硬體選單",
-  "Herdr keybindings": "Herdr 快捷鍵", "Invoke last notification": "執行上一條通知的操作",
+  "Herdr keybindings": "Herdr 快捷鍵", "Invoke last notification": "執行上一則通知的操作",
   "Keybindings": "快捷鍵", "Keyboard backlight cycle": "切換鍵盤背光",
   "Keyboard brightness down": "降低鍵盤背光亮度", "Keyboard brightness up": "提高鍵盤背光亮度",
   "Lock system": "鎖定系統", "Make webcam overlay larger": "放大攝影機浮層",
@@ -399,7 +399,7 @@ const keybindingZh = {
   "Mute microphone": "麥克風靜音", "Network": "網路", "New email": "新增郵件",
   "Next track": "下一首", "Next window in group": "分組中的下一個視窗",
   "Next workspace": "下一個工作區", "Omarchy menu": "Omarchy 選單",
-  "Open notification history": "開啟通知歷史記錄", "Passwords": "密碼",
+  "Open notification history": "開啟通知歷程記錄", "Passwords": "密碼",
   "Pause": "暫停", "Play": "播放", "Pop window out (float & pin)": "彈出視窗（浮動並置頂）",
   "Power": "電源", "Power menu": "電源選單", "Previous track": "上一首",
   "Previous window in group": "分組中的上一個視窗", "Previous workspace": "上一個工作區",
@@ -808,7 +808,7 @@ const menuZh = {
     "label": "Windows 虛擬機器"
   },
   "install.preinstalls": {
-    "label": "預裝軟體"
+    "label": "預安裝軟體"
   },
   "install.service.chromium-account": {
     "label": "Chromium 帳戶"
@@ -872,7 +872,7 @@ const menuZh = {
     "label": "Windows 虛擬機器"
   },
   "remove.preinstalls": {
-    "label": "預裝軟體"
+    "label": "預安裝軟體"
   },
   "remove.security": {
     "label": "安全",
@@ -1467,11 +1467,11 @@ function rebuildPlugin(catalogEntry) {
         after = after
           .replace(
             'message: "Do you want to uninstall " + ((root.deleteTarget && root.deleteTarget.label) || "") + "?"',
-            'message: "確定要卸載「" + ((root.deleteTarget && root.deleteTarget.label) || "") + "」嗎？"'
+            'message: "確定要解除安裝「" + ((root.deleteTarget && root.deleteTarget.label) || "") + "」嗎？"'
           )
           .replace(
-            'confirmText: "卸載"',
-            'confirmText: "卸載"\n          cancelText: "取消"'
+            'confirmText: "解除安裝"',
+            'confirmText: "解除安裝"\n          cancelText: "取消"'
           );
         // Third-party clones do not receive the shell-owned appLibrary, which
         // leaves the Apps submenu empty. Fall back to a local AppLibrary so

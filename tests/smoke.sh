@@ -12,11 +12,20 @@ bash -n "$ROOT_DIR/bin/omarchy-update-confirm-zh-tw"
 for script in codex usage-update; do
   bash -n "$ROOT_DIR/agents-overlay/bin/$script"
 done
+bash -n "$ROOT_DIR/scripts/audit-glossary.sh"
+bash -n "$ROOT_DIR/scripts/build-termbase.sh"
+bash -n "$ROOT_DIR/scripts/term-lookup.sh"
+bash -n "$ROOT_DIR/scripts/naer-lookup.sh"
+bash -n "$ROOT_DIR/scripts/iicm-lookup.sh"
 python -c 'import ast, pathlib, sys; [ast.parse(pathlib.Path(item).read_text()) for item in sys.argv[1:]]' \
+  "$ROOT_DIR/scripts/audit_glossary.py" \
+  "$ROOT_DIR/scripts/termbase_build.py" \
+  "$ROOT_DIR/scripts/termbase_query.py" \
   "$ROOT_DIR/agents-overlay/bin/codex-collector" \
   "$ROOT_DIR/agents-overlay/bin/grok-collector" \
   "$ROOT_DIR/agents-overlay/bin/kimi-collector"
 python -B -m unittest "$ROOT_DIR/agents-overlay/tests/test_collectors.py"
+python -c 'import json, sys; json.load(open(sys.argv[1]))' "$ROOT_DIR/docs/terms-local.json"
 node --check "$ROOT_DIR/bin/omarchy-zh-tw-sync"
 "$ROOT_DIR/bin/omarchy-zh-tw-sync" --help >/dev/null
 
@@ -42,7 +51,7 @@ rg -Fq '準備更新嗎？' "$ROOT_DIR/bin/omarchy-update-confirm-zh-tw"
 rg -Fq -- '--affirmative "是"' "$ROOT_DIR/bin/omarchy-update-confirm-zh-tw"
 rg -Fq -- '--negative "否"' "$ROOT_DIR/bin/omarchy-update-confirm-zh-tw"
 
-echo "靜態檢查透過。"
+echo "靜態檢查通過。"
 "$ROOT_DIR/tests/terminology.sh"
 "$ROOT_DIR/tests/integration.sh"
 "$ROOT_DIR/tests/install-cycle.sh"

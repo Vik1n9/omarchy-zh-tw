@@ -73,7 +73,7 @@ user_name=${USER:-$(id -un)}
 }
 
 [[ -f $SYNC_SOURCE && -f $HOOK_SOURCE && -f $UPDATE_SOURCE && -f $UPDATE_CONFIRM_SOURCE && -d $AGENTS_OVERLAY_SOURCE ]] || {
-  echo "專案檔案不完整，請從倉庫根目錄執行安裝器。" >&2
+  echo "專案檔案不完整，請從儲存庫根目錄執行安裝器。" >&2
   exit 1
 }
 
@@ -92,7 +92,7 @@ if ((DRY_RUN)); then
   echo "將安裝：$SYNC_TARGET"
   echo "將安裝：$UPDATE_TARGET（繁體中文更新流程）"
   echo "將安裝：$AGENTS_OVERLAY_TARGET（Codex/Grok/Kimi 用量擴充套件與主題圖示）"
-  echo "將安裝 post-update 自動同步掛鉤，並把 Super+K 指向繁體中文快捷鍵面板。"
+  echo "將安裝 post-update 自動同步勾點，並把 Super+K 指向繁體中文快捷鍵面板。"
   exit 0
 fi
 
@@ -165,7 +165,7 @@ for source_id in "${PLUGIN_IDS[@]}"; do
   cloned_from=$(jq -r '.omarchy.clonedFrom // empty' "$manifest")
   if [[ $managed == true ]]; then
     [[ $cloned_from == "$source_id" ]] || {
-      echo "受管理外掛的來源不匹配：$target_id" >&2
+      echo "受管理外掛的來源不符：$target_id" >&2
       exit 1
     }
   elif ((ADOPT_EXISTING)) && [[ $cloned_from == "$source_id" ]]; then

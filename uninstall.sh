@@ -37,12 +37,12 @@ while (($# > 0)); do
 done
 
 [[ -f $STATE_DIR/install.version ]] || {
-  echo "沒有找到 omarchy-zh-tw 的安裝狀態，停止卸載。" >&2
+  echo "沒有找到 omarchy-zh-tw 的安裝狀態，停止解除安裝。" >&2
   exit 1
 }
 
 if ((!ASSUME_YES)); then
-  read -r -p "卸載 Omarchy 繁體中文介面並還原原選單？[y/N] " answer
+  read -r -p "解除安裝 Omarchy 繁體中文介面並還原原選單？[y/N] " answer
   [[ $answer == y || $answer == Y ]] || exit 0
 fi
 
@@ -143,5 +143,5 @@ omarchy restart shell >/dev/null || true
 
 archive="$HOME/.local/state/omarchy-zh-tw-uninstalled-$timestamp"
 mv "$STATE_DIR" "$archive"
-echo "卸載完成。外掛和修改過的設定均保留了可還原備份。"
-echo "卸載狀態備份：$archive"
+echo "解除安裝完成。外掛和修改過的設定均保留了可還原備份。"
+echo "解除安裝狀態備份：$archive"

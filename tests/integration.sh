@@ -150,7 +150,7 @@ rg -Fq 'echo -e "\e[32m\n更新 AUR 套件\e[0m"' \
 rg -Fq '正在執行遷移' "$sandbox_home/.local/share/omarchy-zh-tw/bin/omarchy-migrate"
 rg -Fq '更新 mise 管理的工具' "$sandbox_home/.local/share/omarchy-zh-tw/bin/omarchy-update-mise"
 rg -Fq '重新啟動前請檢查日誌' "$sandbox_home/.local/share/omarchy-zh-tw/bin/omarchy-update-analyze-logs"
-rg -Fq '掛鉤執行失敗：' "$sandbox_home/.local/share/omarchy-zh-tw/bin/omarchy-hook"
+rg -Fq '勾點執行失敗：' "$sandbox_home/.local/share/omarchy-zh-tw/bin/omarchy-hook"
 rg -Fq '正在重新啟動' "$sandbox_home/.local/share/omarchy-zh-tw/bin/omarchy-system-reboot"
 rg -Fq 'Omarchy Shell 重新啟動後未能就緒' "$sandbox_home/.local/share/omarchy-zh-tw/bin/omarchy-restart-shell"
 rg -Fq -- '--affirmative "是" --negative "否" --no-show-help' \
@@ -163,4 +163,4 @@ if rg -n '/home/[[:alnum:]_.-]+|/Users/[[:alnum:]_.-]+' "$sandbox_home"; then
   exit 1
 fi
 
-echo "Omarchy 隔離整合檢查透過。"
+echo "Omarchy 隔離整合檢查通過。"
