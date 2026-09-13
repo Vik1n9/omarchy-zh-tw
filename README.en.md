@@ -172,7 +172,25 @@ The project writes only to the following user directories:
 
 On an Omarchy system, the tests also generate an isolated copy from the currently installed system plugins under a temporary `HOME`; they do not touch the real user configuration.
 
-See [docs/glossary.md](docs/glossary.md) for terminology and read [CONTRIBUTING.md](CONTRIBUTING.md) before contributing translations.
+### Checking terminology
+
+Renderings are decided in order: GNOME/KDE zh-TW community usage, then Taiwanese
+Microsoft, then the NAER 樂詞網 glossary, and only then a project-specific choice or
+keeping the English. Look a term up before deciding on it rather than going from memory:
+
+```bash
+./scripts/build-termbase.sh          # build the term base from each source's official endpoint
+./scripts/term-lookup.sh menu        # list every source's rendering, in rank order, with provenance
+./scripts/audit-glossary.sh          # report glossary rows that no source backs
+```
+
+The term base is fetched at run time and is not redistributed from this repository. Lookups
+print the originating msgid for GNOME/KDE readings so you can tell whether the context fits.
+Terms that none of the four sources carry live in [docs/terms-local.json](docs/terms-local.json),
+each with the reason it was chosen.
+
+See [docs/glossary.md](docs/glossary.md) for terminology and the full policy, and read
+[CONTRIBUTING.md](CONTRIBUTING.md) before contributing translations.
 
 ## Acknowledgements and Disclaimer
 
