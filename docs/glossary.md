@@ -118,6 +118,17 @@
 | theme | 主題 | 文題（疑為資料錯誤） | 依現代慣例 |
 | shortcut / keybinding | 快捷鍵 | 捷徑（accelerator key 作「加速鍵」） | GNOME 作「快捷鍵」；台灣微軟作「快速鍵／鍵盤快速鍵」 |
 | screenshot | 截圖／螢幕擷取 | 螢幕擷取畫面（微軟） | GNOME 動作語境作「擷取螢幕畫面」，「螢幕快照」只用於檔名與資料夾名；本專案已有 snapshot「快照」，避免混用 |
+| capture | 擷取 | 擷取 | GNOME／台灣微軟一致 |
+| entire screen | 整個螢幕 | Entire Screen 作「整個螢幕」（GNOME） | 與視窗「全螢幕」區分 |
+| full screen（視窗） | 全螢幕 | 全螢幕（GNOME Fullscreen；微軟） | GNOME 放大鏡的 Full Screen 與 Entire Screen 同作「整個螢幕」，語境不同 |
+| highlight | 反白 | 反白；醒目提示；亮顯（微軟） | 選取／標示語境採「反白」 |
+| select（選取物件） | 選取 | 選取（GNOME／KDE） | 選取視窗等物件用「選取」；選單確認鈕既有「選擇」 |
+| sign in | 登入 | 登入（微軟）；GNOME Sign in to Network 作「登入 Wi-Fi 網路」 | 不用禁用的「登錄」 |
+| captive portal | 網頁驗證入口 | 網頁驗證入口（微軟） | GNOME 現行介面作「登入熱點」，舊條目「網頁入口管制」；按鈕原文對應微軟用語 |
+| internet / internet access | 網際網路／網際網路存取 | 網際網路（GNOME／KDE／微軟）；網際網路存取（微軟） | 與 network「網路」區分；Limited internet access 組為「有限網際網路存取」 |
+| right-click | 按右鍵 | 按右鍵；以滑鼠右鍵按一下（微軟） | 介面用較短的「按右鍵」；禁用「點擊」 |
+| desktop | 桌面 | 桌面（GNOME／KDE／微軟） | 微軟 desktop app 另作「傳統型應用程式」；產品名後綴沿用既有「桌面版」 |
+| toggle | 切換 | 切換 | GNOME／微軟一致 |
 | passphrase | 密語 | 通行片語 | 依現代慣例 |
 | token / credential | 權杖／憑證 | 符記；訊標／身份碼 | 依現代慣例 |
 | threshold | 臨界值 | 定限（微軟作「閾值」） | GNOME 作「臨界值」；電池面板的 `Threshold` 依語境意譯為「充電保護」 |

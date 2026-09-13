@@ -39,6 +39,8 @@ for expected in \
   '"scrolling": "捲動版面配置"' \
   '"dwindle": "Dwindle 平鋪"' \
   '"WIND": "風速"' \
+  '"Capture entire screen": "擷取整個螢幕"' \
+  '"Open Captive Portal": "開啟網頁驗證入口"' \
   'omarchy-menu-select '\''快捷鍵'\''' \
   '系統更新外掛結構已變化：更新入口'; do
   rg -Fq "$expected" "$ROOT_DIR/bin/omarchy-zh-tw-sync" || {

@@ -103,6 +103,12 @@ const zh = {
   "Connection failed": "連線失敗", "Failed to connect": "無法連線",
   "Turn Wi-Fi off": "關閉無線網路", "Turn Wi-Fi on": "開啟無線網路",
   "Hidden": "隱藏網路", "Auto": "自動",
+  "Sign in to this network": "登入此網路",
+  "SIGN-IN REQUIRED": "需要登入", "Sign-in required": "需要登入",
+  "LIMITED INTERNET ACCESS": "有限網際網路存取",
+  "Limited internet access": "有限網際網路存取",
+  "Open Captive Portal": "開啟網頁驗證入口",
+  "Sign in or accept this network\u2019s terms to access the internet.": "請登入或接受此網路的使用條款以存取網際網路。",
   "Timed out connecting": "連線逾時", "Timed out disconnecting": "中斷連線逾時",
   "Timed out forgetting": "忘記網路逾時", "Failed": "失敗",
   "Bending light": "正在傳輸訊號", "Counting collisions": "正在偵測碰撞",
@@ -130,6 +136,7 @@ const zh = {
   "HUMID": "濕度", "Fetching forecast…": "正在取得天氣預報…",
   "Monday": "週一", "Tuesday": "週二", "Wednesday": "週三", "Thursday": "週四",
   "Friday": "週五", "Saturday": "週六", "Sunday": "週日",
+  "Right-click to toggle format": "按右鍵可切換格式",
 
   "Agents": "AI 助理", "No AI coding subscriptions found.\nAgents show up here once you've used them.": "未找到 AI 程式開發訂閱。\n使用相應助理後，它們會顯示在這裡。",
   "BALANCE": "餘額", "Prepaid credits": "預付額度", "LIMITS": "使用限額",
@@ -367,6 +374,7 @@ const keybindingZh = {
   "Brightness up": "提高亮度", "Brightness up precise": "小幅提高亮度",
   "Browser": "瀏覽器", "Browser (private)": "瀏覽器（隱私模式）",
   "Calculator": "計算機", "Calendar": "行事曆", "Capture menu": "擷取選單",
+  "Capture entire screen": "擷取整個螢幕", "Capture highlighted window": "擷取反白視窗",
   "Clear reminders": "清除提醒", "Clipboard manager": "剪貼簿管理器",
   "Close all windows": "關閉所有視窗", "Close window": "關閉視窗",
   "Color picker": "取色器", "Copy URL from Web App": "複製網頁應用程式網址",
@@ -407,6 +415,9 @@ const keybindingZh = {
   "Restore window width": "還原視窗寬度", "Reveal active window on top": "將活動視窗顯示在最上層",
   "Save window width": "儲存視窗寬度", "Screenrecording": "螢幕錄製", "Screenshot": "截圖",
   "Scroll active workspace backward": "向後捲動活動工作區", "Scroll active workspace forward": "向前捲動活動工作區",
+  "Select next window to capture": "選取下一個要擷取的視窗",
+  "Select previous window to capture": "選取上一個要擷取的視窗",
+  "Select window to capture": "選取要擷取的視窗",
   "Set reminder": "設定提醒", "Share": "分享", "Show battery remaining": "顯示電池剩餘時間",
   "Show reminders": "顯示提醒", "Show time": "顯示時間", "Shrink window left": "從左側縮小視窗",
   "Shrink window left a little": "從左側小幅縮小視窗", "Shrink window left a lot": "從左側大幅縮小視窗",
@@ -417,7 +428,8 @@ const keybindingZh = {
   "Swap window up": "向上交換視窗", "Switch audio output": "切換音訊輸出",
   "Switch media source": "切換媒體來源", "System menu": "系統選單", "Terminal": "終端機",
   "Theme menu": "主題選單", "Tiled full screen": "平鋪全螢幕", "Tmux keybindings": "Tmux 快捷鍵",
-  "Toggle dictation": "切換語音輸入", "Toggle laptop display": "切換筆記型電腦顯示器",
+  "Toggle dictation": "切換語音輸入", "Toggle full screen desktop": "切換全螢幕桌面",
+  "Toggle laptop display": "切換筆記型電腦顯示器",
   "Toggle laptop display mirroring": "切換筆記型電腦顯示器鏡像", "Toggle locking on idle": "切換閒置自動鎖定",
   "Toggle menu": "切換選單", "Toggle nightlight": "切換夜燈", "Toggle scratchpad": "切換暫存區",
   "Toggle silencing notifications": "切換通知靜音", "Toggle single-window square aspect": "切換單視窗方形比例",
@@ -819,6 +831,9 @@ const menuZh = {
   "install.ai.dictation": {
     "label": "語音輸入"
   },
+  "install.ai.claude": {
+    "label": "Claude 桌面版"
+  },
   "install.ai.grok-bot": {
     "label": "Grok 機器人"
   },
@@ -883,6 +898,18 @@ const menuZh = {
   },
   "remove.ai": {
     "title": "移除"
+  },
+  "remove.ai.chatgpt": {
+    "label": "ChatGPT 桌面版"
+  },
+  "remove.ai.claude": {
+    "label": "Claude 桌面版"
+  },
+  "remove.ai.dictation": {
+    "label": "語音輸入"
+  },
+  "remove.ai.grok-bot": {
+    "label": "Grok 機器人"
   },
   "remove.gaming.xbox-cloud": {
     "label": "Xbox 雲遊戲"

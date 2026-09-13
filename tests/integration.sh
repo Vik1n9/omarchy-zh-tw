@@ -59,6 +59,9 @@ if (menu["learn.keybindings"].action !== home + "/.local/bin/omarchy-menu-keybin
 if (menu["update.omarchy"].action !== "omarchy-launch-floating-terminal-with-presentation " + home + "/.local/bin/omarchy-update-zh-tw") {
   throw new Error("系統更新入口路徑不正確")
 }
+if (menu["install.ai.chatgpt"].label !== "ChatGPT 桌面版") {
+  throw new Error("ChatGPT 桌面版選單未繁體化")
+}
 NODE
 
 rg -Fq '"scrolling": "捲動版面配置"' \
@@ -83,6 +86,8 @@ if (!byEmoji.get("🚗")?.includes("汽車")) throw new Error("汽車繁體中�
 if (!byEmoji.get("🧑")?.includes("人物")) throw new Error("人物兜底關鍵字缺失")
 if (!byEmoji.get("🚊")?.includes("有軌電車")) throw new Error("交通工具兜底關鍵字缺失")
 NODE
+rg -Fq '擷取整個螢幕' "$sandbox_home/.local/bin/omarchy-menu-keybindings-zh-tw"
+rg -Fq '切換全螢幕桌面' "$sandbox_home/.local/bin/omarchy-menu-keybindings-zh-tw"
 rg -Fq '關閉無線網路' "$plugin_root/testuser.network/Panel.qml"
 rg -Fq '隱藏網路' "$plugin_root/testuser.network/Panel.qml"
 rg -Fq 'return "自動"' "$plugin_root/testuser.network/Model.js"

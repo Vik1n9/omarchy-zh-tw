@@ -62,7 +62,9 @@ Kimi settings live at `~/.config/omarchy/agents/kimi.json`:
 - System tray, clipboard, emoji and image pickers, speed tests, and Wi-Fi QR codes
 - Traditional Chinese emoji search keywords when a local Fcitx 5/Rime emoji annotation file is available
 - Lock screen, authentication, and Omarchy-controlled snapshot, package, migration, error, and restart messages during updates
-- The `Super + K` keyboard shortcuts panel and command descriptions
+- The `Super + K` keyboard shortcuts panel and command descriptions, including the screenshot selection overlay (capture entire screen, highlighted window, and window to capture) and the full-screen desktop toggle
+- Captive-portal network copy (open the portal, sign in to this network, limited internet access) and the clock tooltip for right-click format cycling
+- Claude Desktop in the Install/Remove menus, with ChatGPT Desktop, Grok Bot, and Dictation removal labels matching the install-side wording
 - Automatic resynchronization after Omarchy updates
 
 Proper names, commands, actual file paths, and third-party application content are not forcibly translated. Examples include Omarchy, Hyprland, Codex, DNS, Docker, and `Downloads`.
