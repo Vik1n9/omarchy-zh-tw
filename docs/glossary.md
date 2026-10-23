@@ -89,7 +89,7 @@
 | temperature / humidity | 溫度／濕度 | 溫度／濕度 | 一致 |
 | font / cursor | 字型／游標 | 字型／游標 | 一致 |
 | IP address | IP 位址 | IP 位址 | 一致 |
-| gateway | 閘道器 | 閘道器；閘道 | 一致 |
+| gateway | 閘道 | 閘道器；閘道 | GNOME／KDE 皆作「閘道」（第一順位），Omarchy 內建 zh-TW 亦同；原採「閘道器」與順位不符 |
 | upload / download | 上傳／下載 | 上傳／下載 | 一致 |
 | microphone | 麥克風 | 麥克風 | 一致 |
 | kernel | 核心 | 核心 | 一致 |
@@ -148,6 +148,13 @@
 | history | 歷程記錄 | 歷史記錄 | 偏離舊譯，依 GNOME／MS zh-TW |
 | help | 說明 | 求助 | 介面採「說明」，不用「幫助」 |
 | preinstalled | 預安裝 | pre-install 作「預安裝」（bundled software 作「附隨軟體」） | 台灣微軟與樂詞網皆作「預安裝」；「預裝」是大陸簡縮寫法 |
+| snooze | 延遲 | （四來源僅台灣微軟有條目：延遲） | 通知語境，例如「延遲 1 小時」「延遲中的來源」 |
+| Do Not Disturb | 不要打擾 | 不要打擾（GNOME）；請勿打擾（微軟） | 依第一順位 GNOME |
+| screen sharing | 螢幕畫面分享 | 螢幕畫面分享（微軟） | GNOME／KDE 無條目 |
+| preferences | 偏好設定 | 偏好設定（GNOME）；喜好設定（微軟） | 依第一順位 GNOME |
+| verification code | 驗證碼 | 驗證碼（微軟） | — |
+| agent | 代理程式 | 代理程式；代理人（微軟） | 0.2.0 曾作「AI 助理」，無來源支持；與 Omarchy 內建 zh-TW 一致 |
+| QR code | QR Code | QR Code（GNOME）；QR 代碼（微軟） | 依第一順位 GNOME；Omarchy 內建作「QR 碼」，由覆蓋詞庫修正 |
 | color picker | 取色器 | 色彩選擇器（微軟） | **無來源支持**：微軟作「色彩選擇器」，本專案沿用既有譯名 |
 | list | 列表 | 表列；清單；串列 | 沿用本專案既有譯名 |
 

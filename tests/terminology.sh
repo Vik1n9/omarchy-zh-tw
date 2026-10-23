@@ -85,10 +85,12 @@ else
   done
 fi
 
-rg -Fq 'Qt.locale("zh_TW")' bin/omarchy-zh-tw-sync || report "同步器缺少 zh_TW 地區設定"
-rg -Fq '解除安裝' bin/omarchy-zh-tw-sync || report "同步器缺少「解除安裝」"
-for preferred in 網路 檔案 預設 設定 搜尋 快取 剪貼簿 螢幕 裝置 套件; do
-  rg -Fq -- "$preferred" bin/omarchy-zh-tw-sync || report "同步器缺少偏好詞「$preferred」"
+# 覆蓋詞庫存在的理由就是修正這些用語，不能讓它們從覆蓋值回流。
+for avoided in 'QR 碼' 通行密碼 螢幕錄影 螢幕擷圖 夜光 預先安裝 介面卡 剪貼簿紀錄 通知紀錄; do
+  if hits=$(rg -nF --no-heading -- "$avoided" i18n/zh-TW 2>/dev/null) && [[ -n $hits ]]; then
+    report "覆蓋詞庫出現詞彙表不採用的「$avoided」：
+$hits"
+  fi
 done
 
 if ((fail)); then

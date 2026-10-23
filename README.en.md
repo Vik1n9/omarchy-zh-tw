@@ -1,135 +1,101 @@
-# Omarchy Traditional Chinese (Taiwan) Localization
+# Omarchy Taiwan Usage (zh-TW)
 
 [繁體中文](README.md) | **English**
 
-An unofficial Traditional Chinese (Taiwan, zh-TW) localization project for Omarchy 4. It generates user-scoped plugin clones from the Omarchy sources currently installed on the machine. It never modifies `/usr/share/omarchy` and does not redistribute Omarchy plugin source code in this repository.
+Omarchy 4.5 ships its own Traditional Chinese translation. This unofficial project switches the Omarchy interface language to zh-TW and layers **Taiwan-usage overrides** on top of the official translation: it corrects wording that conflicts with the project [glossary](docs/glossary.md) and fills in strings the official catalog has not translated yet.
 
-This project is derived from the Simplified Chinese localization at [QueedWen/omarchy-zh-cn](https://github.com/QueedWen/omarchy-zh-cn) (MIT), with translations and interface wording adapted to Taiwan conventions (zh-TW).
+- It never modifies `/usr/share/omarchy` and does not redistribute Omarchy source code.
+- Only the strings that need changing are overridden; everything else comes from the official translation and follows Omarchy updates.
+- It resynchronizes automatically after Omarchy updates. If upstream makes an incompatible structural change, it fails explicitly and keeps the last working version.
 
-## Preview
+This project is derived from [QueedWen/omarchy-zh-cn](https://github.com/QueedWen/omarchy-zh-cn) (MIT).
 
-These screenshots were captured on an Omarchy 4 desktop with this project installed. Wallpapers, themes, and weather data will vary by environment.
-
-### Traditional Chinese Main Menu
-
-![Omarchy main menu in Traditional Chinese](docs/images/menu.webp)
-
-### Traditional Chinese Keyboard Shortcuts Panel
-
-![Omarchy keyboard shortcuts panel in Traditional Chinese](docs/images/shortcuts.webp)
-
-### Weather and Date
-
-| Celsius, `km/h`, and Traditional Chinese weather fields | Traditional Chinese dates, months, and weekdays |
-| --- | --- |
-| ![Omarchy weather panel in Traditional Chinese](docs/images/weather.webp) | ![Omarchy calendar panel in Traditional Chinese](docs/images/calendar.webp) |
-
-### Display Panel
-
-![Omarchy display panel in Traditional Chinese](docs/images/display.webp)
-
-### AI Agent Usage Bar
-
-This project extends the upstream Agents widget with Grok Build and Kimi Code, and adds a compatibility fix for the approval policy used by newer Codex CLI releases. The widget switches between light and dark marks with the active Omarchy theme. Providers without a valid login or usable data remain hidden.
-
-| Provider | Usage source | How to enable |
-| --- | --- | --- |
-| Codex | Codex app-server and local sessions | Sign in with Codex CLI; the compatibility scripts never copy tokens |
-| Grok | Grok Build account limits and balance endpoint | Run `grok login` |
-| Kimi | Kimi Coding Plan weekly quota and five-hour window | Set `KIMI_API_KEY` or use a mode-`0600` settings file |
-
-Kimi settings live at `~/.config/omarchy/agents/kimi.json`:
-
-```json
-{
-  "apiKey": "your API key",
-  "region": "cn"
-}
-```
-
-`region` may be `cn` (`api.kimi.com`) or `global` (`api.kimi.ai`). The collector can also discover a future Kimi Code CLI login under `~/.kimi-code/`. Credentials are used only for quota requests and are never written to the usage JSON consumed by the widget.
-
-## Localized Content
-
-- The Omarchy main menu and more than 300 menu items
-- The status bar, plugin settings, and common panels
-- Grok and Kimi support in the AI Agents usage widget, including quota displays and theme-aware light/dark marks
-- Compatibility for the `initialize` failure caused when a newer Codex CLI rejects the legacy `untrusted` approval policy
-- Audio, Bluetooth, network, display, power, and weather interfaces
-- Dates, months, weekdays, and the calendar
-- Celsius temperatures, `km/h` wind speeds, and original location names from the data source
-- Reminders, notification history, and Omarchy activity notifications
-- System tray, clipboard, emoji and image pickers, speed tests, and Wi-Fi QR codes
-- Traditional Chinese emoji search keywords when a local Fcitx 5/Rime emoji annotation file is available
-- Lock screen, authentication, and Omarchy-controlled snapshot, package, migration, error, and restart messages during updates
-- The `Super + K` keyboard shortcuts panel and command descriptions, including the screenshot selection overlay (capture entire screen, highlighted window, and window to capture) and the full-screen desktop toggle
-- Captive-portal network copy (open the portal, sign in to this network, limited internet access) and the clock tooltip for right-click format cycling
-- Claude Desktop in the Install/Remove menus, with ChatGPT Desktop, Grok Bot, and Dictation removal labels matching the install-side wording
-- Automatic resynchronization after Omarchy updates
-
-Proper names, commands, actual file paths, and third-party application content are not forcibly translated. Examples include Omarchy, Hyprland, Codex, DNS, Docker, and `Downloads`.
-
-## Compatibility
-
-- Omarchy `4.x`
-- Node.js, jq, and gum, all included in a standard Omarchy 4 environment
-- A running Omarchy Shell session
-
-This project generates localized clones against the plugin structure installed on the system. When an Omarchy update changes the interface source, the synchronizer regenerates those plugins. If an upstream change is incompatible, synchronization fails explicitly and preserves the last working version.
-
-## Installation
-
-### Install with an AI Assistant
-
-If your AI assistant can read local files and run terminal commands, send it the complete prompt below:
-
-```text
-Please install this Traditional Chinese (Taiwan) localization project on the current Omarchy 4 system:
-https://github.com/Vik1n9/omarchy-zh-tw
-
-Requirements:
-1. Read README.md, README.en.md, and install.sh first, then check whether the current system, Omarchy version, and dependencies are compatible.
-2. Clone the repository into a suitable user directory. If the target directory already exists, do not overwrite it; inspect its current state first.
-3. Run ./install.sh --dry-run first. Run ./install.sh only if the dry run succeeds.
-4. Do not modify /usr/share/omarchy, overwrite existing user plugins, or overwrite personal configuration.
-5. If same-name plugin clones or any other conflicts are found, stop and explain the exact conflict. Do not use --adopt-existing without my explicit approval.
-6. Ask for my explicit approval before any operation that requires a password, privilege elevation, or overwriting files.
-7. After installation, run the project tests, check the synchronization result and Hyprland configuration errors, then report which locations changed, the test results, and how to uninstall the project.
-```
-
-### Manual Installation
+## Quick Start
 
 ```bash
 git clone https://github.com/Vik1n9/omarchy-zh-tw.git
 cd omarchy-zh-tw
-./install.sh --dry-run
+./install.sh --dry-run   # see what it will do first
 ./install.sh
 ```
 
+Requirements:
+
+- Omarchy `4.5` or later (needs the built-in `default/i18n/zh-TW`); for earlier 4.x, use the [last version that supports 4.0](https://github.com/Vik1n9/omarchy-zh-tw/tree/7e582e5)
+- Node.js and jq (provided by the default Omarchy environment)
+- A running Omarchy Shell
+
+The installer only switches the Omarchy interface language. To switch the system locale (`LANG`) as well, run `omarchy language zh-TW`. For fonts and the Fcitx 5/Rime input method, see the [Chinese system environment and input method guide](docs/system-setup.md) (Chinese).
+
+## What Gets Overridden
+
+The override catalogs live in [`i18n/zh-TW/`](i18n/zh-TW) and hold three kinds of strings:
+
+| Kind | Examples |
+| --- | --- |
+| Wording that conflicts with the glossary | QR 碼→QR Code, 通行密碼→密語, 螢幕錄影→螢幕錄製, 夜光→夜燈, 剪貼簿紀錄→剪貼簿歷程記錄, 預先安裝→預安裝軟體, 介面卡→配接器, 重新開機→重新啟動 |
+| Strings the official catalog has not translated | About 90 notification-center strings (snooze, Do Not Disturb, display placement, stepping aside for fullscreen), the world clock, the CJK glyph menu, the "move window to monitor" keybindings |
+| Deliberate design choices | Brightness levels named after the course of the sun: 日正當中, 豔陽高照 … 夜深人靜 |
+
+Official translations that already match the glossary are not overridden. When Fcitx 5/Rime emoji annotations are present, the emoji picker also gains Traditional Chinese search keywords, and weather uses metric units.
+
+## How It Works
+
+Omarchy translates through three entry points, and each is overridden differently:
+
+- **Menu**: overrides go into the user extension `~/.config/omarchy/extensions/omarchy-menu.jsonc`, which takes precedence over the official translation. The menu expands every extension entry into a whole item, so each override carries the current default icon and action. Items you add or edit yourself are kept.
+- **Shell panels**: Omarchy's I18n reads only the system catalogs and has no user override layer. So only the 9 plugins that show an overridden string are cloned (notifications, world clock, indicators, network, Wi-Fi QR code, Bluetooth, clipboard, display, emoji), and their `I18n.t` calls are routed through the override table. When the interface language is not zh-TW, these clones behave exactly like the official plugins.
+- **Keybindings panel**: `Super + K` opens a copy of the panel that reads the merged official + override catalog.
+
+The synchronizer, `omarchy-zh-tw-sync`, rebuilds all of this from the Omarchy sources currently installed, and a `post-update` hook runs it after every system update. It warns when an override targets a string that upstream has removed or that no cloned plugin uses.
+
+## Installation Details
+
 The installer will:
 
-1. Check the Omarchy version and dependencies.
-2. Create 22 user plugin clones through the official `omarchy plugin clone` command.
-3. Install the localization synchronizer and generate the localized plugins.
-4. Install the Codex/Grok/Kimi usage extension and theme marks for the Agents plugin.
-5. Configure metric units for weather data.
-6. Map `Super + K` to the Traditional Chinese keyboard shortcuts panel.
-7. Generate localized update scripts from the currently installed version and route the Omarchy menu and status-bar update actions through them.
-8. Install a `post-update` hook that automatically resynchronizes after Omarchy updates.
+1. Check the Omarchy version, its built-in zh-TW translation, and dependencies.
+2. Set the interface language to zh-TW (`~/.config/omarchy/language`), recording the previous value for uninstallation.
+3. Create the 9 plugin clones with the official `omarchy plugin clone` command, and remove clones left by earlier releases that are no longer needed (the official remover keeps a backup).
+4. Install the synchronizer and override catalogs, rebuild the clones, and write the menu and keybindings overrides.
+5. Point `Super + K` at the overridden keybindings panel and install the `post-update` hook.
 
-If clones with the same username and plugin suffix already exist, the installer stops to avoid overwriting personal modifications. Use the following command only after confirming that those clones were created by an earlier version of this localization:
+If clones with the same name already exist, the installer stops instead of overwriting your changes. Use the following only after confirming those clones were created by this project:
 
 ```bash
 ./install.sh --adopt-existing
 ```
 
+### Install with an AI Assistant
+
+If your AI assistant can read local files and run terminal commands, give it this prompt in full:
+
+```text
+Please install this Taiwan-usage project on the current Omarchy 4.5 (or later) system:
+https://github.com/Vik1n9/omarchy-zh-tw
+
+Requirements:
+1. Read README.md and install.sh first, and check that the system, Omarchy version, and dependencies are compatible.
+2. Clone the repository into a suitable user directory. If the target directory already exists, do not overwrite it; inspect it first.
+3. Run ./install.sh --dry-run first. Run ./install.sh only after the dry run succeeds.
+4. Do not modify /usr/share/omarchy, and do not overwrite existing user plugins or personal settings.
+5. If you find same-named plugin clones or any other conflict, stop immediately and tell me the details. Do not use --adopt-existing without my explicit confirmation.
+6. Ask for my explicit confirmation before any operation that needs a password, elevated privileges, or overwriting files.
+7. After installation, run the project tests, check the sync result and Hyprland config errors, and tell me what was changed, the test results, and how to uninstall.
+```
+
+## Upgrading from 0.2
+
+Run the new `./install.sh` on Omarchy 4.5. The installer will:
+
+- Remove the plugin clones 0.2 created that are no longer needed (keeping backups).
+- Save the full menu dump 0.2 wrote as `omarchy-menu.jsonc.omarchy-zh-tw-0.2-*.bak`, then rewrite the extension so it holds only overrides.
+- Remove the localized update flow and the Grok/Kimi Agents extension that 0.2 maintained. Omarchy 4.5 has these built in; Kimi usage now uses `KIMI_API_KEY` or `kimi login`.
+
 ## Manual Synchronization
 
 ```bash
-omarchy-zh-tw-sync
+omarchy-zh-tw-sync [--quiet] [--no-restart] [--adopt-existing]
 ```
-
-Available options:
 
 ```text
 --quiet           Only print output on failure
@@ -137,23 +103,20 @@ Available options:
 --adopt-existing  Adopt existing clones whose source matches
 ```
 
-## Chinese Locale and Input Methods
-
-The installer does not change the system locale or install system packages. For a Chinese system locale, fonts, or the Fcitx 5/Rime input method, see the [Chinese system environment and input method guide](docs/system-setup.md) (Chinese).
-
 ## Uninstallation
 
 ```bash
 ./uninstall.sh
 ```
 
-The uninstaller restores the pre-installation menu and update command, removes plugin clones managed by this project, and restores the previous `Super + K` configuration. The Omarchy plugin removal command and this uninstaller both retain timestamped backups instead of immediately destroying user configuration.
+The uninstaller removes the plugin clones managed by this project and restores the pre-installation menu, interface language, and `Super + K` binding. Both the Omarchy plugin remover and this uninstaller keep timestamped backups.
 
 ## Modification Scope
 
-The project writes only to the following user directories:
+The project writes only to these user paths; `/usr/share/omarchy` always stays read-only:
 
 ```text
+~/.config/omarchy/language
 ~/.config/omarchy/plugins/
 ~/.config/omarchy/extensions/omarchy-menu.jsonc
 ~/.config/omarchy/hooks/post-update.d/
@@ -164,7 +127,25 @@ The project writes only to the following user directories:
 ~/.local/state/omarchy-zh-tw/
 ```
 
-`/usr/share/omarchy` always remains read-only. The installer does not collect or upload notification history, network information, location data, tokens, or other user data.
+The installer does not collect or upload notification history, network information, location data, tokens, or other user data.
+
+## Known Limitations
+
+- CLI notifications (`omarchy-i18n`) have no user override layer and keep the official translation.
+- Plugins that are not cloned use the official translation; overriding their strings means adding the plugin to the clone list.
+- After an Omarchy update, the clones keep the previous code until synchronization finishes.
+
+## Preview
+
+These screenshots date from 0.2.0 (Omarchy 4.0). From 4.5 on, most interface text comes from the official translation, so details may differ; wallpapers, themes, and weather data also vary by environment.
+
+| Main menu | Keybindings panel |
+| --- | --- |
+| ![Main menu](docs/images/menu.webp) | ![Keybindings panel](docs/images/shortcuts.webp) |
+
+| Weather | Calendar | Display |
+| --- | --- | --- |
+| ![Weather panel](docs/images/weather.webp) | ![Calendar panel](docs/images/calendar.webp) | ![Display panel](docs/images/display.webp) |
 
 ## Development and Checks
 
@@ -172,33 +153,25 @@ The project writes only to the following user directories:
 ./tests/smoke.sh
 ```
 
-On an Omarchy system, the tests also generate an isolated copy from the currently installed system plugins under a temporary `HOME`; they do not touch the real user configuration.
+The tests check the override catalogs' format, keys, and placeholders, plus terminology. On an Omarchy machine they also build plugin clones in a temporary `HOME` and run a full install and uninstall cycle without touching real user settings.
 
 ### Checking terminology
 
-Renderings are decided in order: GNOME/KDE zh-TW community usage, then Taiwanese
-Microsoft, then the NAER 樂詞網 glossary, and only then a project-specific choice or
-keeping the English. Look a term up before deciding on it rather than going from memory:
+Translations are decided, in order, by the GNOME/KDE zh-TW community consensus, Microsoft Taiwan, and NAER's computer terminology dictionary, then by this project's own choice or by keeping the original. Look terms up before choosing a translation; do not guess:
 
 ```bash
 ./scripts/build-termbase.sh          # build the term base from each source's official endpoint
-./scripts/term-lookup.sh menu        # list every source's rendering, in rank order, with provenance
-./scripts/audit-glossary.sh          # report glossary rows that no source backs
+./scripts/term-lookup.sh menu        # list each source's translation and provenance, in rank order
+./scripts/audit-glossary.sh          # report glossary entries that no source supports
 ```
 
-The term base is fetched at run time and is not redistributed from this repository. Lookups
-print the originating msgid for GNOME/KDE readings so you can tell whether the context fits.
-Terms that none of the four sources carry live in [docs/terms-local.json](docs/terms-local.json),
-each with the reason it was chosen.
-
-See [docs/glossary.md](docs/glossary.md) for terminology and the full policy, and read
-[CONTRIBUTING.md](CONTRIBUTING.md) before contributing translations.
+The term base is downloaded at run time and is not redistributed in this repository. Translations that none of the four sources cover are recorded in [docs/terms-local.json](docs/terms-local.json), each with its rationale. See [docs/glossary.md](docs/glossary.md) for the full policy and [CONTRIBUTING.md](CONTRIBUTING.md) before contributing.
 
 ## Acknowledgements and Disclaimer
 
 - Thanks to [QueedWen](https://github.com/QueedWen) for creating the [omarchy-zh-cn](https://github.com/QueedWen/omarchy-zh-cn) Simplified Chinese localization, from which this project is derived (MIT).
-- A tip of the hat to [DHH](https://github.com/dhh) and the Omarchy team for building this beautiful, fun, and agentic Linux distribution.
+- A tip of the hat to [DHH](https://github.com/dhh) and the Omarchy team for building this beautiful, fun, and agentic Linux distribution, and for shipping it in 50 languages with 4.5.
 
-This is a community project and is not affiliated with the official Omarchy project. The Traditional Chinese (Taiwan) translation and adjustments were kick-started by [Vik1n9](https://github.com/Vik1n9); Vik1n9 does not guarantee ongoing maintenance or updates, and anyone is welcome to take over or contribute.
+This is a community project and is not affiliated with the official Omarchy project. The Taiwan-usage adjustments were kick-started by [Vik1n9](https://github.com/Vik1n9); Vik1n9 does not guarantee ongoing maintenance or updates, and anyone is welcome to take over or contribute.
 
-Omarchy and its source code are governed by their upstream licenses. This repository contains only the installation logic, synchronization logic, and Traditional Chinese translations written for this project, and is licensed under the MIT License.
+Omarchy and its source code are governed by their upstream licenses. This repository contains only the installation logic, synchronization logic, and override catalogs written for this project, and is licensed under the MIT License.

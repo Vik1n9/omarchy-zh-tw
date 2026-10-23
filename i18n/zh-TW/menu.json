@@ -1,0 +1,19 @@
+{
+  "system.reboot": { "label": "重新啟動" },
+  "trigger.toggle.nightlight": { "label": "夜燈" },
+  "trigger.clipboard-history": { "label": "剪貼簿歷程記錄" },
+  "trigger.capture.screenrecord": { "label": "螢幕錄製" },
+  "trigger.capture.screenrecord.stop": { "label": "停止螢幕錄製" },
+  "trigger.capture.qr": { "label": "QR Code" },
+  "trigger.appearance.workspace-layout": { "label": "工作區版面配置", "title": "預設工作區版面配置" },
+  "setup.network.qr": { "label": "QR Code" },
+  "install.preinstalls": { "label": "預安裝軟體" },
+  "remove.preinstalls": { "label": "預安裝軟體" },
+  "style.font.cjk": { "label": "中日韓文字", "title": "中日韓字形" },
+  "style.font.cjk.auto": { "label": "自動" },
+  "style.font.cjk.jp": { "label": "日文" },
+  "style.font.cjk.kr": { "label": "韓文" },
+  "style.font.cjk.sc": { "label": "簡體中文" },
+  "style.font.cjk.tc": { "label": "台灣" },
+  "style.font.cjk.hk": { "label": "香港" }
+}

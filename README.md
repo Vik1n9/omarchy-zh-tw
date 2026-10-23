@@ -1,90 +1,76 @@
-# Omarchy 繁體中文（台灣）介面
+# Omarchy 台灣用語（zh-TW）
 
 **繁體中文** | [English](README.en.md)
 
-面向 Omarchy 4 的非官方台灣繁體中文本地化專案。它從本機目前安裝的 Omarchy 原始檔產生使用者級外掛複製，不修改 `/usr/share/omarchy`，也不在儲存庫中重新散布 Omarchy 的外掛原始碼。
+Omarchy 4.5 起內建繁體中文翻譯。這個非官方專案把 Omarchy 的介面語言切到 zh-TW，再在官方翻譯上疊加一層**台灣用語覆蓋**：修正與[詞彙表](docs/glossary.md)衝突的用語，並補上官方還沒翻譯的字串。
 
-本專案衍生自 [QueedWen/omarchy-zh-cn](https://github.com/QueedWen/omarchy-zh-cn) 的簡體中文版（MIT 授權），將其翻譯與介面調整為台灣用語（zh-TW）。
+- 不修改 `/usr/share/omarchy`，也不在儲存庫中散布 Omarchy 的原始碼。
+- 只覆蓋需要改的字串，其餘全部沿用官方翻譯，跟著 Omarchy 更新。
+- Omarchy 更新後自動重新同步；上游結構不相容時明確失敗，並保留上一份可用版本。
 
-## 效果預覽
+本專案衍生自 [QueedWen/omarchy-zh-cn](https://github.com/QueedWen/omarchy-zh-cn)（MIT 授權）。
 
-以下截圖來自實際安裝本專案的 Omarchy 4 桌面。具體桌布、主題和天氣資料會因使用者環境而異。
+## 快速開始
 
-### 繁體中文主選單
-
-![Omarchy 繁體中文主選單](docs/images/menu.webp)
-
-### 繁體中文快捷鍵面板
-
-![Omarchy 繁體中文快捷鍵面板](docs/images/shortcuts.webp)
-
-### 天氣與日期
-
-| 攝氏、`km/h` 與繁體中文天氣欄位 | 繁體中文日期、月份和星期 |
-| --- | --- |
-| ![Omarchy 繁體中文天氣面板](docs/images/weather.webp) | ![Omarchy 繁體中文行事曆面板](docs/images/calendar.webp) |
-
-### 顯示器面板
-
-![Omarchy 繁體中文顯示器面板](docs/images/display.webp)
-
-### AI 助理用量狀態列
-
-在官方 Agents 狀態列的基礎上，本專案增加了 Grok Build 與 Kimi Code，並修復新版 Codex CLI 與舊版收集器之間的核准策略相容問題。小工具會依目前 Omarchy 主題自動切換淺色／深色圖示；未登入或沒有有效資料的服務會自動隱藏。
-
-| 服務 | 用量來源 | 啟用方式 |
-| --- | --- | --- |
-| Codex | Codex app-server 與本機工作階段 | 登入 Codex CLI；相容指令碼不會讀取或複製權杖 |
-| Grok | Grok Build 帳戶限額與餘額介面 | 執行 `grok login` |
-| Kimi | Kimi Coding Plan 週額度與 5 小時視窗 | 設定 `KIMI_API_KEY`，或使用權限為 `0600` 的設定檔 |
-
-Kimi 設定檔位於 `~/.config/omarchy/agents/kimi.json`：
-
-```json
-{
-  "apiKey": "你的 API Key",
-  "region": "cn"
-}
+```bash
+git clone https://github.com/Vik1n9/omarchy-zh-tw.git
+cd omarchy-zh-tw
+./install.sh --dry-run   # 先看會做什麼
+./install.sh
 ```
 
-`region` 可設為 `cn`（`api.kimi.com`）或 `global`（`api.kimi.ai`）。如果未來 Kimi Code CLI 在 `~/.kimi-code/` 寫入登入資訊，收集器也會自動辨識。憑證僅用於伺服器端用量查詢，不會寫入狀態列讀取的用量 JSON。
+需求：
 
-## 已繁體中文化內容
+- Omarchy `4.5` 以上（需要內建的 `default/i18n/zh-TW`）；更早的 4.x 請使用支援 4.0 的[最後一個版本](https://github.com/Vik1n9/omarchy-zh-tw/tree/7e582e5)
+- Node.js 與 jq（Omarchy 預設環境已提供）
+- 正在執行的 Omarchy Shell
 
-- Omarchy 主選單及 300 多個選單項目
-- 狀態列、外掛設定和常用面板
-- AI 助理狀態列新增 Grok、Kimi，用量限額顯示和隨主題切換的淺色／深色圖示
-- 修復新版 Codex CLI 不再接受舊 `untrusted` 核准策略時導致的 `initialize` 錯誤
-- 音訊、藍牙、網路、顯示器、電源和天氣
-- 日期、月份、星期及行事曆
-- 天氣使用攝氏，風速使用 `km/h`，地名保持資料來源原文
-- 提醒、通知歷程和 Omarchy 動態通知
-- 系統匣、剪貼簿、表情符號、圖片選擇器、測速和 Wi-Fi QR Code
-- 偵測到 Fcitx 5/Rime 表情符號註解檔時，為表情符號選擇器補充繁體中文搜尋關鍵字
-- 鎖定畫面、權限驗證，以及 Omarchy 更新過程中的快照、套件、遷移、錯誤與重新啟動提示
-- `Super + K` 快捷鍵面板及功能說明，含截圖選取層（擷取整個螢幕、擷取反白視窗、選取要擷取的視窗）與全螢幕桌面切換
-- 網路強制入口網站（網頁驗證入口、登入此網路、有限網際網路存取）與時鐘「按右鍵可切換格式」
-- 安裝／移除選單的 Claude 桌面版，並讓 ChatGPT 桌面版、Grok 機器人、語音輸入的移除項與安裝側譯名一致
-- Omarchy 更新後的自動重新同步
+安裝器只切換 Omarchy 的介面語言。要連系統地區設定（`LANG`）一起切換，請執行 `omarchy language zh-TW`；字型與 Fcitx 5／Rime 輸入法請參閱[系統中文環境與輸入法](docs/system-setup.md)。
 
-專有名稱、指令、真實檔案路徑和第三方應用程式內容不會強制翻譯，例如 Omarchy、Hyprland、Codex、DNS、Docker 和 `Downloads`。
+## 覆蓋了什麼
 
-## 相容性
+覆蓋詞庫在 [`i18n/zh-TW/`](i18n/zh-TW)，只收三類字串：
 
-- Omarchy `4.x`
-- Node.js、jq、gum（Omarchy 4 預設環境已提供）
-- 需要正在執行的 Omarchy Shell
+| 類別 | 例子 |
+| --- | --- |
+| 與詞彙表衝突的用語 | QR 碼→QR Code、通行密碼→密語、螢幕錄影→螢幕錄製、夜光→夜燈、剪貼簿紀錄→剪貼簿歷程記錄、預先安裝→預安裝軟體、介面卡→配接器、重新開機→重新啟動 |
+| 官方尚未翻譯的字串 | 通知中心約 90 條（延遲通知、不要打擾、顯示位置、全螢幕避開）、世界時鐘、中日韓字形選單、快捷鍵面板的「將視窗移至⋯⋯顯示器」 |
+| 刻意保留的設計 | 顯示器亮度分級以太陽一天的行程命名：日正當中、豔陽高照⋯⋯夜深人靜 |
 
-本專案跟隨系統已安裝的外掛結構產生繁體化複製。Omarchy 更新改變介面原始碼時，同步器會重新產生外掛；如果上游結構發生不相容變化，同步會明確失敗並保留上一份可用版本。
+官方譯法已符合詞彙表的字串不會重複覆蓋。另外，偵測到 Fcitx 5／Rime 的表情符號註解檔時，會為表情符號選擇器補上繁體中文搜尋關鍵字；天氣單位設為公制。
 
-## 安裝
+## 運作方式
+
+Omarchy 的翻譯有三個入口，各自用不同方式覆蓋：
+
+- **選單**：寫入使用者擴充 `~/.config/omarchy/extensions/omarchy-menu.jsonc`，它的優先順序高於官方翻譯。選單會把擴充條目補成完整項目，所以每個覆蓋都帶齊目前預設的圖示與動作；你自己新增或改過的項目會保留。
+- **Shell 面板**：Omarchy 的 I18n 只讀系統目錄，沒有使用者覆蓋層。因此只複製用到覆蓋字串的 9 個外掛（通知、世界時鐘、指示器、網路、Wi-Fi QR Code、藍牙、剪貼簿、顯示器、表情符號），並把複製內的 `I18n.t` 呼叫改經覆蓋表查詢。介面語言不是 zh-TW 時，這些複製的行為與官方外掛完全相同。
+- **快捷鍵面板**：`Super + K` 改開一份讀取「官方＋覆蓋」合併目錄的面板副本。
+
+同步器 `omarchy-zh-tw-sync` 每次都從目前安裝的 Omarchy 原始碼重建上述內容，並由 `post-update` 勾點在系統更新後自動執行。覆蓋的字串若已被上游移除，或不在任何外掛複製中，同步器會列出警告。
+
+## 安裝細節
+
+安裝器會：
+
+1. 檢查 Omarchy 版本、內建 zh-TW 翻譯與依賴。
+2. 把介面語言設為 zh-TW（`~/.config/omarchy/language`），並記下原值供解除安裝還原。
+3. 用官方的 `omarchy plugin clone` 建立 9 個外掛複製，並移除舊版留下、已不需要的複製（官方移除指令會保留備份）。
+4. 安裝同步器與覆蓋詞庫，重建外掛複製，寫入選單與快捷鍵覆蓋。
+5. 把 `Super + K` 指向覆蓋後的快捷鍵面板，並安裝 `post-update` 勾點。
+
+如果已有同名的外掛複製，安裝器會停下來，避免覆蓋你的修改。只有確認那些複製是本專案先前建立的，才使用：
+
+```bash
+./install.sh --adopt-existing
+```
 
 ### 使用 AI 助理安裝
 
-如果你的 AI 助理能夠在本機讀取檔案並執行終端機指令，可以把下面的提示詞完整發送給它：
+如果你的 AI 助理能在本機讀檔並執行終端機指令，可以把下面的提示詞完整交給它：
 
 ```text
-請幫我在目前這台 Omarchy 4 系統上安裝這個台灣繁體中文本地化專案：
+請幫我在目前這台 Omarchy 4.5 以上的系統上安裝這個台灣用語專案：
 https://github.com/Vik1n9/omarchy-zh-tw
 
 要求：
@@ -97,39 +83,19 @@ https://github.com/Vik1n9/omarchy-zh-tw
 7. 安裝完成後執行專案測試，檢查同步結果和 Hyprland 設定錯誤，並告訴我修改了哪些位置、測試結果以及如何解除安裝。
 ```
 
-### 手動安裝
+## 從 0.2 升級
 
-```bash
-git clone https://github.com/Vik1n9/omarchy-zh-tw.git
-cd omarchy-zh-tw
-./install.sh --dry-run
-./install.sh
-```
+在 Omarchy 4.5 上直接執行新版的 `./install.sh` 即可。安裝器會：
 
-安裝器會：
-
-1. 檢查 Omarchy 版本和依賴。
-2. 使用官方 `omarchy plugin clone` 建立 22 個使用者外掛複製。
-3. 安裝本地化同步器並產生繁體中文外掛。
-4. 為 Agents 外掛安裝 Codex/Grok/Kimi 用量收集擴充套件及主題圖示。
-5. 將天氣單位設為公制。
-6. 將 `Super + K` 指向繁體中文快捷鍵面板。
-7. 從本機目前版本產生繁體中文更新指令碼，並將 Omarchy 選單和狀態列的系統更新入口接入繁體中文更新流程。
-8. 安裝 `post-update` 勾點，以便系統更新後自動同步。
-
-如果你已經有相同使用者名稱和外掛字尾的複製，安裝器會停止，避免覆蓋個人修改。只有確認這些複製就是此前的繁體化版本時，才使用：
-
-```bash
-./install.sh --adopt-existing
-```
+- 移除 0.2 建立、現在已不需要的外掛複製（保留備份）。
+- 把 0.2 寫入的整份選單傾印另存為 `omarchy-menu.jsonc.omarchy-zh-tw-0.2-*.bak`，再改寫成只含覆蓋的擴充檔。
+- 移除 0.2 自行維護的中文更新流程與 Agents 的 Grok／Kimi 擴充。這些功能已由 Omarchy 4.5 內建；Kimi 用量改用 `KIMI_API_KEY` 或 `kimi login`。
 
 ## 手動同步
 
 ```bash
-omarchy-zh-tw-sync
+omarchy-zh-tw-sync [--quiet] [--no-restart] [--adopt-existing]
 ```
-
-可用引數：
 
 ```text
 --quiet           僅在失敗時輸出
@@ -137,23 +103,20 @@ omarchy-zh-tw-sync
 --adopt-existing  接管來源相符的現有外掛複製
 ```
 
-## 系統語言與輸入法
-
-安裝器不會自動修改系統地區設定或安裝套件。需要繁體中文系統地區、字型或 Fcitx 5/Rime 輸入法時，請參閱 [系統中文環境與輸入法](docs/system-setup.md)。
-
 ## 解除安裝
 
 ```bash
 ./uninstall.sh
 ```
 
-解除安裝程式會還原安裝前的選單和更新指令，移除受本專案管理的外掛複製，並還原 `Super + K` 設定。Omarchy 的外掛移除指令和解除安裝程式都會保留帶時間戳的備份，不會直接銷毀使用者設定。
+解除安裝會移除本專案管理的外掛複製，並還原安裝前的選單、介面語言與 `Super + K` 設定。Omarchy 的外掛移除指令與解除安裝程式都會保留帶時間戳的備份。
 
 ## 修改範圍
 
-專案只寫入以下使用者目錄：
+專案只寫入以下使用者路徑，`/usr/share/omarchy` 全程維持唯讀：
 
 ```text
+~/.config/omarchy/language
 ~/.config/omarchy/plugins/
 ~/.config/omarchy/extensions/omarchy-menu.jsonc
 ~/.config/omarchy/hooks/post-update.d/
@@ -164,7 +127,25 @@ omarchy-zh-tw-sync
 ~/.local/state/omarchy-zh-tw/
 ```
 
-`/usr/share/omarchy` 全程維持唯讀。安裝器不會收集或上傳通知歷程、網路資訊、位置、權杖或其他使用者資料。
+安裝器不會收集或上傳通知歷程、網路資訊、位置、權杖或其他使用者資料。
+
+## 已知限制
+
+- 命令列通知（`omarchy-i18n`）沒有使用者覆蓋層，維持官方翻譯。
+- 沒有被複製的外掛使用官方翻譯；要覆蓋它們的字串，必須把外掛加入複製清單。
+- 外掛複製在 Omarchy 更新後、同步完成前，會短暫維持舊版程式碼。
+
+## 預覽
+
+以下截圖拍攝於 0.2.0（Omarchy 4.0）時期。4.5 起介面文字以官方翻譯為主，細節可能不同；桌布、主題和天氣資料也因環境而異。
+
+| 主選單 | 快捷鍵面板 |
+| --- | --- |
+| ![主選單](docs/images/menu.webp) | ![快捷鍵面板](docs/images/shortcuts.webp) |
+
+| 天氣 | 行事曆 | 顯示器 |
+| --- | --- | --- |
+| ![天氣面板](docs/images/weather.webp) | ![行事曆面板](docs/images/calendar.webp) | ![顯示器面板](docs/images/display.webp) |
 
 ## 開發與檢查
 
@@ -172,7 +153,7 @@ omarchy-zh-tw-sync
 ./tests/smoke.sh
 ```
 
-在 Omarchy 機器上，測試還會使用臨時 `HOME` 從系統目前外掛產生一套隔離副本；不會觸碰真實使用者設定。
+測試會檢查覆蓋詞庫的格式、鍵名與占位符號，以及術語。在 Omarchy 機器上，還會在臨時 `HOME` 中產生外掛複製並完整跑一次安裝與解除安裝，不會碰到真實的使用者設定。
 
 ### 譯名查證
 
@@ -185,17 +166,13 @@ omarchy-zh-tw-sync
 ./scripts/audit-glossary.sh          # 核對詞彙表有哪些譯名缺乏依據
 ```
 
-詞庫在執行時下載，不隨本儲存庫散布；查詢結果會標出 GNOME／KDE 的原始 msgid，
-供判斷語境是否適用。四個來源都查不到的譯名收錄在 [docs/terms-local.json](docs/terms-local.json)，
-每筆都附採用理由。
-
-翻譯詞彙與完整政策請參閱 [docs/glossary.md](docs/glossary.md)；貢獻前請閱讀 [CONTRIBUTING.md](CONTRIBUTING.md)。
+詞庫在執行時下載，不隨本儲存庫散布。四個來源都查不到的譯名收錄在 [docs/terms-local.json](docs/terms-local.json)，每筆都附採用理由。完整政策請參閱 [docs/glossary.md](docs/glossary.md)；貢獻前請閱讀 [CONTRIBUTING.md](CONTRIBUTING.md)。
 
 ## 致謝與宣告
 
 - 感謝 [QueedWen](https://github.com/QueedWen) 建立 [omarchy-zh-cn](https://github.com/QueedWen/omarchy-zh-cn) 簡體中文本地化專案；本專案即由其改作而來（MIT 授權）。
-- 向 [DHH](https://github.com/dhh) 與 Omarchy 團隊致意，感謝打造這套美麗、有趣且充滿代理精神的 Linux 發行版。
+- 向 [DHH](https://github.com/dhh) 與 Omarchy 團隊致意，感謝打造這套美麗、有趣且充滿代理精神的 Linux 發行版，並在 4.5 內建了 50 種語言。
 
-這是社群專案，與 Omarchy 官方無隸屬關係。本專案的繁體中文（台灣）翻譯與調整由 [Vik1n9](https://github.com/Vik1n9) 協助起頭；Vik1n9 不保證後續維護或更新，歡迎任何人接手或參與維護。
+這是社群專案，與 Omarchy 官方無隸屬關係。本專案的台灣用語調整由 [Vik1n9](https://github.com/Vik1n9) 協助起頭；Vik1n9 不保證後續維護或更新，歡迎任何人接手或參與維護。
 
-Omarchy 及其原始碼遵循其上游授權條款；本儲存庫只包含本專案編寫的安裝邏輯、同步邏輯和繁體中文翻譯，採用 MIT 授權條款。
+Omarchy 及其原始碼遵循其上游授權條款；本儲存庫只包含本專案編寫的安裝邏輯、同步邏輯和覆蓋詞庫，採用 MIT 授權條款。

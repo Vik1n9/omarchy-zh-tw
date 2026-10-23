@@ -5,39 +5,41 @@ set -euo pipefail
 ROOT_DIR=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)
 SYNC_SOURCE="$ROOT_DIR/bin/omarchy-zh-tw-sync"
 HOOK_SOURCE="$ROOT_DIR/hooks/omarchy-zh-tw-post-update"
-UPDATE_SOURCE="$ROOT_DIR/bin/omarchy-update-zh-tw"
-UPDATE_CONFIRM_SOURCE="$ROOT_DIR/bin/omarchy-update-confirm-zh-tw"
+I18N_SOURCE="$ROOT_DIR/i18n/zh-TW"
 SYNC_TARGET="$HOME/.local/bin/omarchy-zh-tw-sync"
 KEYBINDINGS_TARGET="$HOME/.local/bin/omarchy-menu-keybindings-zh-tw"
-UPDATE_TARGET="$HOME/.local/bin/omarchy-update-zh-tw"
-UPDATE_CONFIRM_DIR="$HOME/.local/share/omarchy-zh-tw/bin"
-UPDATE_CONFIRM_TARGET="$UPDATE_CONFIRM_DIR/omarchy-update-confirm"
-AGENTS_OVERLAY_SOURCE="$ROOT_DIR/agents-overlay"
-AGENTS_OVERLAY_TARGET="$HOME/.local/share/omarchy-zh-tw/agents"
+DATA_DIR="$HOME/.local/share/omarchy-zh-tw"
+I18N_TARGET="$DATA_DIR/i18n/zh-TW"
 HOOK_TARGET="$HOME/.config/omarchy/hooks/post-update.d/omarchy-zh-tw-post-update"
 PLUGIN_ROOT="$HOME/.config/omarchy/plugins"
 MENU_FILE="$HOME/.config/omarchy/extensions/omarchy-menu.jsonc"
 BINDINGS_FILE="$HOME/.config/hypr/bindings.lua"
 SHELL_FILE="$HOME/.config/omarchy/shell.json"
+LANGUAGE_FILE="${XDG_CONFIG_HOME:-$HOME/.config}/omarchy/language"
+OMARCHY_I18N="${OMARCHY_PATH:-/usr/share/omarchy}/default/i18n"
 STATE_DIR="$HOME/.local/state/omarchy-zh-tw"
 BACKUP_DIR="$STATE_DIR/original"
 DRY_RUN=0
 ADOPT_EXISTING=0
 
 PLUGIN_IDS=(
-  omarchy.audio omarchy.bluetooth omarchy.clock omarchy.monitor
-  omarchy.network omarchy.power omarchy.weather omarchy.agents
-  omarchy.menu omarchy.notifications omarchy.tray omarchy.indicators
-  omarchy.system-update omarchy.lock omarchy.polkit omarchy.clipboard
-  omarchy.emojis omarchy.image-picker omarchy.reminders omarchy.speedtest
-  omarchy.disk-speedtest omarchy.wifiqr
+  omarchy.notifications omarchy.elsewhen omarchy.indicators
+  omarchy.network omarchy.wifiqr omarchy.bluetooth
+  omarchy.clipboard omarchy.monitor omarchy.emojis
+)
+
+# 0.2 及更早版本自行產生的更新流程與 Agents 擴充；4.5 起由 Omarchy 內建取代。
+LEGACY_FILES=(
+  "$HOME/.local/bin/omarchy-update-zh-tw"
+  "$DATA_DIR/bin"
+  "$DATA_DIR/agents"
 )
 
 usage() {
   cat <<'EOF'
 用法：./install.sh [--dry-run] [--adopt-existing]
 
-安裝 Omarchy 4 繁體中文介面。
+在 Omarchy 4.5 內建的繁體中文上，安裝台灣用語覆蓋。
   --dry-run         只檢查環境並顯示將執行的操作
   --adopt-existing  接管使用者名稱下、來源相符的現有 Omarchy 外掛複製
 EOF
@@ -53,7 +55,7 @@ while (($# > 0)); do
   shift
 done
 
-for command_name in node jq gum omarchy omarchy-plugin-catalog omarchy-shell; do
+for command_name in node jq omarchy omarchy-plugin-catalog omarchy-shell; do
   command -v "$command_name" >/dev/null || {
     echo "缺少指令：$command_name" >&2
     exit 1
@@ -65,6 +67,11 @@ version=$(omarchy version 2>/dev/null || true)
   echo "目前僅支援 Omarchy 4，檢測到：${version:-未知版本}" >&2
   exit 1
 }
+[[ -f $OMARCHY_I18N/zh-TW/shell.json && -f $OMARCHY_I18N/zh-TW/menu.json ]] || {
+  echo "這個 Omarchy 沒有內建繁體中文翻譯（檢測到 $version）。本版需要 Omarchy 4.5 以上；" >&2
+  echo "更早的 4.x 請改用支援 4.0 的最後一個版本：git checkout 7e582e5" >&2
+  exit 1
+}
 
 user_name=${USER:-$(id -un)}
 [[ $user_name =~ ^[A-Za-z0-9][A-Za-z0-9._-]*$ ]] || {
@@ -72,15 +79,20 @@ user_name=${USER:-$(id -un)}
   exit 1
 }
 
-[[ -f $SYNC_SOURCE && -f $HOOK_SOURCE && -f $UPDATE_SOURCE && -f $UPDATE_CONFIRM_SOURCE && -d $AGENTS_OVERLAY_SOURCE ]] || {
+[[ -f $SYNC_SOURCE && -f $HOOK_SOURCE && -f $I18N_SOURCE/shell.json ]] || {
   echo "專案檔案不完整，請從儲存庫根目錄執行安裝器。" >&2
   exit 1
 }
 
+current_language=$(head -n 1 "$LANGUAGE_FILE" 2>/dev/null | tr -d '[:space:]' || true)
+
 echo "Omarchy：$version"
-echo "將安裝 ${#PLUGIN_IDS[@]} 個繁體中文外掛複製。"
+echo "將安裝 ${#PLUGIN_IDS[@]} 個台灣用語外掛複製。"
 
 if ((DRY_RUN)); then
+  if [[ $current_language != zh-TW ]]; then
+    echo "將把 Omarchy 介面語言從 ${current_language:-en} 設為 zh-TW（$LANGUAGE_FILE）。"
+  fi
   for source_id in "${PLUGIN_IDS[@]}"; do
     target_id="$user_name.${source_id#omarchy.}"
     if [[ -d $PLUGIN_ROOT/$target_id ]]; then
@@ -89,17 +101,25 @@ if ((DRY_RUN)); then
       echo "將複製：$source_id -> $target_id"
     fi
   done
-  echo "將安裝：$SYNC_TARGET"
-  echo "將安裝：$UPDATE_TARGET（繁體中文更新流程）"
-  echo "將安裝：$AGENTS_OVERLAY_TARGET（Codex/Grok/Kimi 用量擴充套件與主題圖示）"
-  echo "將安裝 post-update 自動同步勾點，並把 Super+K 指向繁體中文快捷鍵面板。"
+  if [[ -d $PLUGIN_ROOT ]]; then
+    while IFS= read -r manifest; do
+      [[ $(jq -r '.omarchy.zhTwManaged // false' "$manifest") == true ]] || continue
+      cloned_from=$(jq -r '.omarchy.clonedFrom // empty' "$manifest")
+      [[ " ${PLUGIN_IDS[*]} " == *" $cloned_from "* ]] && continue
+      echo "將移除舊版留下的複製並還原官方外掛：$(basename "$(dirname "$manifest")")"
+    done < <(find "$PLUGIN_ROOT" -mindepth 2 -maxdepth 2 -name manifest.json | sort)
+  fi
+  for legacy in "${LEGACY_FILES[@]}"; do
+    [[ -e $legacy ]] && echo "將移除舊版檔案：$legacy"
+  done
+  echo "將安裝：$SYNC_TARGET 與覆蓋詞庫 $I18N_TARGET"
+  echo "將安裝 post-update 自動同步勾點，並把 Super+K 指向台灣用語快捷鍵面板。"
   exit 0
 fi
 
-mkdir -p "$HOME/.local/bin" "$UPDATE_CONFIRM_DIR" "$PLUGIN_ROOT" "$BACKUP_DIR"
+mkdir -p "$HOME/.local/bin" "$PLUGIN_ROOT" "$BACKUP_DIR"
 
 if [[ ! -e $STATE_DIR/install.version ]]; then
-  printf '1\n' >"$STATE_DIR/install.version"
   if [[ -f $MENU_FILE ]]; then
     cp -a "$MENU_FILE" "$BACKUP_DIR/omarchy-menu.jsonc"
   else
@@ -110,30 +130,28 @@ if [[ ! -e $STATE_DIR/install.version ]]; then
   [[ -f $KEYBINDINGS_TARGET ]] && cp -a "$KEYBINDINGS_TARGET" "$BACKUP_DIR/omarchy-menu-keybindings-zh-tw"
   [[ -f $HOOK_TARGET ]] && cp -a "$HOOK_TARGET" "$BACKUP_DIR/omarchy-zh-tw-post-update"
 fi
+printf '2\n' >"$STATE_DIR/install.version"
 
-backup_once() {
-  local current=$1
-  local backup=$2
-  local absent_marker=$3
-  if [[ ! -e $backup && ! -e $absent_marker ]]; then
-    if [[ -f $current ]]; then
-      cp -a "$current" "$backup"
-    else
-      : >"$absent_marker"
-    fi
+# 介面語言是使用者自己的選擇；只在第一次切換時記下原值，供解除安裝還原。
+if [[ ! -e $BACKUP_DIR/language && ! -e $BACKUP_DIR/language-was-absent ]]; then
+  if [[ -f $LANGUAGE_FILE ]]; then
+    cp -a "$LANGUAGE_FILE" "$BACKUP_DIR/language"
+  else
+    : >"$BACKUP_DIR/language-was-absent"
   fi
-}
+fi
+if [[ $current_language != zh-TW ]]; then
+  mkdir -p "$(dirname "$LANGUAGE_FILE")"
+  printf 'zh-TW\n' >"$LANGUAGE_FILE"
+fi
 
-backup_once "$UPDATE_TARGET" "$BACKUP_DIR/omarchy-update-zh-tw" "$BACKUP_DIR/omarchy-update-zh-tw-was-absent"
-backup_once "$UPDATE_CONFIRM_TARGET" "$BACKUP_DIR/omarchy-update-confirm" "$BACKUP_DIR/omarchy-update-confirm-was-absent"
+for legacy in "${LEGACY_FILES[@]}"; do
+  [[ -e $legacy ]] && rm -rf -- "$legacy"
+done
 
 install -m 755 "$SYNC_SOURCE" "$SYNC_TARGET"
-install -m 755 "$UPDATE_SOURCE" "$UPDATE_TARGET"
-install -m 755 "$UPDATE_CONFIRM_SOURCE" "$UPDATE_CONFIRM_TARGET"
-mkdir -p "$AGENTS_OVERLAY_TARGET/bin" "$AGENTS_OVERLAY_TARGET/assets"
-cp -a "$AGENTS_OVERLAY_SOURCE/bin/." "$AGENTS_OVERLAY_TARGET/bin/"
-cp -a "$AGENTS_OVERLAY_SOURCE/assets/." "$AGENTS_OVERLAY_TARGET/assets/"
-install -m 644 "$AGENTS_OVERLAY_SOURCE/README.md" "$AGENTS_OVERLAY_TARGET/README.md"
+mkdir -p "$I18N_TARGET"
+install -m 644 "$I18N_SOURCE"/*.json "$I18N_TARGET/"
 
 mark_managed() {
   local manifest=$1
@@ -184,13 +202,14 @@ if ! grep -Fq -- '-- >>> omarchy-zh-tw' "$BINDINGS_FILE" && \
   cat >>"$BINDINGS_FILE" <<'EOF'
 
 -- >>> omarchy-zh-tw
--- 將 Omarchy 預設的英文快捷鍵面板替換為繁體中文面板。
+-- 將 Omarchy 預設的快捷鍵面板替換為套用台灣用語覆蓋的面板。
 hl.unbind("SUPER + K")
 o.bind("SUPER + K", "快捷鍵", os.getenv("HOME") .. "/.local/bin/omarchy-menu-keybindings-zh-tw")
 -- <<< omarchy-zh-tw
 EOF
 fi
 
+# 同步器會移除不在清單內的舊複製，並重建清單內的複製。
 "$SYNC_TARGET" --adopt-existing
 omarchy hook install post-update "$HOOK_SOURCE"
 
@@ -204,4 +223,5 @@ if command -v hyprctl >/dev/null; then
 fi
 
 printf '%s\n' "${PLUGIN_IDS[@]}" >"$STATE_DIR/plugin-sources"
-echo "安裝完成。按 Super+K 可開啟繁體中文快捷鍵面板；系統更新流程也已繁體中文化。"
+echo "安裝完成。Omarchy 介面語言已設為 zh-TW，並套用台灣用語覆蓋；按 Super+K 可開啟快捷鍵面板。"
+echo "如需同時切換系統地區設定（LANG），請執行：omarchy language zh-TW"

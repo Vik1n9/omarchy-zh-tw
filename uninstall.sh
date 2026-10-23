@@ -7,24 +7,13 @@ PLUGIN_ROOT="$HOME/.config/omarchy/plugins"
 MENU_FILE="$HOME/.config/omarchy/extensions/omarchy-menu.jsonc"
 BINDINGS_FILE="$HOME/.config/hypr/bindings.lua"
 SHELL_FILE="$HOME/.config/omarchy/shell.json"
+LANGUAGE_FILE="${XDG_CONFIG_HOME:-$HOME/.config}/omarchy/language"
 HOOK_FILE="$HOME/.config/omarchy/hooks/post-update.d/omarchy-zh-tw-post-update"
 SYNC_TARGET="$HOME/.local/bin/omarchy-zh-tw-sync"
 KEYBINDINGS_TARGET="$HOME/.local/bin/omarchy-menu-keybindings-zh-tw"
-UPDATE_TARGET="$HOME/.local/bin/omarchy-update-zh-tw"
-UPDATE_CONFIRM_DIR="$HOME/.local/share/omarchy-zh-tw/bin"
-UPDATE_CONFIRM_TARGET="$UPDATE_CONFIRM_DIR/omarchy-update-confirm"
-AGENTS_OVERLAY_TARGET="$HOME/.local/share/omarchy-zh-tw/agents"
-UPDATE_HELPERS=(
-  omarchy-update omarchy-update-pkg-prune omarchy-update-lock
-  omarchy-update-requires-free-space omarchy-snapshot omarchy-update-keyring
-  omarchy-pkg-add
-  omarchy-update-system-pkgs
-  omarchy-update-system-pkgs-when-conflicted omarchy-migrate
-  omarchy-update-aur-pkgs omarchy-update-mise omarchy-update-orphan-pkgs
-  omarchy-update-restart omarchy-update-dev omarchy-update-stay-awake
-  omarchy-update-analyze-logs omarchy-hook omarchy-system-reboot
-  omarchy-restart-shell
-)
+DATA_DIR="$HOME/.local/share/omarchy-zh-tw"
+# 0.2 及更早版本的更新流程，升級後若仍殘留一併清除。
+LEGACY_UPDATE_TARGET="$HOME/.local/bin/omarchy-update-zh-tw"
 ASSUME_YES=0
 
 while (($# > 0)); do
@@ -42,27 +31,19 @@ done
 }
 
 if ((!ASSUME_YES)); then
-  read -r -p "解除安裝 Omarchy 繁體中文介面並還原原選單？[y/N] " answer
+  read -r -p "解除安裝 Omarchy 台灣用語覆蓋，並還原原本的選單與介面語言？[y/N] " answer
   [[ $answer == y || $answer == Y ]] || exit 0
 fi
 
 timestamp=$(date -u +%Y%m%d%H%M%S)
-user_name=${USER:-$(id -un)}
 
-if [[ -f $STATE_DIR/plugin-sources ]]; then
-  mapfile -t plugin_sources <"$STATE_DIR/plugin-sources"
-else
-  plugin_sources=()
+# 依清單外再掃一次，連同舊版留下、標記為受管理的複製一併移除。
+if [[ -d $PLUGIN_ROOT ]]; then
+  while IFS= read -r manifest; do
+    [[ $(jq -r '.omarchy.zhTwManaged // false' "$manifest") == true ]] || continue
+    omarchy plugin remove "$(basename "$(dirname "$manifest")")" --yes
+  done < <(find "$PLUGIN_ROOT" -mindepth 2 -maxdepth 2 -name manifest.json | sort)
 fi
-
-for source_id in "${plugin_sources[@]}"; do
-  [[ -n $source_id ]] || continue
-  target_id="$user_name.${source_id#omarchy.}"
-  manifest="$PLUGIN_ROOT/$target_id/manifest.json"
-  if [[ -f $manifest ]] && [[ $(jq -r '.omarchy.zhTwManaged // false' "$manifest") == true ]]; then
-    omarchy plugin remove "$target_id" --yes
-  fi
-done
 
 if [[ -f $MENU_FILE ]]; then
   cp -a "$MENU_FILE" "$MENU_FILE.omarchy-zh-tw-uninstall-$timestamp.bak"
@@ -72,6 +53,13 @@ if [[ -f $STATE_DIR/original/omarchy-menu.jsonc ]]; then
   cp -a "$STATE_DIR/original/omarchy-menu.jsonc" "$MENU_FILE"
 elif [[ -f $STATE_DIR/original/menu-was-absent ]]; then
   rm -f "$MENU_FILE"
+fi
+
+if [[ -f $STATE_DIR/original/language ]]; then
+  mkdir -p "$(dirname "$LANGUAGE_FILE")"
+  cp -a "$STATE_DIR/original/language" "$LANGUAGE_FILE"
+elif [[ -f $STATE_DIR/original/language-was-absent ]]; then
+  rm -f "$LANGUAGE_FILE"
 fi
 
 if [[ -f $BINDINGS_FILE ]] && grep -Fq -- '-- >>> omarchy-zh-tw' "$BINDINGS_FILE"; then
@@ -120,23 +108,13 @@ else
   rm -f "$KEYBINDINGS_TARGET"
 fi
 if [[ -f $STATE_DIR/original/omarchy-update-zh-tw ]]; then
-  cp -a "$STATE_DIR/original/omarchy-update-zh-tw" "$UPDATE_TARGET"
+  cp -a "$STATE_DIR/original/omarchy-update-zh-tw" "$LEGACY_UPDATE_TARGET"
 else
-  rm -f "$UPDATE_TARGET"
+  rm -f "$LEGACY_UPDATE_TARGET"
 fi
-for helper in "${UPDATE_HELPERS[@]}"; do
-  rm -f "$UPDATE_CONFIRM_DIR/$helper"
-done
-if [[ -f $STATE_DIR/original/omarchy-update-confirm ]]; then
-  mkdir -p "$UPDATE_CONFIRM_DIR"
-  cp -a "$STATE_DIR/original/omarchy-update-confirm" "$UPDATE_CONFIRM_TARGET"
-else
-  rm -f "$UPDATE_CONFIRM_TARGET"
+if [[ -d $DATA_DIR ]]; then
+  find "$DATA_DIR" -depth -delete
 fi
-if [[ -d $AGENTS_OVERLAY_TARGET ]]; then
-  find "$AGENTS_OVERLAY_TARGET" -depth -delete
-fi
-rmdir "$UPDATE_CONFIRM_DIR" "$HOME/.local/share/omarchy-zh-tw" 2>/dev/null || true
 
 if command -v hyprctl >/dev/null; then hyprctl reload >/dev/null || true; fi
 omarchy restart shell >/dev/null || true

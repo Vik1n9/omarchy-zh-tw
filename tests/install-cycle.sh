@@ -4,8 +4,8 @@ set -euo pipefail
 
 ROOT_DIR=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)
 
-if [[ ! -d /usr/share/omarchy/shell || ! -x /usr/share/omarchy/bin/omarchy-menu-keybindings ]]; then
-  echo "非 Omarchy 環境，跳過安裝週期檢查。"
+if [[ ! -d /usr/share/omarchy/shell || ! -f /usr/share/omarchy/default/i18n/zh-TW/shell.json ]]; then
+  echo "非 Omarchy 4.5 以上環境，跳過安裝週期檢查。"
   exit 0
 fi
 
@@ -13,6 +13,8 @@ sandbox_root=$(mktemp -d)
 sandbox_home="$sandbox_root/home"
 stub_bin="$sandbox_root/bin"
 mkdir -p "$sandbox_home" "$stub_bin"
+# 測試只能寫沙箱；XDG_CONFIG_HOME 若指向真實目錄，語言檔會寫到使用者的設定裡。
+export XDG_CONFIG_HOME="$sandbox_home/.config"
 
 cleanup() {
   [[ -n ${sandbox_root:-} && -d $sandbox_root && $sandbox_root == /tmp/* ]] && rm -rf -- "$sandbox_root"
@@ -25,7 +27,7 @@ set -euo pipefail
 
 case "${1:-} ${2:-}" in
   "version ")
-    echo "4.0.0-test"
+    echo "4.5.0-test"
     ;;
   "plugin clone")
     source_id=$3
@@ -70,20 +72,20 @@ chmod 755 "$stub_bin/omarchy" "$stub_bin/omarchy-shell" "$stub_bin/hyprctl"
 
 test_path="$stub_bin:$PATH"
 
+# 模擬 0.2 的安裝：舊工具、舊的更新流程與 Agents 擴充、一個已不需要的受管理複製。
 mkdir -p "$sandbox_home/.local/bin" \
   "$sandbox_home/.local/share/omarchy-zh-tw/bin" \
+  "$sandbox_home/.local/share/omarchy-zh-tw/agents/bin" \
   "$sandbox_home/.config/omarchy/hooks/post-update.d" \
-  "$sandbox_home/.config/omarchy"
+  "$sandbox_home/.config/omarchy/plugins/testuser.audio"
 printf '#!/usr/bin/env bash\necho old-sync\n' >"$sandbox_home/.local/bin/omarchy-zh-tw-sync"
 printf '#!/usr/bin/env bash\necho old-keybindings\n' >"$sandbox_home/.local/bin/omarchy-menu-keybindings-zh-tw"
 printf '#!/usr/bin/env bash\necho old-update\n' >"$sandbox_home/.local/bin/omarchy-update-zh-tw"
-printf '#!/usr/bin/env bash\necho old-update-confirm\n' >"$sandbox_home/.local/share/omarchy-zh-tw/bin/omarchy-update-confirm"
+printf '#!/usr/bin/env bash\necho old-update\n' >"$sandbox_home/.local/share/omarchy-zh-tw/bin/omarchy-update"
 printf '#!/usr/bin/env bash\necho old-hook\n' >"$sandbox_home/.config/omarchy/hooks/post-update.d/omarchy-zh-tw-post-update"
-chmod 755 "$sandbox_home/.local/bin/omarchy-zh-tw-sync" \
-  "$sandbox_home/.local/bin/omarchy-menu-keybindings-zh-tw" \
-  "$sandbox_home/.local/bin/omarchy-update-zh-tw" \
-  "$sandbox_home/.local/share/omarchy-zh-tw/bin/omarchy-update-confirm" \
-  "$sandbox_home/.config/omarchy/hooks/post-update.d/omarchy-zh-tw-post-update"
+jq -n '{id: "testuser.audio", omarchy: {clonedFrom: "omarchy.audio", zhTwManaged: true}}' \
+  >"$sandbox_home/.config/omarchy/plugins/testuser.audio/manifest.json"
+printf 'da\n' >"$sandbox_home/.config/omarchy/language"
 cat >"$sandbox_home/.config/omarchy/shell.json" <<'JSON'
 {
   "version": 1,
@@ -99,33 +101,39 @@ cat >"$sandbox_home/.config/omarchy/shell.json" <<'JSON'
 }
 JSON
 
+HOME="$sandbox_home" USER=testuser PATH="$test_path" "$ROOT_DIR/install.sh" --dry-run >/dev/null
+[[ $(cat "$sandbox_home/.config/omarchy/language") == da ]]
+
 HOME="$sandbox_home" USER=testuser PATH="$test_path" "$ROOT_DIR/install.sh" >/dev/null
 
 test -x "$sandbox_home/.local/bin/omarchy-zh-tw-sync"
 test -x "$sandbox_home/.local/bin/omarchy-menu-keybindings-zh-tw"
-test -x "$sandbox_home/.local/bin/omarchy-update-zh-tw"
-test -x "$sandbox_home/.local/share/omarchy-zh-tw/bin/omarchy-update-confirm"
-test -x "$sandbox_home/.local/share/omarchy-zh-tw/bin/omarchy-update"
-test -x "$sandbox_home/.local/share/omarchy-zh-tw/bin/omarchy-update-restart"
-test -x "$sandbox_home/.local/share/omarchy-zh-tw/agents/bin/grok-collector"
-test -x "$sandbox_home/.local/share/omarchy-zh-tw/agents/bin/kimi-collector"
+test -f "$sandbox_home/.local/share/omarchy-zh-tw/i18n/zh-TW/shell.json"
+test -f "$sandbox_home/.local/share/omarchy-zh-tw/i18n/keybindings.json"
 test -x "$sandbox_home/.config/omarchy/hooks/post-update.d/omarchy-zh-tw-post-update"
-rg -Fq '準備更新嗎？' "$sandbox_home/.local/share/omarchy-zh-tw/bin/omarchy-update-confirm"
+test ! -e "$sandbox_home/.local/bin/omarchy-update-zh-tw"
+test ! -e "$sandbox_home/.local/share/omarchy-zh-tw/bin"
+test ! -e "$sandbox_home/.local/share/omarchy-zh-tw/agents"
+test ! -e "$sandbox_home/.config/omarchy/plugins/testuser.audio"
+[[ $(cat "$sandbox_home/.config/omarchy/language") == zh-TW ]]
 rg -Fq -- '-- >>> omarchy-zh-tw' "$sandbox_home/.config/hypr/bindings.lua"
-[[ $(find "$sandbox_home/.config/omarchy/plugins" -mindepth 2 -maxdepth 2 -name manifest.json | wc -l) -eq 22 ]]
+[[ $(find "$sandbox_home/.config/omarchy/plugins" -mindepth 2 -maxdepth 2 -name manifest.json | wc -l) -eq 9 ]]
 [[ $(jq -r '.bar.layout.center[0].unit' "$sandbox_home/.config/omarchy/shell.json") == metric ]]
+
+# 再安裝一次必須是冪等的，且不能把已切換的語言當成原值記下。
+HOME="$sandbox_home" USER=testuser PATH="$test_path" "$ROOT_DIR/install.sh" >/dev/null
+[[ $(find "$sandbox_home/.config/omarchy/plugins" -mindepth 2 -maxdepth 2 -name manifest.json | wc -l) -eq 9 ]]
+[[ $(grep -c -- '-- >>> omarchy-zh-tw' "$sandbox_home/.config/hypr/bindings.lua") -eq 1 ]]
 
 HOME="$sandbox_home" USER=testuser PATH="$test_path" "$ROOT_DIR/uninstall.sh" --yes >/dev/null
 
 rg -Fq 'old-sync' "$sandbox_home/.local/bin/omarchy-zh-tw-sync"
 rg -Fq 'old-keybindings' "$sandbox_home/.local/bin/omarchy-menu-keybindings-zh-tw"
-rg -Fq 'old-update' "$sandbox_home/.local/bin/omarchy-update-zh-tw"
-rg -Fq 'old-update-confirm' "$sandbox_home/.local/share/omarchy-zh-tw/bin/omarchy-update-confirm"
-test ! -e "$sandbox_home/.local/share/omarchy-zh-tw/bin/omarchy-update"
-test ! -e "$sandbox_home/.local/share/omarchy-zh-tw/bin/omarchy-update-restart"
-test ! -e "$sandbox_home/.local/share/omarchy-zh-tw/agents"
 rg -Fq 'old-hook' "$sandbox_home/.config/omarchy/hooks/post-update.d/omarchy-zh-tw-post-update"
+test ! -e "$sandbox_home/.local/share/omarchy-zh-tw"
 test ! -e "$sandbox_home/.config/omarchy/extensions/omarchy-menu.jsonc"
+[[ $(find "$sandbox_home/.config/omarchy/plugins" -mindepth 2 -maxdepth 2 -name manifest.json | wc -l) -eq 0 ]]
+[[ $(cat "$sandbox_home/.config/omarchy/language") == da ]]
 ! rg -Fq -- '-- >>> omarchy-zh-tw' "$sandbox_home/.config/hypr/bindings.lua"
 [[ $(jq -r '.bar.layout.center[0].unit' "$sandbox_home/.config/omarchy/shell.json") == imperial ]]
 
